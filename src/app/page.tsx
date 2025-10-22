@@ -4,20 +4,23 @@ import React, { useRef, useState, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VStack, HStack, Text, Section, Divider, Spacer, ZStack } from "./components";
 
+
 export default function Home() {
   return (
     <main className="flex items-top justify-center min-h-screen bg-background ">
       <FloatingBar />
-      <VStack className="w-full max-w-3xl bg-foreground mt-30 rounded-t-[25px]">
-        <Section className="my-20">
-          <VStack className="items-start" spacing={8}>
-            <Text variant="title" className="text-oppforeground">Welcome to My Portfolio</Text>
-            <Divider borderColor="border-oppforeground" />
-            <Text variant="body" className="text-oppforeground">
-              This is a sample portfolio page with a floating navigation bar.
-            </Text>
-          </VStack>
-        </Section>
+
+      <VStack className="mt-26 mb-6 w-full max-w-3xl mx-4" spacing={26}>
+        
+          <Section className="bg-foreground rounded-[25px] shadow-lg">
+            <VStack className="items-start my-20" spacing={8}>
+              <Text variant="title" className="text-textColor">Welcome to My Portfolio</Text>
+              <Divider borderColor="border-textColor" />
+              <Text variant="body" className="text-textColor">
+                This is a sample portfolio page with a floating navigation bar.
+              </Text>
+            </VStack>
+          </Section>
       </VStack>
     </main>
   );
@@ -73,7 +76,7 @@ function FloatingBar() {
                 spacing={8}
               >
                 <Spacer />
-                <Divider borderColor="border-oppforeground" />
+                <Divider borderColor="border-textColor" />
                 <FloatingBarButton label="H" />
                 <FloatingBarButton label="P" />
                 <FloatingBarButton label="H" />
@@ -126,11 +129,11 @@ function WideScreenBar() {
     const barRect = bar.getBoundingClientRect();
 
     // Put mover centered under the button horizontally, vertically centered in the bar
-    const x = btnRect.left - barRect.left - btnRect.width - 8;
-    const y = barRect.height - barRect.bottom + (btnRect.height / 2) + 4;
+    const x = (btnRect.right + btnRect.left) / 2 - (barRect.left + barRect.right) / 2;
+    const y = (btnRect.top + btnRect.bottom) / 2 - (barRect.top + barRect.bottom) / 2;
 
     setPosition({ x, y });
-    setTargets(prev => prev.map((t, i) => ({...t, isSelected: i === index})));
+    setTargets(prev => prev.map((t, i) => ({ ...t, isSelected: i === index })));
   };
 
   // Set initial position to the first button after mount
@@ -153,12 +156,12 @@ function WideScreenBar() {
         className="absolute z-0 rounded-[18px] bg-blue-500 y-[-50px]"
         animate={{ x: position.x, y: position.y }}
         transition={{
-                  type: "spring",
-                  stiffness: 250,
-                  damping: 20,
-                  mass: 0.5
-                  // smooth cubic-bezier easing
-                }}
+          type: "spring",
+          stiffness: 250,
+          damping: 20,
+          mass: 0.5
+          // smooth cubic-bezier easing
+        }}
         style={{
           height: MOVER_HEIGHT,
           width: MOVER_WIDTH,
@@ -166,7 +169,7 @@ function WideScreenBar() {
         }}
       />
 
-      <HStack className="z-10">
+      <HStack className="z-10" spacing={8}>
         {targets.map((target, i) => (
           <button
             key={target.id}
@@ -175,14 +178,34 @@ function WideScreenBar() {
               if (el) buttonRefs.current[i] = el;
             }}
             onClick={() => moveDivToIndex(i)}
-            className={`w-40 z-20 py-2 ${target.isSelected ? "" : "active:scale-95"}`}
+            style={{ width: MOVER_WIDTH }}
+            className={`z-20 py-2  ${target.isSelected ? "" : "active:scale-95 hover:bg-oppbackground/5 rounded-[18px] transition-all ease-in-out duration-300"}`
+            }
           >
-            <Text variant="body" className={`${target.isSelected ? "text-white" : "text-oppforeground"} transition-all ease-in-out duration-300`}>
+            <Text variant="body" className={`${target.isSelected ? "text-white" : "text-textColor"} transition-all ease-in-out duration-300`}>
               {target.name}
             </Text>
           </button>
         ))}
       </HStack>
     </div>
+  );
+}
+
+function SvgIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className="w-6 h-6 text-current"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {/* Simple: check icon */}
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
   );
 }

@@ -5,6 +5,7 @@
   --foreground: rgb(255, 255, 255);
   --oppbackground: rgb(0, 0, 0);
   --oppforeground: rgb(28, 28, 30);
+  --textColor: #1D1D1F;
 }
 
 
@@ -13,6 +14,7 @@
   --color-foreground: var(--foreground);
   --color-oppbackground: var(--oppbackground);
   --color-oppforeground: var(--oppforeground);
+  --color-textColor: var(--textColor);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,5 +23,11 @@
     --foreground: rgb(28, 28, 30);
     --oppbackground: rgb(240, 240, 249);
     --oppforeground: rgb(255, 255, 255);
+    --textColor: #F5F5F7;
   }
+}
+
+html, body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
