@@ -1,42 +1,12 @@
-import React, {useState } from "react";
-import { motion, AnimatePresence, type HTMLMotionProps } from "framer-motion";
+import React from "react";
+import { motion, type HTMLMotionProps } from "framer-motion";
 
-export function Button({
-  children,
-  action = () => { },
-  radius = 25,
-  className = "",
-}: { children?: React.ReactNode; action?: () => void; radius?: number; className?: string }) {
-  return (
-    <button
-      onClick={action}
-      style={{ borderRadius: `${radius}px` }}
-      className={`
-       transition-all
-       duration-300
-       ease-in-out
-       p-2
-       active:scale-95
-       ${className}
-     `}
-    >
-      {children}
-    </button>
-  );
-}
-
-
-
-
-export function Spacer({ minH = 0, color = "gray-200" }: { minH?: number; color?: string }) {
+export function Spacer({ minH = 0}: { minH?: number; color?: string }) {
   const minHClass = `min-h-[${minH}px]`;
   return (
-    <div className={`flex-grow ${minHClass} bg-${color}`}></div>
+    <div className={`flex-grow ${minHClass}`}></div>
   );
 }
-
-
-
 
 export function HStack({ children, spacing = 0, className = "", ...motionProps }: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
   return (
