@@ -3,6 +3,8 @@
 import React, { useRef, useState, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VStack, HStack, Text, Section, Divider, Spacer, ZStack } from "./components";
+import HomeIcon from '../../public/home.svg';
+
 
 
 export default function Home() {
@@ -10,17 +12,17 @@ export default function Home() {
     <main className="flex items-top justify-center min-h-screen bg-background ">
       <FloatingBar />
 
+     <HomeIcon className="w-12 h-12" />
       <VStack className="mt-26 mb-6 w-full max-w-3xl mx-4" spacing={26}>
-        
-          <Section className="bg-foreground rounded-[25px] shadow-lg">
-            <VStack className="items-start my-20" spacing={8}>
-              <Text variant="title" className="text-textColor">Welcome to My Portfolio</Text>
-              <Divider borderColor="border-textColor" />
-              <Text variant="body" className="text-textColor">
-                This is a sample portfolio page with a floating navigation bar.
-              </Text>
-            </VStack>
-          </Section>
+        <Section className="bg-foreground rounded-[25px] shadow-lg">
+          <VStack className="items-start my-20" spacing={8}>
+            <Text variant="title" className="text-textColor">Welcome to My Portfolio</Text>
+            <Divider borderColor="border-textColor" />
+            <Text variant="body" className="text-textColor">
+              This is a sample portfolio page with a floating navigation bar.
+            </Text>
+          </VStack>
+        </Section>
       </VStack>
     </main>
   );
