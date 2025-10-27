@@ -1,17 +1,17 @@
 import React from "react";
 import { motion, type HTMLMotionProps } from "framer-motion";
 
-export function Spacer({ minH = 0}: { minH?: number; color?: string }) {
+export function Spacer({ minH = 0, className = ""}: { minH?: number; color?: string, className?: string}) {
   const minHClass = `min-h-[${minH}px]`;
   return (
-    <div className={`flex-grow ${minHClass}`}></div>
+    <div className={`flex-grow ${minHClass} ${className}`}></div>
   );
 }
 
 export function HStack({ children, spacing = 0, className = "", ...motionProps }: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
   return (
     <motion.div
-      className={`flex flex-row items-center ${className}`}
+      className={`flex flex-row ${className}`}
       style={{ gap: `${spacing}px` }}
       {...motionProps} // allows initial, animate, exit, transition
     >
@@ -26,7 +26,7 @@ export function HStack({ children, spacing = 0, className = "", ...motionProps }
 export function VStack({ children, spacing = 0, className = "", ...motionProps }: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
   return (
     <motion.div
-      className={`flex flex-col items-center ${className}`}
+      className={`flex flex-col ${className}`}
       style={{ gap: `${spacing}px` }}
       {...motionProps} // pass initial, animate, exit, transition
     >

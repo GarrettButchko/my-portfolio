@@ -170,7 +170,8 @@ export function FloatingBar({ targets, setTargets }: FloatingBarProps) {
                 ${target.isSelected ? "text-white" : "text-textColor"} 
                 transition-all
                 ease-in-out
-                duration-300`
+                duration-300
+                items-center`
               }>
                 {target.icon}
                 <Text variant="body" className="
