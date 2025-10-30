@@ -1,0 +1,14 @@
+<VStack>
+              <div className="flex flex-col items-center">
+                {/* Top circle */}
+                <div className="w-8 h-8 bg-sub1 rounded-full" />
+
+                {/* Vertical line */}
+                <div
+                  className="bg-sub1 scale-110"
+                  style={{ height: `${150}px`, width: `${6}px`}}
+                />
+
+                <Circle className="text-sub1 fill-sub2 w-8 h-8"/>
+              </div>
+            </VStack>

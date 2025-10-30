@@ -6,6 +6,8 @@
   --oppbackground: rgb(0, 0, 0);
   --oppforeground: rgb(28, 28, 30);
   --textColor: #1D1D1F;
+  --sub1: #eeeeee;
+  --sub2:	#bbbbbb;
 }
 
 
@@ -15,6 +17,8 @@
   --color-oppbackground: var(--oppbackground);
   --color-oppforeground: var(--oppforeground);
   --color-textColor: var(--textColor);
+  --color-sub1: var(--sub1);
+  --color-sub2: var(--sub2);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +28,8 @@
     --oppbackground: rgb(240, 240, 249);
     --oppforeground: rgb(255, 255, 255);
     --textColor: #F5F5F7;
+    --sub1: #555555;
+    --sub2: #999999;
   }
 }
 

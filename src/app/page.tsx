@@ -3,13 +3,23 @@
 import React, { useRef, useState, useLayoutEffect, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VStack, HStack, Text, Section, Divider, Spacer, ZStack } from "./components";
-import HomeIcon from '../../public/home.svg';
-import NewsIcon from '../../public/news.svg';
-import PortfolioIcon from '../../public/portfolio.svg';
+import HomeIcon from '../../public/svg/home.svg';
+import NewsIcon from '../../public/svg/news.svg';
+import PortfolioIcon from '../../public/svg/portfolio.svg';
+import Circle from '../../public/svg/circle.svg';
 import { FloatingBar } from "./floatingbar";
 import Image from "next/image";
 
-
+type InfoItem = {
+  id: number;
+  title: string;
+  majorOrEmployer: string;
+  loc: string;
+  start: number | string;
+  end: number | string;
+  in: boolean;
+  //pic: React.ReactElement;
+};
 
 export default function Home() {
   const [targets, setTargets] = useState([
@@ -22,17 +32,79 @@ export default function Home() {
     <main className="flex items-top justify-center min-h-screen bg-background">
       <FloatingBar targets={targets} setTargets={setTargets} />
       <VStack className="mt-24 mb-5 w-full max-w-4xl mx-4" spacing={26}>
-        <Intro/>
-        <EduExp/>
+        <Intro />
+        <EduExp />
       </VStack>
     </main>
   );
 
   function EduExp() {
+
+
+
+
+    const education: InfoItem[] = [
+      { id: 1, title: "Saint Ignatius Highschool", majorOrEmployer: "Highschool", loc: "Cleveland, OH", start: 20, end: 24, in: false, },
+      { id: 2, title: "Ohio State University", majorOrEmployer: "CS & Engineering", loc: "Columbus, OH", start: 24, end: 25, in: false },
+      { id: 3, title: "Cleveland State University", majorOrEmployer: "CS & Design", loc: "Cleveland, OH", start: 25, end: "Pres.", in: true }
+    ];
+
+    const experience = ([
+      { id: 1, title: "Web and App Developer Intern", majorOrEmployer: "CS & ADollarClass", loc: "Remote", start: 25, end: "Pres.", in: true }
+    ]);
+
     return (
       <Section className="bg-foreground rounded-[25px] max-w-4xl shadow-lg items-center py-5">
-        
+        <VStack>
+          <p
+            className="
+              md:text-5xl 
+              sm:text-4xl 
+              text-3xl 
+              font-bold 
+              transition-all
+              ease-in-out
+              duration-200
+              text-left
+              text-blue-500
+            ">
+            Education
+          </p>
+          <VStack>
+            {education.map((student: InfoItem, index) => (
+              <p>s</p>
+            ))}
+          </VStack>
+
+          <p
+            className="
+                md:text-5xl 
+                sm:text-4xl 
+                text-3xl 
+                font-bold 
+                transition-all
+                ease-in-out
+                duration-200
+                text-left
+                text-blue-500
+                ">
+            Experience
+          </p>
+          <VStack>
+
+
+          </VStack>
+
+        </VStack>
       </Section>
+    );
+  }
+
+  function InfoCollection(infoItem: InfoItem) {
+    return (
+      <p>
+        J
+      </p>
     );
   }
 
@@ -79,7 +151,7 @@ export default function Home() {
         </div>
 
         <VStack className="items-center mt-5" spacing={8}>
-          <p className="text-oppbackground/30 text-center">
+          <p className="text-sub2 text-center text-bold">
             UI/UX Designer | Web & App Developer
           </p>
           <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
