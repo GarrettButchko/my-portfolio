@@ -100,7 +100,9 @@ export function FloatingBar({ targets, setTargets }: FloatingBarProps) {
       left-1/2 
       -translate-x-1/2 
       right-auto
-      w-fit   
+      w-fit
+      outline outline-2 outline-sub1  
+      rounded-[25px] 
  `}>
       <div
         ref={barRef}
