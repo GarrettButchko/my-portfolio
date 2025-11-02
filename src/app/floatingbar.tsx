@@ -114,9 +114,8 @@ export function FloatingBar({ targets, setTargets }: FloatingBarProps) {
         items-center 
         justify-around 
         bg-foreground/80 
-        backdrop-blur-md 
+        backdrop-blur-sm 
         rounded-[25px] 
-        shadow-md 
         py-2 
         px-2 
         transition-all
@@ -165,7 +164,9 @@ export function FloatingBar({ targets, setTargets }: FloatingBarProps) {
                 ${target.isSelected ? "" : "active:scale-95 hover:bg-oppbackground/5"} 
                 transition-all
                 ease-in-out
-                duration-300`
+                duration-300
+                cursor-pointer
+                `
               }>
               <HStack spacing={8} className={`
                 justify-center 

@@ -10,6 +10,8 @@ import Circle from '../../public/svg/circle.svg';
 import { FloatingBar } from "./floatingbar";
 import Image from "next/image";
 import { info } from "console";
+import { hexToRgba } from "@/app/hextoRgba";
+
 
 type InfoItem = {
   id: number;
@@ -22,6 +24,7 @@ type InfoItem = {
   pic: string;
   picAlt: string;
   hexColor: string;
+  link: string;
 };
 
 export default function Home() {
@@ -34,7 +37,7 @@ export default function Home() {
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
       <FloatingBar targets={targets} setTargets={setTargets} />
-      <VStack className="mt-24 mb-6 mx-6 w-full max-w-4xl" spacing={26}>
+      <VStack className="mt-35 mb-6 mx-6 w-full max-w-4xl" spacing={45}>
         <Intro />
         <EduExp />
       </VStack>
@@ -44,18 +47,18 @@ export default function Home() {
   function EduExp() {
 
     const education: InfoItem[] = [
-      { id: 1, title: "Saint Ignatius Highschool", majorOrEmployer: "Highschool", loc: "Cleveland, OH", start: 20, end: 24, in: false, pic: "/logos/sihs.jpg", picAlt: "Saint Ignatius Highschool Logo", hexColor: "#eab908" },
-      { id: 2, title: "Ohio State University", majorOrEmployer: "CS & Engineering", loc: "Columbus, OH", start: 24, end: 25, in: false, pic: "/logos/osu.jpg", picAlt: "Ohio State Logo", hexColor: "#bb0000" },
-      { id: 3, title: "Cleveland State University", majorOrEmployer: "CS & Design", loc: "Cleveland, OH", start: 25, end: "Pres.", in: true, pic: "/logos/csu.jpg", picAlt: "Cleveland State Logo", hexColor: "#016a4c" }
+      { id: 1, title: "Saint Ignatius Highschool", majorOrEmployer: "Highschool", loc: "Cleveland, OH", start: 20, end: 24, in: false, pic: "/logos/sihs.jpg", picAlt: "Saint Ignatius Highschool Logo", hexColor: "#eab908", link: "https://www.ignatius.edu/" },
+      { id: 2, title: "Ohio State University", majorOrEmployer: "CS & Engineering", loc: "Columbus, OH", start: 24, end: 25, in: false, pic: "/logos/osu.jpg", picAlt: "Ohio State Logo", hexColor: "#bb0000", link: "https://www.osu.edu/" },
+      { id: 3, title: "Cleveland State University", majorOrEmployer: "CS & Design", loc: "Cleveland, OH", start: 25, end: "Pres.", in: true, pic: "/logos/csu.jpg", picAlt: "Cleveland State Logo", hexColor: "#016a4c", link: "https://www.csuohio.edu/" }
     ];
 
     const experience: InfoItem[] = ([
-      { id: 1, title: "Web and App Developer Intern", majorOrEmployer: "ADollarClass", loc: "Remote", start: 25, end: "Pres.", in: true, pic: "/logos/adollarclass.jpg", picAlt: "AdollarClass Company Logo", hexColor: "#022ffe" }
+      { id: 1, title: "Web and App Dev. Intern", majorOrEmployer: "ADollarClass", loc: "Remote", start: 25, end: "Pres.", in: true, pic: "/logos/adollarclass.jpg", picAlt: "AdollarClass Company Logo", hexColor: "#022ffe", link: "https://www.adollarclass.com/" }
     ]);
 
     return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl shadow-lg items-center py-6">
-        <VStack spacing={25}>
+      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
+        <VStack spacing={25} className="pt-2">
           <p
             className="
               md:text-5xl 
@@ -117,22 +120,22 @@ export default function Home() {
             />
           ) : (
             <HStack>
-            <div>
-              <Circle
-                className="text-sub1 fill-sub1 w-8 h-8"
-                style={{ transform: "translateY(56px)" }}
-              />
-              <div
-                className="bg-sub1 scale-150"
-                style={{ height: `${140}px`, width: `${5}px`, transform: "translateY(56px) translateX(9px)" }}
-              />
-            </div>
+              <div>
+                <Circle
+                  className="text-sub1 fill-sub1 w-8 h-8"
+                  style={{ transform: "translateY(56px)" }}
+                />
+                <div
+                  className="bg-sub1 scale-150"
+                  style={{ height: `${140}px`, width: `${5}px`, transform: "translateY(56px) translateX(9px)" }}
+                />
+              </div>
             </HStack>
           )}
         </div>
 
         <div className="flex flex-col items-center w-full">
-          <div className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full">
+          <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
             <VStack className="md:items-start items-center justify-center">
               <p className="font-bold text-sub2">
                 {infoItem.majorOrEmployer} | {infoItem.loc} | '{infoItem.start} - {typeof infoItem.end === "string" ? infoItem.end : `'${infoItem.end}`}
@@ -152,13 +155,16 @@ export default function Home() {
               </p>
             </VStack>
             <Spacer />
-            <Image
-              src={infoItem.pic}     // path from /public
-              alt={infoItem.picAlt}
-              width={100}
-              height={100}
-              className="rounded-full w-[100px] h-[100px] object-cover flex-shrink-0"
-            />
+            <button className="cursor-pointer" onClick={() => window.open(infoItem.link, "_blank")}>
+
+              <Image
+                src={infoItem.pic}     // path from /public
+                alt={infoItem.picAlt}
+                width={100}
+                height={100}
+                className="rounded-full w-[100px] h-[100px] object-cover flex-shrink-0"
+              />
+            </button>
 
           </div>
           <button
@@ -172,6 +178,7 @@ export default function Home() {
                   duration-300
                   bg-blue-500
                   hover:bg-blue-600
+                  cursor-pointer
                   `}
             style={{
               width: 160,
@@ -198,7 +205,7 @@ export default function Home() {
 
   function Intro() {
     return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl shadow-lg items-center py-5">
+      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-5">
         <div className="flex sm:flex-row flex-col items-center justify-center gap-5">
           <VStack className="sm:items-start items-center">
             <p className="font-bold text-textColor">
@@ -209,17 +216,17 @@ export default function Home() {
                 md:text-5xl 
                 text-4xl 
                 font-bold 
-                bg-clip-text 
+                bg-clip-text
                 text-transparent 
-                bg-[length:200%_200%] 
+                bg-[length:400%_200%] 
                 transition-all
                 ease-in-out
-                duration-200
+                duration-100
                 text-center"
-              animate={{ backgroundPositionY: ["0%", "100%", "0%"] }}
-              transition={{ duration: 0.2, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ backgroundPositionX: ["0%", "100%", "0"] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               style={{
-                backgroundImage: "linear-gradient(to bottom, #0073ffff, #00eeffff)", // blue-400 → teal-300
+                backgroundImage: "linear-gradient(to top, #0073ffff, #00bfffff, #0073ffff)", // blue-400 → teal-300
               }}
             >
               Garrett Butchko
@@ -235,7 +242,7 @@ export default function Home() {
               alt="My profile picture"
               width={150}            // required
               height={150}           // required
-              className="rounded-full border-7 border-oppbackground/10 shadow-lg"
+              className="rounded-full border-7 border-oppbackground/10"
             />
           </div>
         </div>
@@ -245,6 +252,10 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
             <button
               type="button"
+              onClick={() =>
+              (window.location.href =
+                "mailto:garrettwm2005@gmail.com?subject=I'm%20interested%20in%20your%20work&body=")
+              }
               className={`
                   z-20 
                   rounded-[25px]
@@ -256,6 +267,7 @@ export default function Home() {
                   hover:bg-blue-600
                   h-8
                   w-40
+                  cursor-pointer
                   `}>
               <Text
                 variant="body"
@@ -271,7 +283,9 @@ export default function Home() {
               </Text>
             </button>
             <HStack spacing={8}>
-              <button className="
+              <button
+                onClick={() => window.open("https://www.linkedin.com/in/gar-butch/", "_blank")}
+                className="
                   overflow-hidden 
                   rounded-[5px]
                   hover:brightness-75
@@ -279,6 +293,7 @@ export default function Home() {
                   transition-all
                   ease-in-out
                   duration-300
+                  cursor-pointer
                 ">
                 <Image
                   src="/linkedin.jpg"
@@ -295,7 +310,10 @@ export default function Home() {
                   transition-all
                   ease-in-out
                   duration-300
-                ">
+                  cursor-pointer
+                "
+                onClick={() => window.open("https://github.com/GarrettButchko", "_blank")}
+              >
                 <Image
                   src="/github.jpg"     // path from /public
                   alt="Github Picture"
