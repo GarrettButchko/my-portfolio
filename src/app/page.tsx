@@ -37,12 +37,166 @@ export default function Home() {
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
       <FloatingBar targets={targets} setTargets={setTargets} />
-      <VStack className="mt-35 mb-6 mx-6 w-full max-w-4xl" spacing={45}>
+      <VStack className="mt-40 mb-6 mx-6 w-full max-w-4xl" spacing={45}>
         <Intro />
         <EduExp />
+        <RecProj/>
       </VStack>
     </main>
   );
+
+  function RecProj() {
+    return (
+      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
+        
+        <VStack>
+          <p
+            className="
+                md:text-5xl 
+                sm:text-4xl 
+                text-3xl 
+                font-bold 
+                transition-all
+                ease-in-out
+                duration-200
+                text-left
+                text-blue-500
+                ">
+            Recent Projects
+
+            <HStack>
+              
+            </HStack>
+          </p>
+          </VStack>
+      </Section>
+    );
+  }
+
+  function Intro() {
+    return (
+      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-5">
+        <div className="flex sm:flex-row flex-col items-center justify-center gap-5">
+          <VStack className="sm:items-start items-center">
+            <p className="font-bold text-textColor">
+              👋 Hi, I'm
+            </p>
+            <motion.p
+              className="
+                md:text-5xl 
+                text-4xl 
+                font-bold 
+                bg-clip-text
+                text-transparent 
+                bg-[length:400%_200%] 
+                transition-all
+                ease-in-out
+                duration-100
+                text-center"
+              animate={{ backgroundPositionX: ["0%", "100%", "0"] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                backgroundImage: "linear-gradient(to top, #0073ffff, #00bfffff, #0073ffff)", // blue-400 → teal-300
+              }}
+            >
+              Garrett Butchko
+            </motion.p>
+            <p className="text-sub2 font-bold mt-1">
+              UI/UX Designer | Web & App Developer
+            </p>
+          </VStack>
+          <Spacer className="hidden sm:block" />
+          <div className="rounded-full">
+            <Image
+              src="/profile.jpeg"     // path from /public
+              alt="My profile picture"
+              width={150}            // required
+              height={150}           // required
+              className="rounded-full border-7 border-oppbackground/10"
+            />
+          </div>
+        </div>
+
+        <VStack className="items-center mt-5" spacing={8}>
+
+          <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
+            <button
+              type="button"
+              onClick={() =>
+              (window.location.href =
+                "mailto:garrettwm2005@gmail.com?subject=I'm%20interested%20in%20your%20work&body=")
+              }
+              className={`
+                  z-20 
+                  rounded-[25px]
+                  active:scale-95 
+                  transition-all
+                  ease-in-out
+                  duration-300
+                  bg-blue-500
+                  hover:bg-blue-600
+                  h-8
+                  w-40
+                  cursor-pointer
+                  `}>
+              <Text
+                variant="body"
+                className="
+                  justify-center 
+                  text-white
+                  transition-all
+                  ease-in-out
+                  duration-300
+                  items-center
+                  ">
+                Contact
+              </Text>
+            </button>
+            <HStack spacing={8}>
+              <button
+                onClick={() => window.open("https://www.linkedin.com/in/gar-butch/", "_blank")}
+                className="
+                  overflow-hidden 
+                  rounded-[5px]
+                  hover:brightness-75
+                  active:scale-95 
+                  transition-all
+                  ease-in-out
+                  duration-300
+                  cursor-pointer
+                ">
+                <Image
+                  src="/linkedin.jpg"
+                  alt="LinkedIn Picture"
+                  width={32}
+                  height={32}
+                />
+              </button>
+              <button className="
+                  overflow-hidden 
+                  rounded-[5px]
+                  hover:brightness-75
+                  active:scale-95 
+                  transition-all
+                  ease-in-out
+                  duration-300
+                  cursor-pointer
+                "
+                onClick={() => window.open("https://github.com/GarrettButchko", "_blank")}
+              >
+                <Image
+                  src="/github.jpg"     // path from /public
+                  alt="Github Picture"
+                  width={32}
+                  height={32}
+                />
+              </button>
+            </HStack>
+          </div>
+        </VStack>
+      </Section>
+    );
+  }
 
   function EduExp() {
 
@@ -200,131 +354,6 @@ export default function Home() {
           </button>
         </div>
       </HStack>
-    );
-  }
-
-  function Intro() {
-    return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-5">
-        <div className="flex sm:flex-row flex-col items-center justify-center gap-5">
-          <VStack className="sm:items-start items-center">
-            <p className="font-bold text-textColor">
-              👋 Hi, I'm
-            </p>
-            <motion.p
-              className="
-                md:text-5xl 
-                text-4xl 
-                font-bold 
-                bg-clip-text
-                text-transparent 
-                bg-[length:400%_200%] 
-                transition-all
-                ease-in-out
-                duration-100
-                text-center"
-              animate={{ backgroundPositionX: ["0%", "100%", "0"] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              style={{
-                backgroundImage: "linear-gradient(to top, #0073ffff, #00bfffff, #0073ffff)", // blue-400 → teal-300
-              }}
-            >
-              Garrett Butchko
-            </motion.p>
-            <p className="text-sub2 font-bold mt-1">
-              UI/UX Designer | Web & App Developer
-            </p>
-          </VStack>
-          <Spacer className="hidden sm:block" />
-          <div className="rounded-full">
-            <Image
-              src="/profile.jpeg"     // path from /public
-              alt="My profile picture"
-              width={150}            // required
-              height={150}           // required
-              className="rounded-full border-7 border-oppbackground/10"
-            />
-          </div>
-        </div>
-
-        <VStack className="items-center mt-5" spacing={8}>
-
-          <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
-            <button
-              type="button"
-              onClick={() =>
-              (window.location.href =
-                "mailto:garrettwm2005@gmail.com?subject=I'm%20interested%20in%20your%20work&body=")
-              }
-              className={`
-                  z-20 
-                  rounded-[25px]
-                  active:scale-95 
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  bg-blue-500
-                  hover:bg-blue-600
-                  h-8
-                  w-40
-                  cursor-pointer
-                  `}>
-              <Text
-                variant="body"
-                className="
-                  justify-center 
-                  text-white
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  items-center
-                  ">
-                Contact
-              </Text>
-            </button>
-            <HStack spacing={8}>
-              <button
-                onClick={() => window.open("https://www.linkedin.com/in/gar-butch/", "_blank")}
-                className="
-                  overflow-hidden 
-                  rounded-[5px]
-                  hover:brightness-75
-                  active:scale-95 
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  cursor-pointer
-                ">
-                <Image
-                  src="/linkedin.jpg"
-                  alt="LinkedIn Picture"
-                  width={32}
-                  height={32}
-                />
-              </button>
-              <button className="
-                  overflow-hidden 
-                  rounded-[5px]
-                  hover:brightness-75
-                  active:scale-95 
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  cursor-pointer
-                "
-                onClick={() => window.open("https://github.com/GarrettButchko", "_blank")}
-              >
-                <Image
-                  src="/github.jpg"     // path from /public
-                  alt="Github Picture"
-                  width={32}
-                  height={32}
-                />
-              </button>
-            </HStack>
-          </div>
-        </VStack>
-      </Section>
     );
   }
 }
