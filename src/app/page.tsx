@@ -27,6 +27,13 @@ type InfoItem = {
   link: string;
 };
 
+type project = {
+  title: string;
+  type: string;
+  languages: string[];
+  photos: string[];
+}
+
 export default function Home() {
   const [targets, setTargets] = useState([
     { id: 1, name: "Home", isSelected: true, icon: <HomeIcon className="w-5 h-5" /> },
@@ -40,7 +47,7 @@ export default function Home() {
       <VStack className="mt-40 mb-6 mx-6 w-full max-w-4xl" spacing={45}>
         <Intro />
         <EduExp />
-        <RecProj/>
+        <RecProj />
       </VStack>
     </main>
   );
@@ -48,7 +55,7 @@ export default function Home() {
   function RecProj() {
     return (
       <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
-        
+
         <VStack>
           <p
             className="
@@ -63,12 +70,12 @@ export default function Home() {
                 text-blue-500
                 ">
             Recent Projects
-
-            <HStack>
-              
-            </HStack>
           </p>
-          </VStack>
+
+          <HStack>
+              
+          </HStack>
+        </VStack>
       </Section>
     );
   }
