@@ -31,21 +31,110 @@ export default function HomeSecton() {
 
   function RecProj() {
     return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-5">
-        {
-          loading ? (
-            <VStack className="h-50 w-full">
-              <Text className="text-textColor">Loading projects...</Text>
-            </VStack>
-          ) : (
-            <VStack spacing={12}>
-              {projects.map((p) => (
-                <p key={p.title}>{p.title}</p>
-              ))}
-            </VStack>
-          )
-        }
+      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
+        <VStack spacing={25}>
+          <p
+            className="
+              md:text-5xl 
+              sm:text-4xl 
+              text-3xl 
+              font-bold 
+              transition-all
+              ease-in-out
+              duration-200
+              text-left
+              text-blue-500
+            ">
+            Recent Projects
+          </p>
+          {
+            loading ? (
+              <VStack className="h-50 w-full justify-center items-center" spacing={20}>
+                <Text className="text-textColor">Loading projects...</Text>
+                <Image
+                  src="/gifs/loading.gif"
+                  alt="Funny animation"
+                  width={30}
+                  height={30}
+                  unoptimized  // 👈 prevents Next.js from converting it to WebP (keeps animation)
+                />
+              </VStack>
+            ) : (
+              <div style={{ gap: "25px" }} className="flex flex-col md:flex-row w-full">
+                {projects.map((p) => (
+                  <ProjSection key={p.title} project={p} />
+                ))}
+                {projects.map((p) => (
+                  <ProjSection key={p.title} project={p} />
+                ))}
+              </div>
+            )
+          }
+        </VStack>
       </Section>
+    );
+  }
+
+  function ProjSection({ project }: { project: Project }) {
+    return (
+      <VStack className="bg-sub1 rounded-[24px] py-6 w-full overflow-hidden" spacing={10}>
+        <HStack className="items-center px-6">
+          <VStack>
+            <p className="font-bold text-sub2 
+              md:text-4xl 
+              sm:text-3xl 
+              text-2xl ">
+              {project.title}
+            </p>
+            <p className="text-sub3">
+              {project.type}
+            </p>
+          </VStack>
+          <Spacer />
+          <button
+            type="button"
+            className={`
+                  z-20 
+                  rounded-[25px]
+                  active:scale-95 
+                  transition-all
+                  ease-in-out
+                  duration-300
+                  bg-blue-500
+                  hover:bg-blue-600
+                  cursor-pointer
+                  h-8
+                  w-25
+                  `}
+          >
+            <Text
+              variant="body"
+              className="
+                  justify-center 
+                  text-white
+                  transition-all
+                  ease-in-out
+                  duration-300
+                  items-center
+                  ">
+              Info
+            </Text>
+          </button>
+        </HStack>
+        <HStack spacing={15} className="overflow-x-auto overscroll-x-contain scroll-smooth touch-pan-x w-full">
+          <div className="pl-2" />
+          {project.photos.map((photo) => (
+            <Image
+              key={photo}
+              src={photo}
+              alt={`Screen Shot from ${project.title}`}
+              width={70}
+              height={70}
+              className="rounded-[10px]"
+            />
+          ))}
+        </HStack>
+      </VStack>
     );
   }
 
@@ -59,8 +148,10 @@ export default function HomeSecton() {
             </p>
             <motion.p
               className="
+
                 md:text-5xl 
-                text-4xl 
+                sm:text-4xl
+                text-3xl 
                 font-bold 
                 bg-clip-text
                 text-transparent 
@@ -77,9 +168,22 @@ export default function HomeSecton() {
             >
               Garrett Butchko
             </motion.p>
-            <p className="text-sub2 font-bold mt-1">
-              UI/UX Designer | Web & App Developer
-            </p>
+            <div className="flex flex-col sm:flex-row text-sub2 font-bold mt-1 
+                md:text-[20px] 
+                sm:text-[17px]
+                text-[15px]
+                items-center">
+              <p>
+                UI/UX Designer
+              </p>
+              <p className="hidden sm:flex px-1">
+                |
+              </p>
+              <p>
+                Web & App Developer
+              </p>
+            </div>
+            
           </VStack>
           <Spacer className="hidden sm:block" />
           <div className="rounded-full">
@@ -188,7 +292,7 @@ export default function HomeSecton() {
 
     return (
       <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
-        <VStack spacing={25} className="pt-2">
+        <VStack spacing={25}>
           <p
             className="
               md:text-5xl 
@@ -267,26 +371,37 @@ export default function HomeSecton() {
         <div className="flex flex-col items-center w-full">
           <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
             <VStack className="md:items-start items-center justify-center">
-              <p className="font-bold text-sub2">
-                {infoItem.majorOrEmployer} | {infoItem.loc} | '{infoItem.start} - {typeof infoItem.end === "string" ? infoItem.end : `'${infoItem.end}`}
-              </p>
+              <div className="flex sm:flex-row flex-col justify-center items-center 
+            text-[12px] sm:text-[15px] md:text-[18px]">
+                <p className="font-bold text-sub2 justify-center">
+                  {infoItem.majorOrEmployer}
+                </p>
+                <p className="font-bold text-sub2 hidden sm:flex px-1">
+                  |
+                </p>
+                <p className="font-bold text-sub2 justify-center">
+                  {infoItem.loc} | '{infoItem.start} - {typeof infoItem.end === "string" ? infoItem.end : `'${infoItem.end}`}
+                </p>
+              </div>
+
               <p
                 className="
-            md:text-4xl 
-            sm:text-3xl 
-            text-2xl 
+            md:text-[30px]
+            sm:text-[30px]
+            xs:text-[15px] 
             font-bold  
             transition-all
             ease-in-out
             duration-200
             text-sub3
+            
           ">
                 {infoItem.title}
               </p>
+
             </VStack>
             <Spacer />
-            <button className="cursor-pointer" onClick={() => window.open(infoItem.link, "_blank")}>
-
+            <button className="cursor-pointer mb-3 md:mb-0" onClick={() => window.open(infoItem.link, "_blank")}>
               <Image
                 src={infoItem.pic}     // path from /public
                 alt={infoItem.picAlt}
