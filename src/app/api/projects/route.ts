@@ -1,5 +1,4 @@
-// app/api/projects/route.ts
-import { getProjects } from "@/app/getProjects";
+import { getProjects } from "@/app/lib/getProjects";
 import { NextResponse } from "next/server";
 
 export async function GET() {
