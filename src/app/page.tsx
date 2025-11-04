@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useLayoutEffect, useEffect } from "react";
+import React, { useRef, useState, useLayoutEffect, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VStack, HStack, Text, Section, Divider, Spacer, ZStack } from "./components";
 import HomeIcon from '../../public/svg/home.svg';
@@ -11,6 +11,7 @@ import { FloatingBar } from "./floatingbar";
 import Image from "next/image";
 import { info } from "console";
 import { hexToRgba } from "@/app/hextoRgba";
+import { Project } from "./getProjects";
 
 
 type InfoItem = {
@@ -27,12 +28,7 @@ type InfoItem = {
   link: string;
 };
 
-type project = {
-  title: string;
-  type: string;
-  languages: string[];
-  photos: string[];
-}
+
 
 export default function Home() {
   const [targets, setTargets] = useState([
@@ -40,6 +36,12 @@ export default function Home() {
     { id: 2, name: "Portfolio", isSelected: false, icon: <PortfolioIcon className="w-5 h-5" /> },
     { id: 3, name: "News", isSelected: false, icon: <NewsIcon className="w-5 h-5" /> },
   ]);
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then(setProjects);
+  }, []);
 
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
@@ -47,38 +49,19 @@ export default function Home() {
       <VStack className="mt-40 mb-6 mx-6 w-full max-w-4xl" spacing={45}>
         <Intro />
         <EduExp />
-        <RecProj />
+
+        <div>
+          {projects.map((p: Project) => (
+            <div key={p.title}>{p.title}</div>
+          ))}
+        </div>
+
+
       </VStack>
     </main>
   );
 
-  function RecProj() {
-    return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
 
-        <VStack>
-          <p
-            className="
-                md:text-5xl 
-                sm:text-4xl 
-                text-3xl 
-                font-bold 
-                transition-all
-                ease-in-out
-                duration-200
-                text-left
-                text-blue-500
-                ">
-            Recent Projects
-          </p>
-
-          <HStack>
-              
-          </HStack>
-        </VStack>
-      </Section>
-    );
-  }
 
   function Intro() {
     return (
