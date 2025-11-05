@@ -157,7 +157,7 @@ export default function HomeSecton() {
             </Text>
           </button>
         </HStack>
-        <HStack spacing={20} className="overflow-x-auto
+        <HStack spacing={20} className="overflow-x-hidden hover:overflow-x-auto
              [&::-webkit-scrollbar]:h-[8px]
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-sub2 w-full">
@@ -200,7 +200,7 @@ export default function HomeSecton() {
           </VStack>
 
           <HStack spacing={15} className="
-            overflow-x-auto w-full py-[1px] px-[1px]
+            overflow-x-hidden hover:overflow-x-auto w-full py-[1px] px-[1px]
              [&::-webkit-scrollbar]:h-[8px]
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-sub2
