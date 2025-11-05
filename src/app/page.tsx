@@ -29,7 +29,7 @@ export default function Home() {
     <main className="flex items-top justify-center min-h-screen bg-background">
       <FloatingBar targets={targets} setTargets={setTargets} buttonRefs={buttonRefs} position={position} setPosition={setPosition} />
 
-      <VStack className="w-full items-center">
+      <VStack className="w-full items-center mx-3">
         {active === "Home" && <HomeSection />}
         {active === "Portfolio" && <PortfolioSection />}
         {active === "News" && <NewsSection />}
