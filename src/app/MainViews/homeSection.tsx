@@ -157,30 +157,32 @@ export default function HomeSecton() {
             </Text>
           </button>
         </HStack>
-        <HStack spacing={20} className="overflow-x-auto overscroll-x-contain scroll-smooth touch-pan-x w-full">
+        <HStack spacing={20} className="overflow-x-auto
+             [&::-webkit-scrollbar]:h-[8px]
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-sub2 w-full">
           <div className="ml-1" />
           {project.photos.map((photo) => (
-            <Image
+            <img
               key={photo}
               src={photo}
               alt={`Screen Shot from ${project.title}`}
-              width={70}
-              height={70}
-              className="rounded-[10px]"
+              className="rounded-[10px] h-[150px] w-auto outline outline-2 outline-sub2 my-2"
             />
+
           ))}
           <div className="ml-1" />
         </HStack>
 
-        
+
         <VStack className="bg-sub2/20 rounded-[17px] mx-6 py-4" spacing={10}>
-        <p className="text-sub3 
+          <p className="text-sub3 
               md:text-[15px] 
               sm:text-[12px] 
               text-[10px]
               px-4">
-          Languages
-        </p>
+            Languages
+          </p>
 
           <VStack className="px-4">
             <div className="flex h-1 w-full overflow-hidden rounded-lg">
@@ -197,21 +199,26 @@ export default function HomeSecton() {
             </div>
           </VStack>
 
-          <HStack spacing={15} className="overflow-x-auto overscroll-x-contain scroll-smooth touch-pan-x w-full py-[1px] px-[1px]">
+          <HStack spacing={15} className="
+            overflow-x-auto w-full py-[1px] px-[1px]
+             [&::-webkit-scrollbar]:h-[8px]
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-sub2
+            ">
             <div className="w-[1px]" />
             {Object.entries(project.languages).map(([name, bytes]) => (
-              <HStack key={name} className="flex-none px-3 py-1 rounded-[15px] outline outline-1 outline-sub2 items-center" spacing={5}>
+              <HStack key={name} className="flex-none px-3 py-1 rounded-[15px] outline outline-1 outline-sub2 items-center my-2" spacing={5}>
                 <div
                   className="w-2 h-2 md:w-3 md:h-3 rounded-full"
                   style={{ backgroundColor: languageColors[name] }}
                 />
-                <HStack spacing={1}>
-                <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] font-bold">
-                  {name}:
-                </p>
-                <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] ml-1">
-                  {((bytes / total) * 100).toFixed(1)}%
-                </p>
+                <HStack spacing={1} className="">
+                  <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] font-bold">
+                    {name}:
+                  </p>
+                  <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] ml-1">
+                    {((bytes / total) * 100).toFixed(1)}%
+                  </p>
                 </HStack>
               </HStack>
             ))}
