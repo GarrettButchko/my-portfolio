@@ -60,7 +60,7 @@ export async function getProjects(): Promise<Project[]> {
         var feature: boolean = project.feature;
         
         const firstProj: string = "Mini Mate";
-        const secondProj: string = "";
+        const secondProj: string = "Portfolio Website";
         
         if (project.title == firstProj || secondProj){
             feature = true;
