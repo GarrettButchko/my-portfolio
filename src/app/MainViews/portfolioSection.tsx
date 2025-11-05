@@ -3,9 +3,9 @@ import { VStack } from "../Components/components";
 
 export default function PortfolioSection() {
     return (
-        <VStack className="mt-40 mb-6 mx-6 w-full max-w-4xl" spacing={45}>
+        <VStack className="mt-40 mb-4 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
             <p className="text-textColor">
-                portfolio
+                Portfolio
             </p>
         </VStack>
     );

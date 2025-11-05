@@ -22,16 +22,18 @@ export default function HomeSecton() {
   }, []);
 
   return (
-    <VStack className="mt-40 mb-6 mx-6 w-full max-w-4xl" spacing={45}>
+    <VStack className="mt-40 mb-4 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
       <Intro />
+      <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
       <EduExp />
+      <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
       <RecProj />
     </VStack>
   );
 
   function RecProj() {
     return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
+      <Section className="max-w-4xl items-center py-6">
         <VStack spacing={25}>
           <p
             className="
@@ -61,12 +63,11 @@ export default function HomeSecton() {
               </VStack>
             ) : (
               <div style={{ gap: "25px" }} className="flex flex-col md:flex-row w-full">
-                {projects.map((p) => (
-                  <ProjSection key={p.title} project={p} />
-                ))}
-                {projects.map((p) => (
-                  <ProjSection key={p.title} project={p} />
-                ))}
+                {projects
+                  .filter((p) => p.feature)
+                  .map((p) => (
+                    <ProjSection key={p.title} project={p} />
+                  ))}
               </div>
             )
           }
@@ -76,23 +77,57 @@ export default function HomeSecton() {
   }
 
   function ProjSection({ project }: { project: Project }) {
+
+
+    const total = Object.values(project.languages).reduce((a, b) => a + b, 0);
+
+    const languageColors: Record<string, string> = {
+      Swift: "#ffac45",
+      JavaScript: "#f1e05a",
+      Shell: "#89e051",
+      TypeScript: "#2b7489",
+      Python: "#3572A5",
+      Java: "#b07219",
+      C: "#555555",
+      "C++": "#f34b7d",
+      "C#": "#178600",
+      PHP: "#4F5D95",
+      Ruby: "#701516",
+      Go: "#00ADD8",
+      Rust: "#dea584",
+      Kotlin: "#F18E33",
+      Dart: "#00B4AB",
+      Scala: "#c22d40",
+      Haskell: "#5e5086",
+      R: "#198CE7",
+      "Objective C": "#438eff",
+      HTML: "#e34c26",
+      CSS: "#563d7c",
+      SQL: "#e38c00",
+      MATLAB: "#e16737",
+    };
+
     return (
       <VStack className="bg-sub1 rounded-[24px] py-6 w-full overflow-hidden" spacing={10}>
         <HStack className="items-center px-6">
           <VStack>
-            <p className="font-bold text-sub2 
-              md:text-4xl 
-              sm:text-3xl 
-              text-2xl ">
+            <p className="font-bold text-sub3 
+              md:text-2xl 
+              sm:text-2xl 
+              text-1xl">
               {project.title}
             </p>
-            <p className="text-sub3">
+            <p className="text-sub3 
+              md:text-[15px] 
+              sm:text-[12px] 
+              text-[10px]">
               {project.type}
             </p>
           </VStack>
           <Spacer />
           <button
             type="button"
+            onClick={() => window.open(project.link, "_blank")}
             className={`
                   z-20 
                   rounded-[25px]
@@ -116,13 +151,14 @@ export default function HomeSecton() {
                   ease-in-out
                   duration-300
                   items-center
+                  border-white
                   ">
-              Info
+              Github
             </Text>
           </button>
         </HStack>
-        <HStack spacing={15} className="overflow-x-auto overscroll-x-contain scroll-smooth touch-pan-x w-full">
-          <div className="pl-2" />
+        <HStack spacing={20} className="overflow-x-auto overscroll-x-contain scroll-smooth touch-pan-x w-full">
+          <div className="ml-1" />
           {project.photos.map((photo) => (
             <Image
               key={photo}
@@ -133,14 +169,62 @@ export default function HomeSecton() {
               className="rounded-[10px]"
             />
           ))}
+          <div className="ml-1" />
         </HStack>
+
+        
+        <VStack className="bg-sub2/20 rounded-[17px] mx-6 py-4" spacing={10}>
+        <p className="text-sub3 
+              md:text-[15px] 
+              sm:text-[12px] 
+              text-[10px]
+              px-4">
+          Languages
+        </p>
+
+          <VStack className="px-4">
+            <div className="flex h-1 w-full overflow-hidden rounded-lg">
+              {Object.entries(project.languages).map(([name, bytes]) => (
+                <div
+                  key={name}
+                  className="h-full transition-all duration-700"
+                  style={{
+                    width: `${(bytes / total) * 100}%`,
+                    backgroundColor: languageColors[name] || "#888",
+                  }}
+                />
+              ))}
+            </div>
+          </VStack>
+
+          <HStack spacing={15} className="overflow-x-auto overscroll-x-contain scroll-smooth touch-pan-x w-full py-[1px] px-[1px]">
+            <div className="w-[1px]" />
+            {Object.entries(project.languages).map(([name, bytes]) => (
+              <HStack key={name} className="flex-none px-3 py-1 rounded-[15px] outline outline-1 outline-sub2 items-center" spacing={5}>
+                <div
+                  className="w-2 h-2 md:w-3 md:h-3 rounded-full"
+                  style={{ backgroundColor: languageColors[name] }}
+                />
+                <HStack spacing={1}>
+                <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] font-bold">
+                  {name}:
+                </p>
+                <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] ml-1">
+                  {((bytes / total) * 100).toFixed(1)}%
+                </p>
+                </HStack>
+              </HStack>
+            ))}
+            <div className="w-[1px]" />
+          </HStack>
+        </VStack>
       </VStack>
     );
   }
 
   function Intro() {
     return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-5">
+      <Section className="max-w-4xl items-center pt-20 py-5">
         <div className="flex sm:flex-row flex-col items-center justify-center gap-5">
           <VStack className="sm:items-start items-center">
             <p className="font-bold text-textColor">
@@ -148,7 +232,6 @@ export default function HomeSecton() {
             </p>
             <motion.p
               className="
-
                 md:text-5xl 
                 sm:text-4xl
                 text-3xl 
@@ -183,7 +266,7 @@ export default function HomeSecton() {
                 Web & App Developer
               </p>
             </div>
-            
+
           </VStack>
           <Spacer className="hidden sm:block" />
           <div className="rounded-full">
@@ -291,7 +374,7 @@ export default function HomeSecton() {
     ]);
 
     return (
-      <Section className="bg-foreground rounded-[30px] max-w-4xl items-center py-6">
+      <Section className="max-w-4xl items-center py-6">
         <VStack spacing={25}>
           <p
             className="

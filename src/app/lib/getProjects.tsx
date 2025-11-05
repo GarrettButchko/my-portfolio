@@ -56,11 +56,23 @@ export async function getProjects(): Promise<Project[]> {
             .map((f: any) => f.download_url);
         }
 
+        // WHERE TO FEATURE PROJECT
+        var feature: boolean = project.feature;
+        
+        const firstProj: string = "Mini Mate";
+        const secondProj: string = "";
+        
+        if (project.title == firstProj || secondProj){
+            feature = true;
+        }
+
+
         return {
           ...project,
           link: repo.html_url,
           languages,
           photos,
+          feature,
         };
       } catch (err) {
         console.error(`Error processing repo ${repo.name}:`, err);

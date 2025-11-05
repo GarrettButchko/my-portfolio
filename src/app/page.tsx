@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import HomeIcon from '../../public/svg/home.svg';
 import NewsIcon from '../../public/svg/news.svg';
 import PortfolioIcon from '../../public/svg/portfolio.svg';
@@ -8,6 +8,8 @@ import { FloatingBar } from "./Components/floatingbar";
 import HomeSection from "./MainViews/homeSection"
 import PortfolioSection from "./MainViews/portfolioSection"
 import NewsSection from "./MainViews/newsSection"
+import { VStack, HStack } from "@/app/Components/components";
+import { moveDivToIndex } from "./Components/floatingbar";
 
 
 export default function Home() {
@@ -17,15 +19,45 @@ export default function Home() {
     { id: 3, name: "News", isSelected: false, icon: <NewsIcon className="w-5 h-5" /> },
   ]);
 
+  const buttonRefs = useRef<HTMLButtonElement[]>([]); // stable array of refs
   const active = targets.find((t) => t.isSelected)?.name ?? "Home";
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
-      <FloatingBar targets={targets} setTargets={setTargets} />
+      <FloatingBar targets={targets} setTargets={setTargets} buttonRefs={buttonRefs} position={position} setPosition={setPosition} />
 
-      {active === "Home" && <HomeSection />}
-      {active === "Portfolio" && <PortfolioSection />}
-      {active === "News" && <NewsSection />}
-    </main>
+      <VStack className="w-full items-center">
+        {active === "Home" && <HomeSection />}
+        {active === "Portfolio" && <PortfolioSection />}
+        {active === "News" && <NewsSection />}
+
+        <VStack className="my-20 ">
+          <HStack className="justify-center">
+            {targets.map((target, i) => (
+              <button
+                key={target.id}
+                type="button"
+                onClick={
+                  () => moveDivToIndex({ index: i, setPosition, setTargets })
+                }
+                className="cursor-pointer"
+              >
+                <HStack>
+                  <p className="text-sub2">
+                    {target.name}
+                  </p>
+                  {(i != 2) && <p className="text-sub2 mx-1">|</p>}
+                </HStack>
+              </button>
+            ))}
+        </HStack>
+        <p className="text-sub2">
+          © 2025 Garrett Butchko. All rights reserved.
+        </p>
+      </VStack>
+    </VStack>
+
+    </main >
   );
 }

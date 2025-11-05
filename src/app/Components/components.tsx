@@ -51,8 +51,8 @@ export function ZStack({ children, className = "", ...motionProps }: { children?
 
 
 
-export function Divider({ className = "", borderColor = "border-foreground", height = 1 }) {
-  return <hr className={`border-t ${borderColor} w-full h-${height} ${className}`} />;
+export function Divider({ className = "", backgroundColor = "bg-foreground", height = 1 }) {
+  return <div className={`flex ${backgroundColor} w-full h-${height} ${className}`} />;
 }
 
 

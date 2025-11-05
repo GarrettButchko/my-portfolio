@@ -12,68 +12,63 @@ type Target = {
 type FloatingBarProps = {
   targets: Target[];
   setTargets: React.Dispatch<React.SetStateAction<Target[]>>;
+  buttonRefs: React.RefObject<HTMLButtonElement[]>;
+  position: { x: number; y: number };
+  setPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
 };
 
-export function FloatingBar({ targets, setTargets }: FloatingBarProps) {
+export interface MoveDivToIndexOptions<T> {
+  index: number;
+  setPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
+  setTargets: React.Dispatch<React.SetStateAction<T[]>>;
+}
+
+export function moveDivToIndex<T extends { isSelected: boolean }>(
+  { index, setPosition, setTargets }: MoveDivToIndexOptions<T>
+) {
+  let x = 0;
+
+  if (window.innerWidth < 768) {
+    if (index === 0) x = -68;
+    else if (index === 1) x = 0;
+    else if (index === 2) x = 68;
+  } else {
+    if (index === 0) x = -168;
+    else if (index === 1) x = 0;
+    else if (index === 2) x = 168;
+  }
+
+  const y = 0;
+
+  // Update position only if changed
+  setPosition(prev => (prev.x === x && prev.y === y ? prev : { x, y }));
+
+  // Update selection only if changed
+  setTargets(prev => {
+    const newTargets = prev.map((t, i) => ({ ...t, isSelected: i === index }));
+    const isDifferent = newTargets.some((t, i) => t.isSelected !== prev[i].isSelected);
+    return isDifferent ? newTargets : prev;
+  });
+}
+
+export function FloatingBar({
+  targets,
+  setTargets,
+  buttonRefs,
+  position,
+  setPosition,
+}: FloatingBarProps) {
   // mover size (same as you used style height/width)
   const [moverSize, setMoverSize] = useState({ width: 120, height: 36 });
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const barRef = useRef<HTMLDivElement | null>(null);
-  const buttonRefs = useRef<HTMLButtonElement[]>([]); // stable array of refs
-
-  // target definitions (only contains names/ids — refs are stored in buttonRefs)
   
 
-  // compute position of a button relative to the bar container
-  const moveDivToIndex = (index: number) => {
-    const btn = buttonRefs.current[index];
-    const bar = barRef.current;
-    if (!btn || !bar) return;
-
-    const btnRect = btn.getBoundingClientRect();
-    const barRect = bar.getBoundingClientRect();
-
-    var x = 0;
-    
-    if (window.innerWidth < 768) {
-      if (index == 0) {
-        x = -68;
-      } else if (index == 1) {
-        x = 0;
-      } else if (index == 2){
-        x = 68;
-      }
-    } else {
-      if (index == 0) {
-        x = -168;
-      } else if (index == 1) {
-        x = 0;
-      } else if (index == 2){
-        x = 168;
-      }
-    }
-
-    // old wayconst x = (btnRect.right + btnRect.left) / 2 - (barRect.left + barRect.right) / 2;
-    const y = (btnRect.top + btnRect.bottom) / 2 - (barRect.top + barRect.bottom) / 2;
-
-    // Only update if different
-    setPosition(prev => (prev.x === x && prev.y === y ? prev : { x, y }));
-
-    setTargets(prev => {
-      const newTargets = prev.map((t, i) => ({ ...t, isSelected: i === index }));
-      // Only update if changed
-      const isDifferent = newTargets.some((t, i) => t.isSelected !== prev[i].isSelected);
-      return isDifferent ? newTargets : prev;
-    });
-  };
-
   useLayoutEffect(() => {
-    moveDivToIndex(0); // set initial position instantly
+    moveDivToIndex({ index: 0, setPosition, setTargets });
   }, []);
 
   function moveToIsSelected() {
     const selectedIndex = targets.findIndex(t => t.isSelected);
-    if (selectedIndex !== -1) moveDivToIndex(selectedIndex);
+    if (selectedIndex !== -1) moveDivToIndex({ index: selectedIndex, setPosition, setTargets });;
   }
 
 
@@ -105,7 +100,6 @@ export function FloatingBar({ targets, setTargets }: FloatingBarProps) {
       rounded-[25px] 
  `}>
       <div
-        ref={barRef}
         style={{ height: moverSize.height + 16 }}
         className="
         overflow-hidden 
@@ -152,7 +146,7 @@ export function FloatingBar({ targets, setTargets }: FloatingBarProps) {
                 if (el) buttonRefs.current[i] = el;
               }}
               onClick={
-                () => moveDivToIndex(i)
+                () => moveDivToIndex({ index: i, setPosition, setTargets })
               }
               style={{
                 width: moverSize.width,

@@ -1,7 +1,8 @@
 export type Project = {
     title: string;
     type: string;
-    gitLink: string;
+    link: string;
     languages: Record<string, number>;
     photos: string[];
-};
+    feature: boolean;
+}
