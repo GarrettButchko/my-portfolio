@@ -20,6 +20,7 @@ export default function Home() {
     { id: 3, name: "News", isSelected: false, icon: <NewsIcon className="w-5 h-5" /> },
   ]);
 
+
   const buttonRefs = useRef<HTMLButtonElement[]>([]); // stable array of refs
   const active = targets.find((t) => t.isSelected)?.name ?? "Home";
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -34,7 +35,7 @@ export default function Home() {
         {active === "Portfolio" && <PortfolioSection />}
         {active === "News" && <NewsSection />}
 
-        <VStack className="my-20 ">
+        <VStack className="my-20 md:text-[15px] sm:text-[15px] text-[10px]">
           <HStack className="justify-center">
             {targets.map((target, i) => (
               <button

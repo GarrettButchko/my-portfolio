@@ -7,22 +7,12 @@ import { hexToRgba } from "@/app/lib/hextoRgba";
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { Project } from "@/app/Types/Project"
+import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
 
 export default function HomeSecton() {
 
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/projects")
-      .then((res) => res.json())
-      .then((data) => setProjects(data))
-      .catch((err) => console.error("Error loading projects:", err))
-      .finally(() => setLoading(false));
-  }, []);
-
   return (
-    <VStack className="mt-40 mb-4 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
+    <VStack className="mt-40 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
       <Intro />
       <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
       <EduExp />
@@ -32,6 +22,17 @@ export default function HomeSecton() {
   );
 
   function RecProj() {
+    const [loading, setLoading] = useState(true);
+
+    const [projects, setProjects] = useState<Project[]>([]);
+    useEffect(() => {
+      fetch("/api/projects")
+        .then((res) => res.json())
+        .then((data) => setProjects(data))
+        .catch((err) => console.error("Error loading projects:", err))
+        .finally(() => setLoading(false));
+    }, []);
+
     return (
       <Section className="max-w-4xl items-center py-6">
         <VStack spacing={25}>
@@ -47,185 +48,26 @@ export default function HomeSecton() {
               text-left
               text-blue-500
             ">
-            Recent Projects
+            Featured Projects
           </p>
           {
             loading ? (
-              <VStack className="h-50 w-full justify-center items-center" spacing={20}>
-                <Text className="text-textColor">Loading projects...</Text>
-                <Image
-                  src="/gifs/loading.gif"
-                  alt="Funny animation"
-                  width={30}
-                  height={30}
-                  unoptimized  // 👈 prevents Next.js from converting it to WebP (keeps animation)
-                />
-              </VStack>
+              <div style={{ gap: "25px" }} className="flex flex-col md:flex-row w-full">
+                  <ProjSectionPlaceHolder/>
+                  <ProjSectionPlaceHolder/>
+              </div>
             ) : (
               <div style={{ gap: "25px" }} className="flex flex-col md:flex-row w-full">
                 {projects
                   .filter((p) => p.feature)
-                  .map((p) => (
-                    <ProjSection key={p.title} project={p} />
+                  .map((p, i) => (
+                    <ProjSection key={p.title} project={p} index={i} />
                   ))}
               </div>
             )
           }
         </VStack>
       </Section>
-    );
-  }
-
-  function ProjSection({ project }: { project: Project }) {
-
-
-    const total = Object.values(project.languages).reduce((a, b) => a + b, 0);
-
-    const languageColors: Record<string, string> = {
-      Swift: "#ffac45",
-      JavaScript: "#f1e05a",
-      Shell: "#89e051",
-      TypeScript: "#2b7489",
-      Python: "#3572A5",
-      Java: "#b07219",
-      C: "#555555",
-      "C++": "#f34b7d",
-      "C#": "#178600",
-      PHP: "#4F5D95",
-      Ruby: "#701516",
-      Go: "#00ADD8",
-      Rust: "#dea584",
-      Kotlin: "#F18E33",
-      Dart: "#00B4AB",
-      Scala: "#c22d40",
-      Haskell: "#5e5086",
-      R: "#198CE7",
-      "Objective C": "#438eff",
-      HTML: "#e34c26",
-      CSS: "#563d7c",
-      SQL: "#e38c00",
-      MATLAB: "#e16737",
-    };
-
-    return (
-      <VStack className="bg-sub1 rounded-[24px] py-6 w-full overflow-hidden" spacing={10}>
-        <HStack className="items-center px-6">
-          <VStack>
-            <p className="font-bold text-sub3 
-              md:text-2xl 
-              sm:text-2xl 
-              text-1xl">
-              {project.title}
-            </p>
-            <p className="text-sub3 
-              md:text-[15px] 
-              sm:text-[12px] 
-              text-[10px]">
-              {project.type}
-            </p>
-          </VStack>
-          <Spacer />
-          <button
-            type="button"
-            onClick={() => window.open(project.link, "_blank")}
-            className={`
-                  z-20 
-                  rounded-[25px]
-                  active:scale-95 
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  bg-blue-500
-                  hover:bg-blue-600
-                  cursor-pointer
-                  h-8
-                  w-25
-                  `}
-          >
-            <Text
-              variant="body"
-              className="
-                  justify-center 
-                  text-white
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  items-center
-                  border-white
-                  ">
-              Github
-            </Text>
-          </button>
-        </HStack>
-        <HStack spacing={20} className="overflow-x-hidden hover:overflow-x-auto
-             [&::-webkit-scrollbar]:h-[8px]
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-sub2 w-full">
-          <div className="ml-1" />
-          {project.photos.map((photo) => (
-            <img
-              key={photo}
-              src={photo}
-              alt={`Screen Shot from ${project.title}`}
-              className="rounded-[10px] h-[150px] w-auto outline outline-2 outline-sub2 my-2"
-            />
-
-          ))}
-          <div className="ml-1" />
-        </HStack>
-
-
-        <VStack className="bg-sub2/20 rounded-[17px] mx-6 py-4" spacing={10}>
-          <p className="text-sub3 
-              md:text-[15px] 
-              sm:text-[12px] 
-              text-[10px]
-              px-4">
-            Languages
-          </p>
-
-          <VStack className="px-4">
-            <div className="flex h-1 w-full overflow-hidden rounded-lg">
-              {Object.entries(project.languages).map(([name, bytes]) => (
-                <div
-                  key={name}
-                  className="h-full transition-all duration-700"
-                  style={{
-                    width: `${(bytes / total) * 100}%`,
-                    backgroundColor: languageColors[name] || "#888",
-                  }}
-                />
-              ))}
-            </div>
-          </VStack>
-
-          <HStack spacing={15} className="
-            overflow-x-hidden hover:overflow-x-auto w-full py-[1px] px-[1px]
-             [&::-webkit-scrollbar]:h-[8px]
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-sub2
-            ">
-            <div className="w-[1px]" />
-            {Object.entries(project.languages).map(([name, bytes]) => (
-              <HStack key={name} className="flex-none px-3 py-1 rounded-[15px] outline outline-1 outline-sub2 items-center my-2" spacing={5}>
-                <div
-                  className="w-2 h-2 md:w-3 md:h-3 rounded-full"
-                  style={{ backgroundColor: languageColors[name] }}
-                />
-                <HStack spacing={1} className="">
-                  <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] font-bold">
-                    {name}:
-                  </p>
-                  <p className="text-sub3 text-[8px] sm:text-[12px] md:text-[15px] ml-1">
-                    {((bytes / total) * 100).toFixed(1)}%
-                  </p>
-                </HStack>
-              </HStack>
-            ))}
-            <div className="w-[1px]" />
-          </HStack>
-        </VStack>
-      </VStack>
     );
   }
 
@@ -400,7 +242,7 @@ export default function HomeSecton() {
 
           <VStack spacing={25}>
             {education.map((student: InfoItem, index) => (
-              <InfoCollection key={index} infoItem={student} />
+              <InfoCollection key={index} infoItem={student} index={index} />
             ))}
           </VStack>
 
@@ -421,7 +263,7 @@ export default function HomeSecton() {
           <VStack>
             <VStack spacing={25}>
               {experience.map((job: InfoItem, index) => (
-                <InfoCollection key={index} infoItem={job} />
+                <InfoCollection key={index} infoItem={job} index={index} />
               ))}
             </VStack>
           </VStack>
@@ -430,7 +272,7 @@ export default function HomeSecton() {
     );
   }
 
-  function InfoCollection({ infoItem }: { infoItem: InfoItem }) {
+  function InfoCollection({ infoItem, index }: { infoItem: InfoItem, index: number }) {
 
     return (
 
@@ -458,7 +300,12 @@ export default function HomeSecton() {
           )}
         </div>
 
-        <div className="flex flex-col items-center w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          viewport={{ once: true, amount: 0.2 }} // triggers when 20% visible, only once
+          className="flex flex-col items-center w-full">
           <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
             <VStack className="md:items-start items-center justify-center">
               <div className="flex sm:flex-row flex-col justify-center items-center 
@@ -533,8 +380,9 @@ export default function HomeSecton() {
               Learn More
             </Text>
           </button>
-        </div>
+        </motion.div>
       </HStack>
     );
   }
 }
+

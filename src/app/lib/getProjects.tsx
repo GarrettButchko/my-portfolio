@@ -9,6 +9,16 @@ const headers = {
   Authorization: `token ${GITHUB_TOKEN}`,
 };
 
+async function fetchSafeJSON(url: string, options: RequestInit = {}) {
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function getProjects(): Promise<Project[]> {
   if (!GITHUB_USERNAME || !GITHUB_TOKEN) {
     throw new Error("GITHUB_USERNAME or GITHUB_TOKEN not defined in environment");
@@ -26,61 +36,60 @@ export async function getProjects(): Promise<Project[]> {
 
   const repos = await res.json();
 
-  const projects: Project[] = await Promise.all(
-    repos.map(async (repo: any) => {
-      try {
-        // 1️⃣ Fetch project.json file (if it exists)
-        const repoProjectURL = `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/contents/project.json`;
-        const res2 = await fetch(repoProjectURL, { headers });
-        if (!res2.ok) return null;
-        const projectFile = await res2.json();
+  const projects: Project[] = [];
 
-        // 2️⃣ Download actual project.json data
-        const res3 = await fetch(projectFile.download_url);
-        if (!res3.ok) return null;
-        const project: Project = await res3.json();
+  for (const repo of repos) {
+    try {
+      // 1️⃣ Try to fetch project.json (optional)
+      const projectFileData = await fetchSafeJSON(
+        `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/contents/project.json`,
+        { headers }
+      );
 
-        // 3️⃣ Fetch repo languages (from repo object, not file)
-        const langRes = await fetch(repo.languages_url, { headers });
-        const languages = langRes.ok ? await langRes.json() : {};
-
-        // 4️⃣ Fetch screenshots
-        const repoSSURL = `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/contents/Screen_Shots`;
-        const ssRes = await fetch(repoSSURL, { headers });
-
-        let photos: string[] = [];
-        if (ssRes.ok) {
-          const files = await ssRes.json();
-          photos = files
-            .filter((f: any) => f.type === "file" && /\.(png|jpe?g|gif|webp)$/i.test(f.name))
-            .map((f: any) => f.download_url);
-        }
-
-        // WHERE TO FEATURE PROJECT
-        var feature: boolean = project.feature;
-        
-        const firstProj: string = "Mini Mate";
-        const secondProj: string = "Portfolio Website";
-        
-        if (project.title == firstProj || secondProj){
-            feature = true;
-        }
-
-
-        return {
-          ...project,
-          link: repo.html_url,
-          languages,
-          photos,
-          feature,
-        };
-      } catch (err) {
-        console.error(`Error processing repo ${repo.name}:`, err);
-        return null;
+      if (!projectFileData) {
+        // No project.json → skip quietly
+        console.log(`ℹ️ Skipping ${repo.name} (no project.json)`);
+        continue;
       }
-    })
-  );
 
-  return projects.filter(Boolean) as Project[];
+      // 2️⃣ Get actual project.json content
+      const projectJSON = await fetchSafeJSON(projectFileData.download_url);
+      if (!projectJSON) continue;
+      const project: Project = projectJSON;
+
+      // 3️⃣ Fetch languages (optional)
+      const languages = (await fetchSafeJSON(repo.languages_url, { headers })) || {};
+
+      // 4️⃣ Try to load screenshots folder (optional)
+      const ssFiles = await fetchSafeJSON(
+        `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/contents/Screen_Shots`,
+        { headers }
+      );
+
+      const photos =
+        ssFiles?.filter(
+          (f: any) => f.type === "file" && /\.(png|jpe?g|gif|webp)$/i.test(f.name)
+        ).map((f: any) => f.download_url) || [];
+
+      // 5️⃣ Mark featured projects
+      const feature =
+        project.feature ||
+        project.title === "Mini Mate" ||
+        project.title === "Portfolio Website";
+
+      projects.push({
+        ...project,
+        link: repo.html_url,
+        languages,
+        photos,
+        feature,
+      });
+    } catch (err) {
+      console.error(`Error processing repo ${repo.name}:`, err);
+    }
+  }
+
+  return projects;
 }
+
 
