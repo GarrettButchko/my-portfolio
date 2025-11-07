@@ -34,7 +34,7 @@ export default function HomeSecton() {
     }, []);
 
     return (
-      <Section className="max-w-4xl items-center py-6">
+      <Section className="max-w-4xl items-center py-5">
         <VStack spacing={25}>
           <p
             className="
@@ -50,24 +50,27 @@ export default function HomeSecton() {
             ">
             Featured Projects
           </p>
-          {
-            loading ? (
-              <div style={{ gap: "25px" }} className="flex flex-col md:flex-row w-full">
-                  <ProjSectionPlaceHolder/>
-                  <ProjSectionPlaceHolder/>
-              </div>
-            ) : (
-              <div style={{ gap: "25px" }} className="flex flex-col md:flex-row w-full">
-                {projects
-                  .filter((p) => p.feature)
-                  .map((p, i) => (
-                    <ProjSection key={p.title} project={p} index={i} />
-                  ))}
-              </div>
-            )
-          }
+
+          <VStack className="w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
+              {loading ? (
+                <>
+                  <ProjSectionPlaceHolder />
+                  <ProjSectionPlaceHolder />
+                </>
+              ) : (
+                <>
+                  {projects
+                    .filter((p) => p.feature)
+                    .map((p, i) => (
+                      <ProjSection key={i} project={p} index={i} />
+                    ))}
+                </>
+              )}
+            </div>
+          </VStack>
         </VStack>
-      </Section>
+      </Section >
     );
   }
 
@@ -117,7 +120,7 @@ export default function HomeSecton() {
             </div>
 
           </VStack>
-          <Spacer className="hidden sm:block" />
+          <Spacer className="hidden sm:block w-1" />
           <div className="rounded-full">
             <Image
               src="/profile.jpeg"     // path from /public

@@ -5,4 +5,5 @@ export type Project = {
     languages: Record<string, number>;
     photos: string[];
     feature: boolean;
+    pushed_at: string;
 }

@@ -2,6 +2,7 @@ import React, { useRef, useState, useLayoutEffect, useEffect } from "react";
 import { HStack, Text } from "../Components/components";
 import { motion } from "framer-motion";
 
+
 type Target = {
   id: number;
   name: string;
@@ -88,6 +89,7 @@ export function FloatingBar({
   }, [targets]);
 
   return (
+    
     <div className={`
       fixed
       top-5 

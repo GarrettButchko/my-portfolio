@@ -75,7 +75,7 @@ export async function getProjects(): Promise<Project[]> {
       const feature =
         project.feature ||
         project.title === "Mini Mate" ||
-        project.title === "Portfolio Website";
+        project.title === "Portfolio";
 
       projects.push({
         ...project,
@@ -83,7 +83,10 @@ export async function getProjects(): Promise<Project[]> {
         languages,
         photos,
         feature,
+        pushed_at: repo.pushed_at,
       });
+
+      console.log(Object.keys(projects[0].languages));
     } catch (err) {
       console.error(`Error processing repo ${repo.name}:`, err);
     }
