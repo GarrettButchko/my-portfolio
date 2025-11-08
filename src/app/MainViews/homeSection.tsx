@@ -155,6 +155,7 @@ export default function HomeSecton() {
 
           <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
             <button
+              title="Email Me!"
               type="button"
               onClick={() =>
               (window.location.href =
@@ -174,6 +175,7 @@ export default function HomeSecton() {
                   cursor-pointer
                   `}>
               <Text
+              
                 variant="body"
                 className="
                   justify-center 
@@ -188,6 +190,7 @@ export default function HomeSecton() {
             </button>
             <HStack spacing={8}>
               <button
+                title="Go to my Linkedin"
                 onClick={() => window.open("https://www.linkedin.com/in/gar-butch/", "_blank")}
                 className="
                   overflow-hidden 
@@ -216,6 +219,7 @@ export default function HomeSecton() {
                   duration-300
                   cursor-pointer
                 "
+                title="Go to my Github"
                 onClick={() => window.open("https://github.com/GarrettButchko", "_blank")}
               >
                 <Image

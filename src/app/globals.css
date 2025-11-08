@@ -39,4 +39,10 @@
 html, body {
   background-color: var(--color-background);
   color: var(--color-foreground);
+  overflow-y: scroll; /* keeps layout stable (no shift when scrollbar appears) */
+  scrollbar-width: none; /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }

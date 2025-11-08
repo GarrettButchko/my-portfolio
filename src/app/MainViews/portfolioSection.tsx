@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Project } from "@/app/Types/Project"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
 import Arrow from "../../../public/svg/arrow.svg";
+import { nextImageLoaderRegex } from "next/dist/build/webpack-config";
 
 
 export default function PortfolioSection() {
@@ -71,24 +72,33 @@ export default function PortfolioSection() {
         "MATLAB",
     ];
 
+    // 1️⃣ Filter and sort first
     const filteredProjects = projects
-        .filter((p, i) =>
-            (query === "" ||
+        .filter((p) => {
+            const matchesSearch =
+                query === "" ||
                 p.title.toLowerCase().includes(query.toLowerCase()) ||
-                p.type.toLowerCase().includes(query.toLowerCase())) &&
-            (selected === "" || Object.keys(p.languages).includes(selected)) &&
-            shownProj.includes(i + 1)
-        )
+                p.type.toLowerCase().includes(query.toLowerCase());
+
+            const matchesLanguage =
+                selected === "" || Object.keys(p.languages).includes(selected);
+
+            return matchesSearch && matchesLanguage;
+        })
         .sort((a, b) => {
-            if (sortFirst) {
-                // Newest first
-                return new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime();
-            } else {
-                // Oldest first
-                return new Date(a.pushed_at).getTime() - new Date(b.pushed_at).getTime();
-            }
+            return sortFirst
+                ? new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime()
+                : new Date(a.pushed_at).getTime() - new Date(b.pushed_at).getTime();
         });
 
+    // 2️⃣ Then apply pagination (shownProj)
+    const paginatedProjects = filteredProjects.filter((_, i) =>
+        shownProj.includes(i + 1)
+    );
+
+    const canAddPage: boolean = ((paginatedProjects.length + ((pageNum - 1) * 4) + shownProj[0]) - 1) != filteredProjects.length;
+
+    const canSubtractPage: boolean = shownProj[0] != 1
 
 
 
@@ -108,7 +118,10 @@ export default function PortfolioSection() {
                         onBlur={(e) => {
                             if (!e.target.value) setFocused(false);
                         }}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={(e) => {
+                            setQuery(e.target.value);
+                            setShownProjs([1, 2, 3, 4]);
+                        }}
                         className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-50"
                     />
                 </HStack>
@@ -116,13 +129,16 @@ export default function PortfolioSection() {
                 <HStack className="w-full" spacing={8}>
                     <NativeDropdown />
                     <button
+                        title="Sort projects by newest or oldest"
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
                             (setSortFirst(!sortFirst))
+                            setShownProjs([1, 2, 3, 4]);
+                        }
                         }
                         className="
                             bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
-                            hover:brightness-75
+                            hover:bg-oppbackground/5
                             active:scale-95 
                             transition-all
                             ease-in-out
@@ -139,7 +155,7 @@ export default function PortfolioSection() {
             </div>
 
 
-            <VStack className="mb-4 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
+            <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
                     {loading ? (
                         <>
@@ -150,13 +166,13 @@ export default function PortfolioSection() {
                         </>
                     ) : (
                         <>
-                            {filteredProjects.map((item, i) => (
+                            {paginatedProjects.map((item, i) => (
                                 <ProjSection key={i} project={item} index={i} />
                             ))}
-                            {filteredProjects.length < 4 && (
+                            {paginatedProjects.length < 4 && (
                                 // Add placeholders to make at least 4 items
                                 <>
-                                    {Array.from({ length: 4 - filteredProjects.length }).map((_, i) => (
+                                    {Array.from({ length: 4 - paginatedProjects.length }).map((_, i) => (
                                         <ProjSectionPlaceHolder key={`placeholder-${i}`} animate={false} className="opacity-0" />
                                     ))}
                                 </>
@@ -165,61 +181,80 @@ export default function PortfolioSection() {
                     )}
                 </div>
             </VStack>
-            <p className="text-sub1">
-                Showing {shownProj[0] * pageNum} to {(projects.length - (pageNum * 4) < 4) ? 4 - (projects.length % 4) : shownProj[3] * pageNum} of {projects.length} Projects
+            <p className="text-sub2">
+                Showing {filteredProjects.length == 0 ? 0 : shownProj[0]} to {(paginatedProjects.length + ((pageNum - 1) * 4) + shownProj[0]) - 1} of {filteredProjects.length} Projects
             </p>
             <HStack spacing={8}>
                 <button
                     type="button"
-                    onClick={() =>
-                        setPageNum(pageNum - 1)
-                    }
-                    className="
-                            bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
-                            hover:brightness-75
-                            active:scale-95 
-                            transition-all
-                            ease-in-out
-                            duration-300
-                            cursor-pointer
-                        ">
-                    <Arrow className="text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
-                            transition-transform
-                            ease-in-out
-                            duration-300
-                            rotate-270" />
+                    onClick={() => {
+                        if (canSubtractPage) {
+                            const updated = shownProj.map(n => n - 4);
+                            setShownProjs(updated);
+                        }
+                    }}
+                    className={`${canSubtractPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                        bg-foreground 
+                        rounded-full 
+                        flex 
+                        justify-center 
+                        items-center 
+                        md:p-4 
+                        sm:p-3 
+                        p-2
+                    `}>
+                    <HStack className={`${canSubtractPage ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center`} spacing={5}>
+                        <Arrow className="
+                            md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            rotate-270
+                        "/>
+                        <p>
+                            Previous
+                        </p>
+                    </HStack>
                 </button>
                 <button
                     type="button"
-                    onClick={() =>
-                        setPageNum(pageNum + 1)
-                    }
-                    className="
-                            bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
-                            hover:brightness-75
-                            active:scale-95 
-                            transition-all
-                            ease-in-out
-                            duration-300
-                            cursor-pointer
-                        ">
-                    <Arrow className="text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                    onClick={() => {
+                        if (canAddPage) {
+                            const updated = shownProj.map((n) => n + 4);
+                            setShownProjs(updated);
+                        }
+                    }}
+                    className={`${canAddPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                        bg-foreground 
+                        rounded-full 
+                        flex 
+                        justify-center 
+                        items-center 
+                        md:p-4 sm:p-3 p-2
+                        `}>
+                    <HStack className={`${canAddPage ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center`} spacing={5}>
+                        <p>
+                            Next
+                        </p>
+                        <Arrow className="md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                             transition-transform
                             ease-in-out
                             duration-300
                             rotate-90"/>
+                    </HStack>
                 </button>
             </HStack>
-        </VStack>
+        </VStack >
     );
 
     function NativeDropdown() {
         return (
             <div className="flex rounded-full bg-foreground px-4 items-center justify-center w-full h-full">
                 <select
+                    title="Sort projects by what languages were used"
                     value={selected}
-                    onChange={(e) => setSelected(e.target.value)}
-                    className="text-sub2 bg-transparent outline-none md:text-[16px] sm:text-[14px] text-[12px]"
+                    onChange={(e) => {
+                        setSelected(e.target.value)
+                        setShownProjs([1, 2, 3, 4]);
+                    }}
+                    className="text-sub2 bg-transparent outline-none md:text-[16px] sm:text-[14px] text-[12px] cursor-pointer"
                 >
                     <option value="">Language</option>
 
