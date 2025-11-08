@@ -61,7 +61,7 @@ export function FloatingBar({
 }: FloatingBarProps) {
   // mover size (same as you used style height/width)
   const [moverSize, setMoverSize] = useState({ width: 120, height: 36 });
-  
+
 
   useLayoutEffect(() => {
     moveDivToIndex({ index: 0, setPosition, setTargets });
@@ -89,7 +89,7 @@ export function FloatingBar({
   }, [targets]);
 
   return (
-    
+
     <div className={`
       fixed
       top-5 
@@ -100,7 +100,7 @@ export function FloatingBar({
       w-fit
       outline outline-2 outline-sub1  
       rounded-[25px] 
- `}>
+    `}>
       <div
         style={{ height: moverSize.height + 16 }}
         className="
@@ -121,7 +121,7 @@ export function FloatingBar({
         {/* animated mover — absolutely positioned inside the bar */}
         <motion.div
           className="absolute z-0 rounded-[18px] bg-blue-500 y-[-50px]"
-          animate={{ x: position.x, y: position.y, width: moverSize.width, height: moverSize.height}}
+          animate={{ x: position.x, y: position.y, width: moverSize.width, height: moverSize.height }}
           transition={{
             type: "spring",
             stiffness: 250,
@@ -147,9 +147,10 @@ export function FloatingBar({
               ref={(el) => {
                 if (el) buttonRefs.current[i] = el;
               }}
-              onClick={ () => {
+              onClick={() => {
                 moveDivToIndex({ index: i, setPosition, setTargets });
-                window.scrollTo(0, 0);}
+                window.scrollTo(0, 0);
+              }
               }
               style={{
                 width: moverSize.width,

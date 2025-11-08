@@ -327,10 +327,9 @@ export default function HomeSecton() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          viewport={{ once: true, amount: 0.2 }} // triggers when 20% visible, only once
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: (index + 1) * 0.2 }}
           className="flex flex-col items-center w-full">
           <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
             <VStack className="md:items-start items-center justify-center">
