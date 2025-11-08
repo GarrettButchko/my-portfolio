@@ -19,12 +19,31 @@ export default function PortfolioSection() {
     const [sortFirst, setSortFirst] = useState(true);
 
     useEffect(() => {
+        // prevent running before localStorage is available (server-side)
+        if (typeof window === "undefined") return;
+
+        const cached = localStorage.getItem("projects");
+        if (cached) {
+            setProjects(JSON.parse(cached));
+            setLoading(false);
+        }
+
         fetch("/api/projects")
             .then((res) => res.json())
-            .then((data) => setProjects(data))
+            .then((data) => {
+                const cachedData = cached ? JSON.parse(cached) : null;
+
+                // Only update if data actually changed
+                if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
+                    setProjects(data);
+                    localStorage.setItem("projects", JSON.stringify(data));
+                }
+            })
             .catch((err) => console.error("Error loading projects:", err))
             .finally(() => setLoading(false));
+
     }, []);
+
 
     const languages: string[] = [
         "Swift",
@@ -92,15 +111,32 @@ export default function PortfolioSection() {
                 </HStack>
                 <HStack className="" spacing={8}>
                     <NativeDropdown />
-                    <div className="bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2">
-                        <Arrow className="text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6 " />
-                    </div>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            (setSortFirst(!sortFirst))
+                        }
+                        className="
+                            bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
+                            hover:brightness-75
+                            active:scale-95 
+                            transition-all
+                            ease-in-out
+                            duration-300
+                            cursor-pointer
+                        ">
+                        <Arrow className={`text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            transition-transform
+                            ease-in-out
+                            duration-300
+                            ${sortFirst ? "rotate-0" : "rotate-180"}`} />
+                    </button>
                 </HStack>
             </div>
 
 
             <VStack className="mb-4 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
                     {loading ? (
                         <>
                             <ProjSectionPlaceHolder />

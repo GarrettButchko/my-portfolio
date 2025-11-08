@@ -34,9 +34,8 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
   return (
     <VStack
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: (index + 1) * 0.2 }}
-      viewport={{ once: true, amount: 0.2 }}
       className="bg-sub1 rounded-[24px] py-6 w-full overflow-hidden"
       spacing={10}
     >
@@ -69,7 +68,7 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
           [&::-webkit-scrollbar]:h-[0px]
           hover:[&::-webkit-scrollbar]:h-[6px]
           [&::-webkit-scrollbar-track]:rounded-full
-          [&::-webkit-scrollbar-track]:bg-gray-100/20
+          [&::-webkit-scrollbar-track]:bg-transparent
           [&::-webkit-scrollbar-thumb]:rounded-full
           [&::-webkit-scrollbar-thumb]:bg-gray-400/30
           hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
@@ -96,7 +95,7 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
             [&::-webkit-scrollbar]:h-[0px]
             hover:[&::-webkit-scrollbar]:h-[6px]
             [&::-webkit-scrollbar-track]:rounded-full
-            [&::-webkit-scrollbar-track]:bg-gray-100/20
+            [&::-webkit-scrollbar-track]:bg-transparent
             [&::-webkit-scrollbar-thumb]:rounded-full
             [&::-webkit-scrollbar-thumb]:bg-gray-400/30
             hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60

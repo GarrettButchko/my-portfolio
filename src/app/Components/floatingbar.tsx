@@ -147,8 +147,9 @@ export function FloatingBar({
               ref={(el) => {
                 if (el) buttonRefs.current[i] = el;
               }}
-              onClick={
-                () => moveDivToIndex({ index: i, setPosition, setTargets })
+              onClick={ () => {
+                moveDivToIndex({ index: i, setPosition, setTargets });
+                window.scrollTo(0, 0);}
               }
               style={{
                 width: moverSize.width,

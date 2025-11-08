@@ -26,12 +26,31 @@ export default function HomeSecton() {
 
     const [projects, setProjects] = useState<Project[]>([]);
     useEffect(() => {
+      // prevent running before localStorage is available (server-side)
+      if (typeof window === "undefined") return;
+
+      const cached = localStorage.getItem("projects");
+      if (cached) {
+        setProjects(JSON.parse(cached));
+        setLoading(false);
+      }
+
       fetch("/api/projects")
         .then((res) => res.json())
-        .then((data) => setProjects(data))
+        .then((data) => {
+          const cachedData = cached ? JSON.parse(cached) : null;
+
+          // Only update if data actually changed
+          if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
+            setProjects(data);
+            localStorage.setItem("projects", JSON.stringify(data));
+          }
+        })
         .catch((err) => console.error("Error loading projects:", err))
         .finally(() => setLoading(false));
-    }, []);
+
+    }, []); // ✅ empty dependency array runs once only
+
 
     return (
       <Section className="max-w-4xl items-center py-5">

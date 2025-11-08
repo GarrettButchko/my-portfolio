@@ -41,9 +41,11 @@ export default function Home() {
               <button
                 key={target.id}
                 type="button"
-                onClick={
-                  () => moveDivToIndex({ index: i, setPosition, setTargets })
-                }
+                onClick={() => {
+                  moveDivToIndex({ index: i, setPosition, setTargets });
+                  window.scrollTo(0, 0); // instant scroll to top
+                }}
+
                 className="cursor-pointer"
               >
                 <HStack>
