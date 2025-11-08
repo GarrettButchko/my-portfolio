@@ -24,7 +24,8 @@ export default function Home() {
   const buttonRefs = useRef<HTMLButtonElement[]>([]); // stable array of refs
   const active = targets.find((t) => t.isSelected)?.name ?? "Home";
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
+  
 
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
