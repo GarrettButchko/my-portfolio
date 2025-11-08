@@ -59,12 +59,13 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
         </button>
       </HStack>
 
-      {/* Photos */}
-      <HStack
-        spacing={20}
-        className="
+      <VStack className="mx-6 rounded-[19px] bg-sub2/20 p-3" spacing={5}>
+        {/* Photos */}
+        <HStack
+          spacing={20}
+          className="
           overflow-x-auto
-          py-[1px] px-[1px] ml-6
+          py-[1px] px-[1px]
           [&::-webkit-scrollbar]:h-[0px]
           hover:[&::-webkit-scrollbar]:h-[6px]
           [&::-webkit-scrollbar-track]:rounded-full
@@ -73,24 +74,24 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
           [&::-webkit-scrollbar-thumb]:bg-gray-400/30
           hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
         "
-      >
-        {project.photos.map((photo) => (
-          <img
-            key={photo}
-            src={photo}
-            alt={`Screenshot from ${project.title}`}
-            className="rounded-[10px] h-[150px]"
-          />
-        ))}
-      </HStack>
+        >
+          {project.photos.map((photo) => (
+            <img
+              key={photo}
+              src={photo}
+              alt={`Screenshot from ${project.title}`}
+              className="rounded-[12px] h-[150px]"
+            />
+          ))}
+        </HStack>
 
-      {/* Languages */}
-      <VStack className="" spacing={5}>
-        {/* Badges */}
-        <HStack
-          spacing={15}
-          className="
-            overflow-x-auto py-[1px] px-[1px] ml-6 min-w-0
+        {/* Languages */}
+        <VStack spacing={5}>
+          {/* Badges */}
+          <HStack
+            spacing={15}
+            className="
+            overflow-x-auto py-[1px] px-[1px]  min-w-0
             transition-opacity duration-300
             [&::-webkit-scrollbar]:h-[0px]
             hover:[&::-webkit-scrollbar]:h-[6px]
@@ -100,70 +101,72 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
             [&::-webkit-scrollbar-thumb]:bg-gray-400/30
             hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
           "
-        >
-          {Object.entries(project.languages).map(([name, bytes]) => (
-            <HStack
-              key={name}
-              spacing={5}
-              className="px-3 py-[1px] rounded-[15px] bg-sub2/20 items-center mb-[2px]"
-            >
-              <div
-                className="w-2 h-2 md:w-3 md:h-3 rounded-full"
-                style={{ backgroundColor: languageColors[name] }}
-              />
-              <HStack spacing={1}>
-                <p className="text-sub3 text-[12px] md:text-[15px] font-bold">
-                  {name}:
-                </p>
-                <p className="text-sub3 text-[12px] md:text-[15px] ml-1">
-                  {((bytes / total) * 100).toFixed(1)}%
-                </p>
-              </HStack>
-            </HStack>
-          ))}
-        </HStack>
-
-        {/* Language bar */}
-        <VStack className="px-6">
-          <div className="flex h-1 overflow-hidden rounded-lg">
+          >
             {Object.entries(project.languages).map(([name, bytes]) => (
-              <div
+              <HStack
                 key={name}
-                className="h-full transition-all duration-700"
-                style={{
-                  width: `${(bytes / total) * 100}%`,
-                  backgroundColor: languageColors[name] || "#888",
-                }}
-              />
+                spacing={5}
+                className="px-3 py-[1px] rounded-[12px] bg-sub2/20 items-center"
+              >
+                <div
+                  className="w-2 h-2 md:w-3 md:h-3 rounded-full"
+                  style={{ backgroundColor: languageColors[name] }}
+                />
+                <HStack spacing={1}>
+                  <p className="text-sub3 text-[12px] md:text-[15px] font-bold">
+                    {name}:
+                  </p>
+                  <p className="text-sub3 text-[12px] md:text-[15px] ml-1">
+                    {((bytes / total) * 100).toFixed(1)}%
+                  </p>
+                </HStack>
+              </HStack>
             ))}
-          </div>
+          </HStack>
         </VStack>
       </VStack>
-    </VStack>
+
+      {/* Language bar */}
+      <VStack className="px-6">
+        <div className="flex h-1 overflow-hidden rounded-lg">
+          {Object.entries(project.languages).map(([name, bytes]) => (
+            <div
+              key={name}
+              className="h-full transition-all duration-700"
+              style={{
+                width: `${(bytes / total) * 100}%`,
+                backgroundColor: languageColors[name] || "#888",
+              }}
+            />
+          ))}
+        </div>
+      </VStack>
+
+    </VStack >
   );
 }
 
 
 
-export function ProjSectionPlaceHolder({ className, animate=true}: { className?: string, animate?: boolean}) {
-    return (
-        <VStack
-            className={`bg-sub1 rounded-[24px] p-6 w-full overflow-hidden ${animate ? "animate-pulse" : ""} ${className ?? ""}`}
-            spacing={10}
-        >
-            <HStack className="items-center">
-                <VStack spacing={5}>
-                    <div className="font-bold text-sub3 md:h-[36px] sm:h-[32px] h-[28px] w-15 rounded-[10px] bg-sub2/30" />
-                    <div className="font-bold text-sub3 md:h-[15px] sm:h-[12px] h-[10px] w-10 rounded-[10px] bg-sub2/30" />
-                </VStack>
-                <Spacer />
-            </HStack>
-            <HStack spacing={20}>
-                <div className="w-20 h-[150px] rounded-[10px] my-2 bg-sub2/30" />
-                <div className="w-20 h-[150px] rounded-[10px] my-2 bg-sub2/30" />
-                <div className="w-20 h-[150px] rounded-[10px] my-2 bg-sub2/30" />
-            </HStack>
-            <div className="rounded-[10px] w-full md:h-[36px] sm:h-[32px] h-[28px] bg-sub2/30" />
+export function ProjSectionPlaceHolder({ className, animate = true }: { className?: string, animate?: boolean }) {
+  return (
+    <VStack
+      className={`bg-sub1 rounded-[24px] p-6 w-full overflow-hidden ${animate ? "animate-pulse" : ""} ${className ?? ""}`}
+      spacing={10}
+    >
+      <HStack className="items-center">
+        <VStack spacing={5}>
+          <div className="font-bold text-sub3 md:h-[36px] sm:h-[32px] h-[28px] w-15 rounded-[10px] bg-sub2/30" />
+          <div className="font-bold text-sub3 md:h-[15px] sm:h-[12px] h-[10px] w-10 rounded-[10px] bg-sub2/30" />
         </VStack>
-    );
+        <Spacer />
+      </HStack>
+      <HStack spacing={20}>
+        <div className="w-20 h-[150px] rounded-[10px] my-2 bg-sub2/30" />
+        <div className="w-20 h-[150px] rounded-[10px] my-2 bg-sub2/30" />
+        <div className="w-20 h-[150px] rounded-[10px] my-2 bg-sub2/30" />
+      </HStack>
+      <div className="rounded-[10px] w-full md:h-[36px] sm:h-[32px] h-[28px] bg-sub2/30" />
+    </VStack>
+  );
 }

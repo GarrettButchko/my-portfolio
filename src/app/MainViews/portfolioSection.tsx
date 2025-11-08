@@ -94,8 +94,11 @@ export default function PortfolioSection() {
 
     return (
         <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
-            <div className="flex flex-col sm:flex-row mx-1" style={{ gap: "8px" }}>
-                <HStack ref={searchBarRef} className="md:h-14 sm:h-12 h-10 bg-foreground rounded-[30px] justify-start items-center px-5">
+            <div className="flex flex-col sm:flex-row" style={{ gap: "8px" }}>
+                <HStack
+                    ref={searchBarRef}
+                    className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5"
+                >
                     <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
                     <input
                         type="text"
@@ -106,10 +109,11 @@ export default function PortfolioSection() {
                             if (!e.target.value) setFocused(false);
                         }}
                         onChange={(e) => setQuery(e.target.value)}
-                        className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none"
+                        className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-50"
                     />
                 </HStack>
-                <HStack className="" spacing={8}>
+
+                <HStack className="w-full" spacing={8}>
                     <NativeDropdown />
                     <button
                         type="button"
@@ -161,13 +165,57 @@ export default function PortfolioSection() {
                     )}
                 </div>
             </VStack>
+            <p className="text-sub1">
+                Showing {shownProj[0] * pageNum} to {(projects.length - (pageNum * 4) < 4) ? 4 - (projects.length % 4) : shownProj[3] * pageNum} of {projects.length} Projects
+            </p>
+            <HStack spacing={8}>
+                <button
+                    type="button"
+                    onClick={() =>
+                        setPageNum(pageNum - 1)
+                    }
+                    className="
+                            bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
+                            hover:brightness-75
+                            active:scale-95 
+                            transition-all
+                            ease-in-out
+                            duration-300
+                            cursor-pointer
+                        ">
+                    <Arrow className="text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            transition-transform
+                            ease-in-out
+                            duration-300
+                            rotate-270" />
+                </button>
+                <button
+                    type="button"
+                    onClick={() =>
+                        setPageNum(pageNum + 1)
+                    }
+                    className="
+                            bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
+                            hover:brightness-75
+                            active:scale-95 
+                            transition-all
+                            ease-in-out
+                            duration-300
+                            cursor-pointer
+                        ">
+                    <Arrow className="text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            transition-transform
+                            ease-in-out
+                            duration-300
+                            rotate-90"/>
+                </button>
+            </HStack>
         </VStack>
     );
 
     function NativeDropdown() {
         return (
             <div className="flex rounded-full bg-foreground px-4 items-center justify-center w-full h-full">
-
                 <select
                     value={selected}
                     onChange={(e) => setSelected(e.target.value)}
@@ -179,7 +227,6 @@ export default function PortfolioSection() {
                         <option key={i} value={language}>{language}</option>
                     ))}
                 </select>
-
             </div>
         );
     }
