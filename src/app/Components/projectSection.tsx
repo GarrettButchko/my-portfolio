@@ -156,8 +156,8 @@ export function ProjSectionPlaceHolder({ className, animate = true }: { classNam
     >
       <HStack className="items-center">
         <VStack spacing={5}>
-          <div className="font-bold text-sub3 md:h-[36px] sm:h-[32px] h-[28px] w-15 rounded-[10px] bg-sub2/30" />
-          <div className="font-bold text-sub3 md:h-[15px] sm:h-[12px] h-[10px] w-10 rounded-[10px] bg-sub2/30" />
+          <div className="font-bold md:h-[36px] sm:h-[32px] h-[28px] w-15 rounded-[10px] bg-sub2/30" />
+          <div className="font-bold md:h-[15px] sm:h-[12px] h-[10px] w-10 rounded-[10px] bg-sub2/30" />
         </VStack>
         <Spacer />
       </HStack>

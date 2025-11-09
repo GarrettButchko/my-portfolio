@@ -89,7 +89,10 @@ export default function NewsSection() {
                         type="text"
                         placeholder="Search..."
                         value={query}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={(e) => {
+                            setQuery(e.target.value)
+                            setShownPosts(5);
+                        }}
                         className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-40"
                     />
                 </HStack>
@@ -97,7 +100,10 @@ export default function NewsSection() {
                 <button
                     title="Sort posts by newest or oldest"
                     type="button"
-                    onClick={() => setSortFirst(!sortFirst)}
+                    onClick={() => {
+                        setSortFirst(!sortFirst);
+                        setShownPosts(5);
+                    }}
                     className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
                         hover:bg-oppbackground/5
@@ -118,14 +124,45 @@ export default function NewsSection() {
             </div>
 
             {/* 📰 Post List */}
-            <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
-                {posts.length > 0 ? (
-                    posts.slice(0, shownPosts).map((post, i) => (
-                        <PostView key={post.title} post={post} index={i} />
-                    ))
+            <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6 justify-center items-center" spacing={45}>
+
+                {loading ? (
+                    <>
+                        <PostViewPlaceHolder />
+                        <PostViewPlaceHolder />
+                        <PostViewPlaceHolder />
+                        <PostViewPlaceHolder />
+                        <PostViewPlaceHolder />
+                    </>
+                ) : filteredPosts && filteredPosts.length > 0 ? (
+                    <>
+                        {filteredPosts.slice(0, shownPosts).map((post, i) => (
+                            <PostView key={post.title} post={post} index={i} />
+                        ))}
+
+                        {/* Add placeholders if less than 5 items */}
+                        {filteredPosts.length < 5 &&
+                            Array.from({ length: 5 - filteredPosts.length }).map((_, i) => (
+                                <PostViewPlaceHolder
+                                    key={`placeholder-${i}`}
+                                    animate={false}
+                                    className="opacity-0"
+                                />
+                            ))}
+                    </>
                 ) : (
-                    <p className="text-sub2">No posts yet...</p>
+                    <>
+                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
+                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
+                    <p className="text-sub2 py-6">No posts yet...</p>
+                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
+                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
+                    </>
                 )}
+
+
+
+
             </VStack>
 
             {/* ➕ More Button */}
@@ -305,3 +342,34 @@ function PostView({ post, index }: PostViewProps) {
     );
 }
 
+function PostViewPlaceHolder({ className, animate = true }: { className?: string, animate?: boolean }) {
+    return (
+        <VStack
+            className={`relative bg-sub1 rounded-[20px] w-full overflow-visible mb-4 ${animate ? "animate-pulse" : ""} ${className ?? ""}`}
+            spacing={4}
+        >
+            <div className="flex flex-col sm:flex-row p-6 w-full rounded-[12px] bg-sub2/30 gap-4">
+                {/* Left content */}
+                <VStack spacing={5} className="sm:items-start items-center sm:text-left text-center">
+                    <div className="h-[40px] w-[180px] rounded-[12px] bg-sub2/30"></div>
+                    <div className="h-[12px] w-[80px] rounded-[12px] bg-sub2/30"></div>
+
+                    <HStack spacing={2} className="hidden sm:flex">
+                        <div className="h-[30px] w-[180px] rounded-[12px] bg-sub2/30"></div>
+                    </HStack>
+                </VStack>
+
+                <Spacer />
+
+                {/* Right content */}
+                <VStack spacing={2} className="items-center">
+                    <div className="w-[150px] h-[85px] rounded-[12px] bg-sub2/30"></div>
+
+                    <HStack spacing={2} className="flex sm:hidden justify-center mt-2">
+                        <div className="h-[25px] w-[60px] rounded-[12px] bg-sub2/30"></div>
+                    </HStack>
+                </VStack>
+            </div>
+        </VStack>
+    );
+}

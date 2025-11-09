@@ -1,4 +1,4 @@
-import { HStack, VStack} from "../Components/components";
+import { HStack, VStack } from "../Components/components";
 import Search from "../../../public/svg/search.svg";
 import React, { useState, useEffect } from "react";
 import { Project } from "@/app/Types/Project"
@@ -146,30 +146,45 @@ export default function PortfolioSection() {
 
 
             <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
-                    {loading ? (
-                        <>
-                            <ProjSectionPlaceHolder />
-                            <ProjSectionPlaceHolder />
-                            <ProjSectionPlaceHolder />
-                            <ProjSectionPlaceHolder />
-                        </>
-                    ) : (
-                        <>
-                            {paginatedProjects.map((item, i) => (
-                                <ProjSection key={i} project={item} index={i} />
-                            ))}
-                            {paginatedProjects.length < 4 && (
-                                // Add placeholders to make at least 4 items
-                                <>
-                                    {Array.from({ length: 4 - paginatedProjects.length }).map((_, i) => (
-                                        <ProjSectionPlaceHolder key={`placeholder-${i}`} animate={false} className="opacity-0" />
-                                    ))}
-                                </>
-                            )}
-                        </>
-                    )}
-                </div>
+
+
+
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
+                        <ProjSectionPlaceHolder />
+                        <ProjSectionPlaceHolder />
+                        <ProjSectionPlaceHolder />
+                        <ProjSectionPlaceHolder />
+                    </div>
+                ) : paginatedProjects && paginatedProjects.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
+                        {paginatedProjects.map((item, i) => (
+                            <ProjSection key={i} project={item} index={i} />
+                        ))}
+                        {paginatedProjects.length < 4 && (
+                            // Add placeholders to make at least 4 items
+                            <>
+                                {Array.from({ length: 4 - paginatedProjects.length }).map((_, i) => (
+                                    <ProjSectionPlaceHolder key={`placeholder-${i}`} animate={false} className="opacity-0" />
+                                ))}
+                            </>
+                        )}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center w-full">
+                        <HStack>
+                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                        </HStack>
+
+                        <p className="text-sub2 py-6 text-center w-full">No projects yet...</p>
+
+                        <HStack>
+                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                        </HStack>
+                    </div>
+                )}
             </VStack>
             <p className="text-sub2">
                 Showing {filteredProjects.length == 0 ? 0 : shownProj[0]} to {(paginatedProjects.length + shownProj[0]) - 1} of {filteredProjects.length} Projects
