@@ -1,12 +1,307 @@
-import { VStack } from "../Components/components";
 
+import { VStack, HStack, Spacer, Text } from "../Components/components";
+import React, { useState, useEffect } from "react";
+import Search from "../../../public/svg/search.svg";
+import Arrow from "../../../public/svg/arrow.svg";
+import { Post } from "@/app/Types/Post";
+import { Project } from "@/app/Types/Project";
+import Image from "next/image";
+import { motion, type HTMLMotionProps } from "framer-motion";
 
 export default function NewsSection() {
+    const [query, setQuery] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [sortFirst, setSortFirst] = useState(true);
+    const [shownPosts, setShownPosts] = useState(5);
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
+
+    // ✅ Fetch posts from API and cache in localStorage
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const cached = localStorage.getItem("posts");
+        if (cached) {
+            setPosts(JSON.parse(cached));
+            setLoading(false);
+        }
+
+        fetch("/api/posts")
+            .then((res) => res.json())
+            .then((data) => {
+                const cachedData = cached ? JSON.parse(cached) : null;
+                if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
+                    setPosts(data);
+                    localStorage.setItem("posts", JSON.stringify(data));
+                }
+            })
+            .catch((err) => console.error("Error loading posts:", err))
+            .finally(() => setLoading(false));
+    }, []);
+
+    // ✅ Fetch projects from API and cache in localStorage
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const cached = localStorage.getItem("projects");
+        if (cached) {
+            setProjects(JSON.parse(cached));
+            setLoading(false);
+        }
+
+        fetch("/api/projects")
+            .then((res) => res.json())
+            .then((data) => {
+                const cachedData = cached ? JSON.parse(cached) : null;
+                if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
+                    setProjects(data);
+                    localStorage.setItem("projects", JSON.stringify(data));
+                }
+            })
+            .catch((err) => console.error("Error loading projects:", err))
+            .finally(() => setLoading(false));
+    }, []);
+
+    const addMore = posts.length - shownPosts > 0;
+
+    const filteredPosts = posts
+        .filter((p) => {
+            const matchesSearch =
+                query === "" ||
+                p.title.toLowerCase().includes(query.toLowerCase()) ||
+                p.subtitle.toLowerCase().includes(query.toLowerCase()) || Object.keys(p.tags).includes(query.toLowerCase());
+
+            return matchesSearch;
+        })
+        .sort((a, b) => {
+            return sortFirst
+                ? new Date(b.publish).getTime() - new Date(a.publish).getTime()
+                : new Date(a.publish).getTime() - new Date(b.publish).getTime();
+        });
+
     return (
-        <VStack className="mt-40 mb-4 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
-            <p className="text-textColor">
-                News
-            </p>
+        <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
+            {/* 🔍 Search + Sort Controls */}
+            <div className="flex flex-row" style={{ gap: "8px" }}>
+                <HStack className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5">
+                    <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-40"
+                    />
+                </HStack>
+
+                <button
+                    title="Sort posts by newest or oldest"
+                    type="button"
+                    onClick={() => setSortFirst(!sortFirst)}
+                    className="
+                        bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
+                        hover:bg-oppbackground/5
+                        active:scale-95 
+                        transition-all
+                        ease-in-out
+                        duration-300
+                        cursor-pointer
+                    ">
+                    <Arrow
+                        className={`text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                        transition-transform
+                        ease-in-out
+                        duration-300
+                        ${sortFirst ? "rotate-0" : "rotate-180"}
+                    `} />
+                </button>
+            </div>
+
+            {/* 📰 Post List */}
+            <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
+                {posts.length > 0 ? (
+                    posts.slice(0, shownPosts).map((post, i) => (
+                        <PostView key={post.title} post={post} index={i} />
+                    ))
+                ) : (
+                    <p className="text-sub2">No posts yet...</p>
+                )}
+            </VStack>
+
+            {/* ➕ More Button */}
+            <HStack spacing={8}>
+                <button
+                    type="button"
+                    onClick={() => addMore && setShownPosts(shownPosts + 5)}
+                    className={`${addMore ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                        bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
+                    `}
+                >
+                    <HStack
+                        className={`${addMore ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center px-2`}
+                        spacing={5}
+                    >
+                        <p>More...</p>
+                    </HStack>
+                </button>
+            </HStack>
         </VStack>
     );
 }
+
+// ✅ PostView Component
+type PostViewProps = {
+    post: Post;
+    index: number;
+};
+
+function PostView({ post, index }: PostViewProps) {
+    return (
+        <VStack
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: (index + 1) * 0.2 }}
+            className="relative bg-sub1 rounded-[20px] w-full justify-center items-center overflow-visible mb-[16px]"
+            spacing={10}
+        >
+            {/* --- Content --- */}
+            <div className="flex sm:flex-row flex-col p-6 justify-center items-center w-full">
+                <VStack
+                    className="
+                        sm:items-start items-center
+                        sm:text-left text-center
+                        sm:justify-start justify-center
+                    "
+                    spacing={4}
+                >
+                    <h2
+                        className="
+                            md:text-[30px]
+                            sm:text-[26px]
+                            text-[23px] 
+                            font-bold  
+                            transition-all
+                            ease-in-out
+                            duration-200
+                            text-sub3
+                        "
+                    >
+                        {post.title}
+                    </h2>
+
+                    <p
+                        className="
+                            text-sub3 
+                            md:text-[15px] 
+                            sm:text-[12px] 
+                            text-[10px] 
+                            truncate
+                        "
+                    >
+                        {post.subtitle}
+                    </p>
+
+
+                    <HStack
+                        spacing={6}
+                        className="
+                        hidden
+                        sm:flex
+                            overflow-x-auto
+                            py-[1px] px-[1px]
+                            [&::-webkit-scrollbar]:h-[0px]
+                            hover:[&::-webkit-scrollbar]:h-[6px]
+                            [&::-webkit-scrollbar-track]:rounded-full
+                            [&::-webkit-scrollbar-track]:bg-transparent
+                            [&::-webkit-scrollbar-thumb]:rounded-full
+                            [&::-webkit-scrollbar-thumb]:bg-gray-400/30
+                            hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
+                            sm:justify-start justify-center
+                        "
+                    >
+                        {post.tags.map((text) => (
+                            <p
+                                key={text}
+                                className="text-sub3 text-[12px] md:text-[15px] font-bold px-3 py-1 bg-sub2/20 rounded-[12px]"
+                            >
+                                {text}
+                            </p>
+                        ))}
+                    </HStack>
+                </VStack>
+
+                <Spacer />
+
+                <VStack spacing={6}>
+                    <Image
+                        src="/ss1.png"
+                        alt={post.title}
+                        width={150}
+                        height={150}
+                        className="rounded-[12px] sm:mt-0 mt-4"
+                    />
+
+                    <HStack
+                        spacing={6}
+                        className="
+                        sm:hidden
+                        flex
+                            overflow-x-auto
+                            py-[1px] px-[1px]
+                            [&::-webkit-scrollbar]:h-[0px]
+                            hover:[&::-webkit-scrollbar]:h-[6px]
+                            [&::-webkit-scrollbar-track]:rounded-full
+                            [&::-webkit-scrollbar-track]:bg-transparent
+                            [&::-webkit-scrollbar-thumb]:rounded-full
+                            [&::-webkit-scrollbar-thumb]:bg-gray-400/30
+                            hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
+                            sm:justify-start justify-center
+                        "
+                    >
+                        {post.tags.map((text) => (
+                            <p
+                                key={text}
+                                className="text-sub3 text-[12px] md:text-[15px] font-bold px-3 py-1 bg-sub2/20 rounded-[12px]"
+                            >
+                                {text}
+                            </p>
+                        ))}
+                    </HStack>
+                </VStack>
+            </div>
+
+            {/* --- Floating Button --- */}
+            <button
+                type="button"
+                className="
+                    absolute 
+                    bottom-[-16px] 
+                    z-20 
+                    rounded-[25px]
+                    active:scale-95 
+                    transition-all
+                    ease-in-out
+                    duration-300
+                    bg-blue-500
+                    hover:bg-blue-600
+                    cursor-pointer
+                    flex
+                    justify-center
+                    items-center
+                "
+                style={{
+                    width: 80,
+                    height: 32,
+                }}
+            >
+                <Text
+                    variant="body"
+                    className="text-white transition-all ease-in-out duration-300"
+                >
+                    Info
+                </Text>
+            </button>
+        </VStack>
+    );
+}
+

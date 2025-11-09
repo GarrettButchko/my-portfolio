@@ -1,20 +1,17 @@
-import { HStack, VStack, Spacer } from "../Components/components";
+import { HStack, VStack} from "../Components/components";
 import Search from "../../../public/svg/search.svg";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Project } from "@/app/Types/Project"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
 import Arrow from "../../../public/svg/arrow.svg";
-import { nextImageLoaderRegex } from "next/dist/build/webpack-config";
+
 
 
 export default function PortfolioSection() {
 
     const [loading, setLoading] = useState(true);
     const [query, setQuery] = useState("");
-    const [focused, setFocused] = useState(false);
-    const searchBarRef = useRef<HTMLInputElement | null>(null);
     const [shownProj, setShownProjs] = useState<number[]>([1, 2, 3, 4]);
-    const [pageNum, setPageNum] = useState<number>(1);
     const [projects, setProjects] = useState<Project[]>([]);
     const [selected, setSelected] = useState("");
     const [sortFirst, setSortFirst] = useState(true);
@@ -96,17 +93,14 @@ export default function PortfolioSection() {
         shownProj.includes(i + 1)
     );
 
-    const canAddPage: boolean = ((paginatedProjects.length + ((pageNum - 1) * 4) + shownProj[0]) - 1) != filteredProjects.length;
+    const canAddPage: boolean = ((paginatedProjects.length + shownProj[0]) - 1) != filteredProjects.length;
 
     const canSubtractPage: boolean = shownProj[0] != 1
-
-
 
     return (
         <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
             <div className="flex flex-col sm:flex-row" style={{ gap: "8px" }}>
                 <HStack
-                    ref={searchBarRef}
                     className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5"
                 >
                     <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
@@ -114,10 +108,6 @@ export default function PortfolioSection() {
                         type="text"
                         placeholder="Search..."
                         value={query}
-                        onFocus={() => setFocused(true)}
-                        onBlur={(e) => {
-                            if (!e.target.value) setFocused(false);
-                        }}
                         onChange={(e) => {
                             setQuery(e.target.value);
                             setShownProjs([1, 2, 3, 4]);
@@ -182,7 +172,7 @@ export default function PortfolioSection() {
                 </div>
             </VStack>
             <p className="text-sub2">
-                Showing {filteredProjects.length == 0 ? 0 : shownProj[0]} to {(paginatedProjects.length + ((pageNum - 1) * 4) + shownProj[0]) - 1} of {filteredProjects.length} Projects
+                Showing {filteredProjects.length == 0 ? 0 : shownProj[0]} to {(paginatedProjects.length + shownProj[0]) - 1} of {filteredProjects.length} Projects
             </p>
             <HStack spacing={8}>
                 <button

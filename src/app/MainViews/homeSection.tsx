@@ -1,6 +1,6 @@
 "use client";
 
-import { VStack, HStack, Text, Section, Divider, Spacer, ZStack } from "../Components/components";
+import { VStack, HStack, Text, Section, Spacer } from "../Components/components";
 import Circle from "../../../public/svg/circle.svg";
 import Image from "next/image";
 import { hexToRgba } from "@/app/lib/hextoRgba";
@@ -356,7 +356,6 @@ export default function HomeSecton() {
             ease-in-out
             duration-200
             text-sub3
-            
           ">
                 {infoItem.title}
               </p>
