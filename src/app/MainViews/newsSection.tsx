@@ -6,6 +6,7 @@ import Arrow from "../../../public/svg/arrow.svg";
 import { Post } from "@/app/Types/Post";
 import { Project } from "@/app/Types/Project";
 import Image from "next/image";
+import BlurOverlay from "@/app/Components/blurOverlay";
 
 
 export default function NewsSection() {
@@ -15,6 +16,38 @@ export default function NewsSection() {
     const [shownPosts, setShownPosts] = useState(5);
     const [posts, setPosts] = useState<Post[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
+    const [show, setShow] = useState(true);
+    const [popUpView, setPopUpView] = useState<React.ReactNode>(
+        <div className="text-textColor text-center text-bold">
+            {"Nothing Here Yet :)..."}
+        </div>
+    );
+
+
+    useEffect(() => {
+        if (show) {
+            // Lock scroll and save current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.position = "fixed";
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.left = "0";
+            document.body.style.right = "0";
+            document.body.style.overflowY = "scroll";
+            document.body.style.width = "100%";
+
+            return () => {
+                // Restore scroll position
+                document.body.style.position = "";
+                document.body.style.top = "";
+                document.body.style.left = "";
+                document.body.style.right = "";
+                document.body.style.overflowY = "";
+                document.body.style.width = "";
+                window.scrollTo(0, scrollY);
+            };
+        }
+    }, [show]);
+
 
     // ✅ Fetch posts from API and cache in localStorage
     useEffect(() => {
@@ -80,31 +113,32 @@ export default function NewsSection() {
         });
 
     return (
-        <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
-            {/* 🔍 Search + Sort Controls */}
-            <div className="flex flex-row" style={{ gap: "8px" }}>
-                <HStack className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5">
-                    <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={query}
-                        onChange={(e) => {
-                            setQuery(e.target.value)
+        <div className="w-full">
+            <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
+                {/* 🔍 Search + Sort Controls */}
+                <div className="flex flex-row" style={{ gap: "8px" }}>
+                    <HStack className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5">
+                        <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={query}
+                            onChange={(e) => {
+                                setQuery(e.target.value)
+                                setShownPosts(5);
+                            }}
+                            className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-40"
+                        />
+                    </HStack>
+
+                    <button
+                        title="Sort posts by newest or oldest"
+                        type="button"
+                        onClick={() => {
+                            setSortFirst(!sortFirst);
                             setShownPosts(5);
                         }}
-                        className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-40"
-                    />
-                </HStack>
-
-                <button
-                    title="Sort posts by newest or oldest"
-                    type="button"
-                    onClick={() => {
-                        setSortFirst(!sortFirst);
-                        setShownPosts(5);
-                    }}
-                    className="
+                        className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
                         hover:bg-oppbackground/5
                         active:scale-95 
@@ -113,76 +147,76 @@ export default function NewsSection() {
                         duration-300
                         cursor-pointer
                     ">
-                    <Arrow
-                        className={`text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                        <Arrow
+                            className={`text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                         transition-transform
                         ease-in-out
                         duration-300
                         ${sortFirst ? "rotate-0" : "rotate-180"}
                     `} />
-                </button>
-            </div>
+                    </button>
+                </div>
 
-            {/* 📰 Post List */}
-            <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6 justify-center items-center" spacing={45}>
+                {/* 📰 Post List */}
+                <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6 justify-center items-center" spacing={45}>
 
-                {loading ? (
-                    <>
-                        <PostViewPlaceHolder />
-                        <PostViewPlaceHolder />
-                        <PostViewPlaceHolder />
-                        <PostViewPlaceHolder />
-                        <PostViewPlaceHolder />
-                    </>
-                ) : filteredPosts && filteredPosts.length > 0 ? (
-                    <>
-                        {filteredPosts.slice(0, shownPosts).map((post, i) => (
-                            <PostView key={post.title} post={post} index={i} />
-                        ))}
-
-                        {/* Add placeholders if less than 5 items */}
-                        {filteredPosts.length < 5 &&
-                            Array.from({ length: 5 - filteredPosts.length }).map((_, i) => (
-                                <PostViewPlaceHolder
-                                    key={`placeholder-${i}`}
-                                    animate={false}
-                                    className="opacity-0"
-                                />
+                    {loading ? (
+                        <>
+                            <PostViewPlaceHolder />
+                            <PostViewPlaceHolder />
+                            <PostViewPlaceHolder />
+                            <PostViewPlaceHolder />
+                            <PostViewPlaceHolder />
+                        </>
+                    ) : filteredPosts && filteredPosts.length > 0 ? (
+                        <>
+                            {filteredPosts.slice(0, shownPosts).map((post, i) => (
+                                <PostView key={post.title} post={post} index={i} />
                             ))}
-                    </>
-                ) : (
-                    <>
-                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
-                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
-                    <p className="text-sub2 py-6">No posts yet...</p>
-                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
-                    <PostViewPlaceHolder animate={false} className="opacity-0"/>
-                    </>
-                )}
 
+                            {/* Add placeholders if less than 5 items */}
+                            {filteredPosts.length < 5 &&
+                                Array.from({ length: 5 - filteredPosts.length }).map((_, i) => (
+                                    <PostViewPlaceHolder
+                                        key={`placeholder-${i}`}
+                                        animate={false}
+                                        className="opacity-0"
+                                    />
+                                ))}
+                        </>
+                    ) : (
+                        <>
+                            <PostViewPlaceHolder animate={false} className="opacity-0" />
+                            <PostViewPlaceHolder animate={false} className="opacity-0" />
+                            <p className="text-sub2 py-6">No posts yet...</p>
+                            <PostViewPlaceHolder animate={false} className="opacity-0" />
+                            <PostViewPlaceHolder animate={false} className="opacity-0" />
+                        </>
+                    )}
 
-
-
-            </VStack>
-
-            {/* ➕ More Button */}
-            <HStack spacing={8}>
-                <button
-                    type="button"
-                    onClick={() => addMore && setShownPosts(shownPosts + 5)}
-                    className={`${addMore ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                </VStack>
+                {/* ➕ More Button */}
+                <HStack spacing={8}>
+                    <button
+                        type="button"
+                        onClick={() => addMore && setShownPosts(shownPosts + 5)}
+                        className={`${addMore ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
                     `}
-                >
-                    <HStack
-                        className={`${addMore ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center px-2`}
-                        spacing={5}
                     >
-                        <p>More...</p>
-                    </HStack>
-                </button>
-            </HStack>
-        </VStack>
+                        <HStack
+                            className={`${addMore ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center px-2`}
+                            spacing={5}
+                        >
+                            <p>More...</p>
+                        </HStack>
+                    </button>
+                </HStack>
+            </VStack>
+            <BlurOverlay show={show} onClose={() => setShow(false)}>
+                {popUpView}
+            </BlurOverlay>
+        </div>
     );
 }
 

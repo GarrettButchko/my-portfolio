@@ -1,24 +1,61 @@
 "use client";
 
 import { VStack, HStack, Text, Section, Spacer } from "../Components/components";
-import Circle from "../../../public/svg/circle.svg";
+import InfoCollection from "../Components/InfoCollection";
 import Image from "next/image";
-import { hexToRgba } from "@/app/lib/hextoRgba";
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { Project } from "@/app/Types/Project"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
+import BlurOverlay from "@/app/Components/blurOverlay";
 
 export default function HomeSecton() {
 
+  const [show, setShow] = useState(true);
+  const [popUpView, setPopUpView] = useState<React.ReactNode>(
+    <div className="text-textColor text-center text-bold">
+      {"Nothing Here Yet :)..."}
+    </div>
+  );
+
+
+  useEffect(() => {
+    if (show) {
+      // Lock scroll and save current scroll position
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.overflowY = "scroll";
+      document.body.style.width = "100%";
+
+      return () => {
+        // Restore scroll position
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.overflowY = "";
+        document.body.style.width = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [show]);
+
   return (
-    <VStack className="mt-40 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
-      <Intro />
-      <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
-      <EduExp />
-      <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
-      <RecProj />
-    </VStack>
+    <div>
+      <VStack className="mt-40 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
+        <Intro />
+        <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
+        <EduExp />
+        <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
+        <RecProj />
+      </VStack>
+      <BlurOverlay show={show} onClose={() => setShow(false)} >
+        {popUpView}
+      </BlurOverlay>
+    </div>
   );
 
   function RecProj() {
@@ -48,7 +85,6 @@ export default function HomeSecton() {
         })
         .catch((err) => console.error("Error loading projects:", err))
         .finally(() => setLoading(false));
-
     }, []); // ✅ empty dependency array runs once only
 
 
@@ -175,7 +211,7 @@ export default function HomeSecton() {
                   cursor-pointer
                   `}>
               <Text
-              
+
                 variant="body"
                 className="
                   justify-center 
@@ -237,15 +273,117 @@ export default function HomeSecton() {
   }
 
   function EduExp() {
-
     const education: InfoItem[] = [
-      { id: 1, title: "Saint Ignatius Highschool", majorOrEmployer: "Highschool", loc: "Cleveland, OH", start: 20, end: 24, in: false, pic: "/logos/sihs.jpg", picAlt: "Saint Ignatius Highschool Logo", hexColor: "#eab908", link: "https://www.ignatius.edu/" },
-      { id: 2, title: "Ohio State University", majorOrEmployer: "CS & Engineering", loc: "Columbus, OH", start: 24, end: 25, in: false, pic: "/logos/osu.jpg", picAlt: "Ohio State Logo", hexColor: "#bb0000", link: "https://www.osu.edu/" },
-      { id: 3, title: "Cleveland State University", majorOrEmployer: "CS & Design", loc: "Cleveland, OH", start: 25, end: "Pres.", in: true, pic: "/logos/csu.jpg", picAlt: "Cleveland State Logo", hexColor: "#016a4c", link: "https://www.csuohio.edu/" }
+      {
+        id: 1,
+        title: "Saint Ignatius Highschool",
+        majorOrEmployer: "Highschool",
+        gpa: 4.31,
+        loc: "Cleveland, OH",
+        start: 20,
+        end: 24,
+        in: false,
+        pic: "/logos/sihs.jpg",
+        picAlt: "Saint Ignatius Highschool Logo",
+        hexColor: "#eab908",
+        link: "https://www.ignatius.edu/",
+        actProjs: [
+          {
+            title: "Student Government",
+            body: "Participated in student council, organizing events and representing student interests.",
+            skills: ["Leadership", "Event Planning", "Teamwork"],
+          },
+          {
+            title: "Football (Varsity Captain)",
+            body: "Captain of the varsity football team, leading teammates and contributing to team strategy and success.",
+            skills: ["Leadership", "Teamwork", "Strategy"],
+          },
+          {
+            title: "Rugby (Varsity, 3 years)",
+            body: "Played varsity rugby for three years; 1 National Championship, 1 State Runner-Up, and 3 State Championships.",
+            skills: ["Teamwork", "Strategy", "Discipline", "Competitive Mindset"],
+          },
+          {
+            title: "Big Brother",
+            body: "Mentored younger students, providing guidance and support throughout the school year.",
+            skills: ["Mentorship", "Communication", "Responsibility"],
+          },
+          {
+            title: "Freshman Retreat Leader",
+            body: "Led retreats for incoming freshmen, organizing activities and fostering community.",
+            skills: ["Leadership", "Organization", "Public Speaking"],
+          },
+          {
+            title: "Welsch Academy Flag Football Coach",
+            body: "Coached youth flag football, teaching fundamentals and teamwork to younger players.",
+            skills: ["Coaching", "Leadership", "Motivation"],
+          },
+        ]
+      },
+      {
+        id: 2,
+        title: "Ohio State University",
+        majorOrEmployer: "CS & Engineering",
+        gpa: 3.2,
+        loc: "Columbus, OH",
+        start: 24,
+        end: 25,
+        in: false,
+        pic: "/logos/osu.jpg",
+        picAlt: "Ohio State Logo",
+        hexColor: "#bb0000",
+        link: "https://www.osu.edu/",
+        actProjs: [
+          {
+            title: "Impact Developers Club – Founder & Head of Development",
+            body: "Founded and lead the Impact Developers Club, overseeing development projects and mentoring members to build real-world applications that serve the community.",
+            skills: ["Leadership", "Project Management", "Software Development", "Mentorship"],
+          },
+          {
+            title: "Honors Community Leadership Council",
+            body: "Member of the council, contributing to initiatives that enhance community engagement and leadership among students.",
+            skills: ["Leadership", "Community Engagement", "Collaboration", "Event Planning"],
+          },
+        ]
+      },
+      {
+        id: 3,
+        title: "Cleveland State University",
+        majorOrEmployer: "CS & Design",
+        gpa: "TBD",
+        loc: "Cleveland, OH",
+        start: 25,
+        end: "Pres.",
+        in: true,
+        pic: "/logos/csu.jpg",
+        picAlt: "Cleveland State Logo",
+        hexColor: "#016a4c",
+        link: "https://www.csuohio.edu/",
+        actProjs: [
+          {
+            title: "Viking Catholic - Treasurer",
+            body: "Manage the finances of Viking Catholic, overseeing budgets, coordinating fundraising, and supporting leadership in organizing campus events.",
+            skills: ["Financial Management", "Budgeting", "Organization", "Leadership"],
+          },
+        ]
+      }
     ];
 
     const experience: InfoItem[] = ([
-      { id: 1, title: "Web and App Dev. Intern", majorOrEmployer: "ADollarClass", loc: "Remote", start: 25, end: "Pres.", in: true, pic: "/logos/adollarclass.jpg", picAlt: "AdollarClass Company Logo", hexColor: "#022ffe", link: "https://www.adollarclass.com/" }
+      {
+        id: 1,
+        title: "Web and App Dev. Intern",
+        majorOrEmployer: "ADollarClass",
+        loc: "Remote",
+        start: 25,
+        end: "Pres.",
+        in: true,
+        pic: "/logos/adollarclass.jpg",
+        picAlt: "AdollarClass Company Logo",
+        hexColor: "#022ffe",
+        link: "https://www.adollarclass.com/",
+        actProjs: []
+      }
     ]);
 
     return (
@@ -295,117 +433,6 @@ export default function HomeSecton() {
           </VStack>
         </VStack>
       </Section>
-    );
-  }
-
-  function InfoCollection({ infoItem, index }: { infoItem: InfoItem, index: number }) {
-
-    return (
-
-      <HStack spacing={20} className="items-center ">
-
-        <div className="md:flex hidden">
-          {infoItem.in ? (
-            <Circle
-              className="text-sub1 fill-sub2 w-8 h-8"
-              style={{ transform: "translateY(-16px)" }}
-            />
-          ) : (
-            <HStack>
-              <div>
-                <Circle
-                  className="text-sub1 fill-sub1 w-8 h-8"
-                  style={{ transform: "translateY(56px)" }}
-                />
-                <div
-                  className="bg-sub1 scale-150"
-                  style={{ height: `${140}px`, width: `${5}px`, transform: "translateY(56px) translateX(9px)" }}
-                />
-              </div>
-            </HStack>
-          )}
-        </div>
-
-        <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: (index + 1) * 0.2 }}
-          className="flex flex-col items-center w-full">
-          <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
-            <VStack className="md:items-start items-center justify-center">
-              <div className="flex sm:flex-row flex-col justify-center items-center 
-            text-[12px] sm:text-[15px] md:text-[18px]">
-                <p className="font-bold text-sub2 justify-center">
-                  {infoItem.majorOrEmployer}
-                </p>
-                <p className="font-bold text-sub2 hidden sm:flex px-1">
-                  |
-                </p>
-                <p className="font-bold text-sub2 justify-center">
-                  {infoItem.loc} | '{infoItem.start} - {typeof infoItem.end === "string" ? infoItem.end : `'${infoItem.end}`}
-                </p>
-              </div>
-
-              <p
-                className="
-            md:text-[30px]
-            sm:text-[30px]
-            xs:text-[15px] 
-            font-bold  
-            transition-all
-            ease-in-out
-            duration-200
-            text-sub3
-          ">
-                {infoItem.title}
-              </p>
-
-            </VStack>
-            <Spacer />
-            <button className="cursor-pointer mb-3 md:mb-0" onClick={() => window.open(infoItem.link, "_blank")}>
-              <Image
-                src={infoItem.pic}     // path from /public
-                alt={infoItem.picAlt}
-                width={100}
-                height={100}
-                className="rounded-full w-[100px] h-[100px] object-cover flex-shrink-0"
-              />
-            </button>
-
-          </div>
-          <button
-            type="button"
-            className={`
-                  z-20 
-                  rounded-[25px]
-                  active:scale-95 
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  bg-blue-500
-                  hover:bg-blue-600
-                  cursor-pointer
-                  `}
-            style={{
-              width: 160,
-              height: 32,
-              transform: "translateY(-16px)",
-            }}>
-            <Text
-              variant="body"
-              className="
-                  justify-center 
-                  text-white
-                  transition-all
-                  ease-in-out
-                  duration-300
-                  items-center
-                  ">
-              Learn More
-            </Text>
-          </button>
-        </motion.div>
-      </HStack>
     );
   }
 }
