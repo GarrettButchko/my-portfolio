@@ -59,7 +59,7 @@ export default function Home() {
             ))}
           </HStack>
           <p className="text-sub2">
-            © 2025 Garrett Butchko. All rights reserved.
+            © {new Date().getFullYear()} Garrett Butchko. All rights reserved.
           </p>
         </VStack>
       </VStack>

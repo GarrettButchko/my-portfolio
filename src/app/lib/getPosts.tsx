@@ -53,9 +53,7 @@ export async function getPosts(): Promise<Post[]> {
             const data = snapshot.val();
             const posts: Post[] = Object.values(data).map((item: any) => ({
                 ...item,
-                publish: item.publish?.toDate
-                    ? item.publish.toDate().toISOString()
-                    : item.publish,
+                publish: item.publish?.toDate ? item.publish.toDate().toISOString() : item.publish,
             }));
 
             // Cache result

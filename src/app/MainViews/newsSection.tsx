@@ -6,7 +6,7 @@ import Arrow from "../../../public/svg/arrow.svg";
 import { Post } from "@/app/Types/Post";
 import { Project } from "@/app/Types/Project";
 import Image from "next/image";
-import { motion, type HTMLMotionProps } from "framer-motion";
+
 
 export default function NewsSection() {
     const [query, setQuery] = useState("");
@@ -192,7 +192,7 @@ type PostViewProps = {
     index: number;
 };
 
-function PostView({ post, index }: PostViewProps) {
+export function PostView({ post, index }: PostViewProps) {
     return (
         <VStack
             initial={{ opacity: 0, y: 30 }}
@@ -342,7 +342,7 @@ function PostView({ post, index }: PostViewProps) {
     );
 }
 
-function PostViewPlaceHolder({ className, animate = true }: { className?: string, animate?: boolean }) {
+export function PostViewPlaceHolder({ className, animate = true }: { className?: string, animate?: boolean }) {
     return (
         <VStack
             className={`relative bg-sub1 rounded-[20px] w-full overflow-visible mb-4 ${animate ? "animate-pulse" : ""} ${className ?? ""}`}

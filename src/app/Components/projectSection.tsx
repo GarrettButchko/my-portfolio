@@ -146,8 +146,6 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
   );
 }
 
-
-
 export function ProjSectionPlaceHolder({ className, animate = true }: { className?: string, animate?: boolean }) {
   return (
     <VStack
