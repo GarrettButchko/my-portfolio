@@ -11,7 +11,7 @@ import BlurOverlay from "@/app/Components/blurOverlay";
 
 export default function HomeSecton() {
 
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [popUpView, setPopUpView] = useState<React.ReactNode>(
     <div className="text-textColor text-center text-bold">
       {"Nothing Here Yet :)..."}
@@ -335,7 +335,7 @@ export default function HomeSecton() {
         link: "https://www.osu.edu/",
         actProjs: [
           {
-            title: "Impact Developers Club – Founder & Head of Development",
+            title: "Impact Developers Club",
             body: "Founded and lead the Impact Developers Club, overseeing development projects and mentoring members to build real-world applications that serve the community.",
             skills: ["Leadership", "Project Management", "Software Development", "Mentorship"],
           },
@@ -361,7 +361,7 @@ export default function HomeSecton() {
         link: "https://www.csuohio.edu/",
         actProjs: [
           {
-            title: "Viking Catholic - Treasurer",
+            title: "Viking Catholic",
             body: "Manage the finances of Viking Catholic, overseeing budgets, coordinating fundraising, and supporting leadership in organizing campus events.",
             skills: ["Financial Management", "Budgeting", "Organization", "Leadership"],
           },
@@ -382,7 +382,13 @@ export default function HomeSecton() {
         picAlt: "AdollarClass Company Logo",
         hexColor: "#022ffe",
         link: "https://www.adollarclass.com/",
-        actProjs: []
+        actProjs: [
+          {
+            title: "Mobile App",
+            body: "Completed hands-on training by developing a full-stack mobile application to gain experience in app architecture, UI design, and backend integration.",
+            skills: ["App Development", "Flutter", "Firebase", "UI Design", "Problem Solving", "Team Collaboration"],
+          }
+        ]
       }
     ]);
 
@@ -406,7 +412,7 @@ export default function HomeSecton() {
 
           <VStack spacing={25}>
             {education.map((student: InfoItem, index) => (
-              <InfoCollection key={index} infoItem={student} index={index} />
+              <InfoCollection key={index} infoItem={student} index={index} setPopUpView={setPopUpView} setShow={setShow} />
             ))}
           </VStack>
 
@@ -427,7 +433,7 @@ export default function HomeSecton() {
           <VStack>
             <VStack spacing={25}>
               {experience.map((job: InfoItem, index) => (
-                <InfoCollection key={index} infoItem={job} index={index} />
+                <InfoCollection key={index} infoItem={job} index={index} setPopUpView={setPopUpView} setShow={setShow} />
               ))}
             </VStack>
           </VStack>

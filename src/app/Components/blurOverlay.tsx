@@ -49,7 +49,7 @@ export default function BlurOverlay({ show, onClose, children }: BlurOverlayProp
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="relative z-60 w-full max-w-lg p-4 max-h-[90vh] overflow-y-auto"
+            className="relative z-60 w-full max-w-4xl p-4 overflow-y-auto"
           >
             {children}
           </motion.div>

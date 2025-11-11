@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, type HTMLMotionProps } from "framer-motion";
 
-export function Spacer({ minH = 0, className = ""}: { minH?: number; color?: string, className?: string}) {
+export function Spacer({ minH = 0, className = "" }: { minH?: number; color?: string, className?: string }) {
   const minHClass = `min-h-[${minH}px]`;
   return (
     <div className={`flex-grow ${minHClass} ${className}`}></div>
@@ -51,8 +51,16 @@ export function ZStack({ children, className = "", ...motionProps }: { children?
 
 
 
-export function Divider({ className = "", backgroundColor = "bg-foreground", height = 1 }) {
-  return <div className={`flex ${backgroundColor} w-full h-${height} ${className}`} />;
+export function Divider({
+  className = "",
+  backgroundColor = "bg-foreground",
+  height = "h-2",
+}: {
+  className?: string;
+  backgroundColor?: string;
+  height?: string;
+}) {
+  return <div className={`flex ${backgroundColor} w-full ${height} ${className}`} />;
 }
 
 
