@@ -10,6 +10,7 @@ import PortfolioSection from "./MainViews/portfolioSection";
 import NewsSection from "./MainViews/newsSection";
 import { VStack, HStack } from "@/app/Components/components";
 import { moveDivToIndex } from "./Components/floatingbar";
+import { useSearchParams, useRouter } from "next/navigation";
 
 type TargetSerializable = {
   id: number;
@@ -28,45 +29,57 @@ const iconsMap: Record<string, React.ReactElement> = {
 };
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const cachedTarget = typeof window !== "undefined" ? localStorage.getItem("target") : null;
+  const sectionFromCache = cachedTarget ? (JSON.parse(cachedTarget) as "Home" | "Portfolio" | "News") : null;
+  const sectionFromUrl = searchParams?.get("start-section") as "Home" | "Portfolio" | "News" | null;
+
+  // Initial section priority: URL > localStorage > default
+  const initialSection: "Home" | "Portfolio" | "News" = sectionFromUrl ?? sectionFromCache ?? "Home";
+
   const [mounted, setMounted] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const [targets, setTargets] = useState<Target[]>(() => {
-    if (typeof window === "undefined") return []; // SSR-safe
-
-    const cached = localStorage.getItem("targets");
-    if (cached) {
-      const parsed: TargetSerializable[] = JSON.parse(cached);
-      return parsed.map(t => ({ ...t, icon: iconsMap[t.name] }));
-    }
-
-    // default targets
-    return [
-      { id: 1, name: "Home", isSelected: true, icon: <HomeIcon className="w-5 h-5" /> },
-      { id: 2, name: "Portfolio", isSelected: false, icon: <PortfolioIcon className="w-5 h-5" /> },
-      { id: 3, name: "News", isSelected: false, icon: <NewsIcon className="w-5 h-5" /> },
-    ];
-  });
+  const [targets, setTargets] = useState<Target[]>(() => [
+    { id: 1, name: "Home", isSelected: initialSection === "Home", icon: <HomeIcon className="w-5 h-5" /> },
+    { id: 2, name: "Portfolio", isSelected: initialSection === "Portfolio", icon: <PortfolioIcon className="w-5 h-5" /> },
+    { id: 3, name: "News", isSelected: initialSection === "News", icon: <NewsIcon className="w-5 h-5" /> },
+  ]);
 
   const buttonRefs = useRef<HTMLButtonElement[]>([]);
 
-  // 2️⃣ Set mounted flag
+  // Mark mounted
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 3️⃣ Save to localStorage effect (only after mount)
+  // Save active section to localStorage whenever it changes
   useEffect(() => {
-    if (!mounted) return; // ✅ client-only
-    const serializableTargets = targets.map(({ id, name, isSelected }) => ({ id, name, isSelected }));
-    localStorage.setItem("targets", JSON.stringify(serializableTargets));
+    if (!mounted) return;
+    const active = targets.find(t => t.isSelected)?.name ?? "Home";
+    localStorage.setItem("target", JSON.stringify(active));
   }, [targets, mounted]);
 
-  // 4️⃣ Conditional rendering comes after hooks
   if (!mounted) return null;
 
-  const active = targets.find((t: Target) => t.isSelected)?.name ?? "Home";
+  const active = targets.find(t => t.isSelected)?.name ?? "Home";
 
+  const handleSectionChange = (sectionName: string, index: number) => {
+    // Update targets state
+    setTargets(prev =>
+      prev.map((t, i) => ({ ...t, isSelected: i === index }))
+    );
+
+    // Move FloatingBar
+    moveDivToIndex({ index, setPosition, setTargets });
+
+    // Update URL without reload
+    router.replace(`/?start-section=${sectionName}`, { scroll: false });
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+  };
 
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
@@ -83,15 +96,12 @@ export default function Home() {
               <button
                 key={target.id}
                 type="button"
-                onClick={() => {
-                  moveDivToIndex({ index: i, setPosition, setTargets });
-                  window.scrollTo(0, 0); // instant scroll to top
-                }}
+                onClick={() => handleSectionChange(target.name, i)}
                 className="cursor-pointer"
               >
                 <HStack>
                   <p className="text-sub2 ml-1">{target.name}</p>
-                  {(i !== targets.length - 1) && <p className="text-sub2 mx-1">|</p>}
+                  {i !== targets.length - 1 && <p className="text-sub2 mx-1">|</p>}
                 </HStack>
               </button>
             ))}

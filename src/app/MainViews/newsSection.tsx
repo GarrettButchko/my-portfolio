@@ -7,6 +7,8 @@ import { Post } from "@/app/Types/Post";
 import { Project } from "@/app/Types/Project";
 import Image from "next/image";
 import BlurOverlay from "@/app/Components/blurOverlay";
+import { useRouter } from "next/navigation";
+import { slugify } from '@/app/lib/slugify';
 
 
 export default function NewsSection() {
@@ -23,29 +25,31 @@ export default function NewsSection() {
         </div>
     );
 
+    
+
     useEffect(() => {
         if (show) {
-          // Lock scroll and save current scroll position
-          const scrollY = window.scrollY;
-          document.body.style.position = "fixed";
-          document.body.style.top = `-${scrollY}px`;
-          document.body.style.left = "0";
-          document.body.style.right = "0";
-          document.body.style.overflowY = "scroll";
-          document.body.style.width = "100%";
-    
-          return () => {
-            // Restore scroll position
-            document.body.style.position = "";
-            document.body.style.top = "";
-            document.body.style.left = "";
-            document.body.style.right = "";
-            document.body.style.overflowY = "";
-            document.body.style.width = "";
-            window.scrollTo(0, scrollY);
-          };
+            // Lock scroll and save current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.position = "fixed";
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.left = "0";
+            document.body.style.right = "0";
+            document.body.style.overflowY = "scroll";
+            document.body.style.width = "100%";
+
+            return () => {
+                // Restore scroll position
+                document.body.style.position = "";
+                document.body.style.top = "";
+                document.body.style.left = "";
+                document.body.style.right = "";
+                document.body.style.overflowY = "";
+                document.body.style.width = "";
+                window.scrollTo(0, scrollY);
+            };
         }
-      }, [show]);
+    }, [show]);
 
 
     useEffect(() => {
@@ -136,6 +140,8 @@ export default function NewsSection() {
                 : new Date(a.publish).getTime() - new Date(b.publish).getTime();
         });
 
+    
+
     return (
         <div className="w-full">
             <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
@@ -195,7 +201,7 @@ export default function NewsSection() {
                     ) : filteredPosts && filteredPosts.length > 0 ? (
                         <>
                             {filteredPosts.slice(0, shownPosts).map((post, i) => (
-                                <PostView key={post.title} post={post} index={i} setShow={setShow} popUpView={popUpView}/>
+                                <PostView key={post.title} post={post} index={i} setShow={setShow} popUpView={popUpView} />
                             ))}
 
                             {/* Add placeholders if less than 5 items */}
@@ -252,7 +258,13 @@ type PostViewProps = {
     popUpView: React.RefObject<React.ReactNode>;
 };
 
-export function PostView({ post, index}: PostViewProps) {
+export function PostView({ post, index }: PostViewProps) {
+    const router = useRouter();
+
+    const goToPost = (postTitle: string) => {
+        router.push(`/news/${slugify(postTitle)}`);
+    };
+
     return (
         <VStack
             whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
@@ -369,7 +381,7 @@ export function PostView({ post, index}: PostViewProps) {
             <button
                 type="button"
                 onClick={() => {
-                    
+                    goToPost(post.title);
                 }}
 
                 className="
