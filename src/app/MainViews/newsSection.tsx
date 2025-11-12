@@ -1,6 +1,6 @@
 
 import { VStack, HStack, Spacer, Text } from "../Components/components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
 import { Post } from "@/app/Types/Post";
@@ -16,12 +16,36 @@ export default function NewsSection() {
     const [shownPosts, setShownPosts] = useState(5);
     const [posts, setPosts] = useState<Post[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
-    const [show, setShow] = useState(true);
-    const [popUpView, setPopUpView] = useState<React.ReactNode>(
-        <div className="text-textColor text-center text-bold">
-            {"Nothing Here Yet :)..."}
+    const [show, setShow] = useState(false);
+    const popUpView = useRef<React.ReactNode>(
+        <div className="text-textColor text-center font-bold">
+            Nothing Here Yet :)...
         </div>
     );
+
+    useEffect(() => {
+        if (show) {
+          // Lock scroll and save current scroll position
+          const scrollY = window.scrollY;
+          document.body.style.position = "fixed";
+          document.body.style.top = `-${scrollY}px`;
+          document.body.style.left = "0";
+          document.body.style.right = "0";
+          document.body.style.overflowY = "scroll";
+          document.body.style.width = "100%";
+    
+          return () => {
+            // Restore scroll position
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.left = "";
+            document.body.style.right = "";
+            document.body.style.overflowY = "";
+            document.body.style.width = "";
+            window.scrollTo(0, scrollY);
+          };
+        }
+      }, [show]);
 
 
     useEffect(() => {
@@ -148,7 +172,7 @@ export default function NewsSection() {
                         cursor-pointer
                     ">
                         <Arrow
-                            className={`text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            className={`text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                         transition-transform
                         ease-in-out
                         duration-300
@@ -171,7 +195,7 @@ export default function NewsSection() {
                     ) : filteredPosts && filteredPosts.length > 0 ? (
                         <>
                             {filteredPosts.slice(0, shownPosts).map((post, i) => (
-                                <PostView key={post.title} post={post} index={i} />
+                                <PostView key={post.title} post={post} index={i} setShow={setShow} popUpView={popUpView}/>
                             ))}
 
                             {/* Add placeholders if less than 5 items */}
@@ -205,7 +229,7 @@ export default function NewsSection() {
                     `}
                     >
                         <HStack
-                            className={`${addMore ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center px-2`}
+                            className={`${addMore ? "text-accent" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center px-2`}
                             spacing={5}
                         >
                             <p>More...</p>
@@ -214,7 +238,7 @@ export default function NewsSection() {
                 </HStack>
             </VStack>
             <BlurOverlay show={show} onClose={() => setShow(false)}>
-                {popUpView}
+                {popUpView.current}
             </BlurOverlay>
         </div>
     );
@@ -224,14 +248,14 @@ export default function NewsSection() {
 type PostViewProps = {
     post: Post;
     index: number;
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    popUpView: React.RefObject<React.ReactNode>;
 };
 
-export function PostView({ post, index }: PostViewProps) {
+export function PostView({ post, index}: PostViewProps) {
     return (
         <VStack
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: (index + 1) * 0.2 }}
+            whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
             className="relative bg-sub1 rounded-[20px] w-full justify-center items-center overflow-visible mb-[16px]"
             spacing={10}
         >
@@ -344,6 +368,10 @@ export function PostView({ post, index }: PostViewProps) {
             {/* --- Floating Button --- */}
             <button
                 type="button"
+                onClick={() => {
+                    
+                }}
+
                 className="
                     absolute 
                     bottom-[-16px] 
@@ -353,8 +381,7 @@ export function PostView({ post, index }: PostViewProps) {
                     transition-all
                     ease-in-out
                     duration-300
-                    bg-blue-500
-                    hover:bg-blue-600
+                    bg-accent hover:brightness-75
                     cursor-pointer
                     flex
                     justify-center

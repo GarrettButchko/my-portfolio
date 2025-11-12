@@ -1,9 +1,10 @@
 import { HStack, VStack } from "../Components/components";
 import Search from "../../../public/svg/search.svg";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Project } from "@/app/Types/Project"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
 import Arrow from "../../../public/svg/arrow.svg";
+import BlurOverlay from "@/app/Components/blurOverlay";
 
 
 
@@ -15,6 +16,36 @@ export default function PortfolioSection() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [selected, setSelected] = useState("");
     const [sortFirst, setSortFirst] = useState(true);
+    const [show, setShow] = useState(false);
+      const popUpView = useRef<React.ReactNode>(
+        <div className="text-textColor text-center font-bold">
+          Nothing Here Yet :)...
+        </div>
+      );
+
+      useEffect(() => {
+          if (show) {
+            // Lock scroll and save current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.position = "fixed";
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.left = "0";
+            document.body.style.right = "0";
+            document.body.style.overflowY = "scroll";
+            document.body.style.width = "100%";
+      
+            return () => {
+              // Restore scroll position
+              document.body.style.position = "";
+              document.body.style.top = "";
+              document.body.style.left = "";
+              document.body.style.right = "";
+              document.body.style.overflowY = "";
+              document.body.style.width = "";
+              window.scrollTo(0, scrollY);
+            };
+          }
+        }, [show]);
 
     useEffect(() => {
         // prevent running before localStorage is available (server-side)
@@ -98,35 +129,36 @@ export default function PortfolioSection() {
     const canSubtractPage: boolean = shownProj[0] != 1
 
     return (
-        <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
-            <div className="flex flex-col sm:flex-row" style={{ gap: "8px" }}>
-                <HStack
-                    className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5"
-                >
-                    <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={query}
-                        onChange={(e) => {
-                            setQuery(e.target.value);
-                            setShownProjs([1, 2, 3, 4]);
-                        }}
-                        className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-50"
-                    />
-                </HStack>
+        <>
+            <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
+                <div className="flex flex-col sm:flex-row" style={{ gap: "8px" }}>
+                    <HStack
+                        className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5"
+                    >
+                        <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={query}
+                            onChange={(e) => {
+                                setQuery(e.target.value);
+                                setShownProjs([1, 2, 3, 4]);
+                            }}
+                            className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-50"
+                        />
+                    </HStack>
 
-                <HStack className="w-full" spacing={8}>
-                    <NativeDropdown />
-                    <button
-                        title="Sort projects by newest or oldest"
-                        type="button"
-                        onClick={() => {
-                            (setSortFirst(!sortFirst))
-                            setShownProjs([1, 2, 3, 4]);
-                        }
-                        }
-                        className="
+                    <HStack className="w-full" spacing={8}>
+                        <NativeDropdown />
+                        <button
+                            title="Sort projects by newest or oldest"
+                            type="button"
+                            onClick={() => {
+                                (setSortFirst(!sortFirst))
+                                setShownProjs([1, 2, 3, 4]);
+                            }
+                            }
+                            className="
                             bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
                             hover:bg-oppbackground/5
                             active:scale-95 
@@ -135,70 +167,70 @@ export default function PortfolioSection() {
                             duration-300
                             cursor-pointer
                         ">
-                        <Arrow className={`text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            <Arrow className={`text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                             transition-transform
                             ease-in-out
                             duration-300
                             ${sortFirst ? "rotate-0" : "rotate-180"}`} />
-                    </button>
-                </HStack>
-            </div>
+                        </button>
+                    </HStack>
+                </div>
 
 
-            <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
+                <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
 
 
 
-                {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
-                        <ProjSectionPlaceHolder />
-                        <ProjSectionPlaceHolder />
-                        <ProjSectionPlaceHolder />
-                        <ProjSectionPlaceHolder />
-                    </div>
-                ) : paginatedProjects && paginatedProjects.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
-                        {paginatedProjects.map((item, i) => (
-                            <ProjSection key={i} project={item} index={i} />
-                        ))}
-                        {paginatedProjects.length < 4 && (
-                            // Add placeholders to make at least 4 items
-                            <>
-                                {Array.from({ length: 4 - paginatedProjects.length }).map((_, i) => (
-                                    <ProjSectionPlaceHolder key={`placeholder-${i}`} animate={false} className="opacity-0" />
-                                ))}
-                            </>
-                        )}
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center w-full">
-                        <HStack>
-                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
-                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
-                        </HStack>
+                    {loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
+                            <ProjSectionPlaceHolder />
+                            <ProjSectionPlaceHolder />
+                            <ProjSectionPlaceHolder />
+                            <ProjSectionPlaceHolder />
+                        </div>
+                    ) : paginatedProjects && paginatedProjects.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
+                            {paginatedProjects.map((item, i) => (
+                                <ProjSection key={i} project={item} index={i} setShow={setShow} view={popUpView}/>
+                            ))}
+                            {paginatedProjects.length < 4 && (
+                                // Add placeholders to make at least 4 items
+                                <>
+                                    {Array.from({ length: 4 - paginatedProjects.length }).map((_, i) => (
+                                        <ProjSectionPlaceHolder key={`placeholder-${i}`} animate={false} className="opacity-0" />
+                                    ))}
+                                </>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center w-full">
+                            <HStack>
+                                <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                                <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                            </HStack>
 
-                        <p className="text-sub2 py-6 text-center w-full">No projects yet...</p>
+                            <p className="text-sub2 py-6 text-center w-full">No projects yet...</p>
 
-                        <HStack>
-                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
-                            <ProjSectionPlaceHolder animate={false} className="opacity-0" />
-                        </HStack>
-                    </div>
-                )}
-            </VStack>
-            <p className="text-sub2">
-                Showing {filteredProjects.length == 0 ? 0 : shownProj[0]} to {(paginatedProjects.length + shownProj[0]) - 1} of {filteredProjects.length} Projects
-            </p>
-            <HStack spacing={8}>
-                <button
-                    type="button"
-                    onClick={() => {
-                        if (canSubtractPage) {
-                            const updated = shownProj.map(n => n - 4);
-                            setShownProjs(updated);
-                        }
-                    }}
-                    className={`${canSubtractPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                            <HStack>
+                                <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                                <ProjSectionPlaceHolder animate={false} className="opacity-0" />
+                            </HStack>
+                        </div>
+                    )}
+                </VStack>
+                <p className="text-sub2">
+                    Showing {filteredProjects.length == 0 ? 0 : shownProj[0]} to {(paginatedProjects.length + shownProj[0]) - 1} of {filteredProjects.length} Projects
+                </p>
+                <HStack spacing={8}>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (canSubtractPage) {
+                                const updated = shownProj.map(n => n - 4);
+                                setShownProjs(updated);
+                            }
+                        }}
+                        className={`${canSubtractPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
                         bg-foreground 
                         rounded-full 
                         flex 
@@ -208,25 +240,25 @@ export default function PortfolioSection() {
                         sm:p-3 
                         p-2
                     `}>
-                    <HStack className={`${canSubtractPage ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center`} spacing={5}>
-                        <Arrow className="
+                        <HStack className={`${canSubtractPage ? "text-accent" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center`} spacing={5}>
+                            <Arrow className="
                             md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                             rotate-270
                         "/>
-                        <p>
-                            Previous
-                        </p>
-                    </HStack>
-                </button>
-                <button
-                    type="button"
-                    onClick={() => {
-                        if (canAddPage) {
-                            const updated = shownProj.map((n) => n + 4);
-                            setShownProjs(updated);
-                        }
-                    }}
-                    className={`${canAddPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                            <p>
+                                Previous
+                            </p>
+                        </HStack>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (canAddPage) {
+                                const updated = shownProj.map((n) => n + 4);
+                                setShownProjs(updated);
+                            }
+                        }}
+                        className={`${canAddPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
                         bg-foreground 
                         rounded-full 
                         flex 
@@ -234,19 +266,23 @@ export default function PortfolioSection() {
                         items-center 
                         md:p-4 sm:p-3 p-2
                         `}>
-                    <HStack className={`${canAddPage ? "text-blue-500" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center`} spacing={5}>
-                        <p>
-                            Next
-                        </p>
-                        <Arrow className="md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                        <HStack className={`${canAddPage ? "text-accent" : "text-sub2"} md:text-[16px] sm:text-[14px] text-[12px] justify-center items-center`} spacing={5}>
+                            <p>
+                                Next
+                            </p>
+                            <Arrow className="md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                             transition-transform
                             ease-in-out
                             duration-300
                             rotate-90"/>
-                    </HStack>
-                </button>
-            </HStack>
-        </VStack >
+                        </HStack>
+                    </button>
+                </HStack>
+            </VStack >
+            <BlurOverlay show={show} onClose={() => setShow(false)} >
+                {popUpView.current}
+            </BlurOverlay>
+        </>
     );
 
     function NativeDropdown() {

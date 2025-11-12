@@ -108,7 +108,7 @@ export default function AdminPage() {
                     />
                     <button
                         onClick={handleUnlock}
-                        className="px-6 py-2 bg-blue-500 hover:bg-blue-700 active:scale-95 text-white rounded-[19px] transition-all ease-in-out duration-300 cursor-pointer"
+                        className="px-6 py-2 bg-accent hover:brightness-75 active:scale-95 text-white rounded-[19px] transition-all ease-in-out duration-300 cursor-pointer"
                     >
                         <HStack>
                             <Lock className="h-6" />
@@ -157,7 +157,7 @@ export default function AdminPage() {
                         cursor-pointer
                     ">
                         <Arrow
-                            className={`text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            className={`text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                         transition-transform
                         ease-in-out
                         duration-300
@@ -179,7 +179,7 @@ export default function AdminPage() {
                         duration-300
                         cursor-pointer
                     ">
-                        <Plus className="text-blue-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6" />
+                        <Plus className="text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6" />
                     </button>
                 </div>
 

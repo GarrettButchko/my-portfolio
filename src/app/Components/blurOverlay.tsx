@@ -39,7 +39,9 @@ export default function BlurOverlay({ show, onClose, children }: BlurOverlayProp
               cursor-pointer
             "
           >
-            <Plus className="text-blue-500 hover:text-blue-700 md:h-8 sm:h-7 h-6 w-6 md:w-8 sm:w-7 rotate-45" />
+            <Plus className="text-accent hover:brightness-75 md:h-8 sm:h-7 h-6 w-6 md:w-8 sm:w-7 rotate-45 transition-all
+              ease-in-out
+              duration-300" />
           </button>
 
           {/* Overlay Content */}

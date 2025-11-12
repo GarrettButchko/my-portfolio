@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Project } from "@/app/Types/Project"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
 import BlurOverlay from "@/app/Components/blurOverlay";
+import { picView } from "../Components/picView";
 
 export default function HomeSecton() {
 
@@ -17,8 +18,6 @@ export default function HomeSecton() {
       Nothing Here Yet :)...
     </div>
   );
-
-
 
   useEffect(() => {
     if (show) {
@@ -61,8 +60,8 @@ export default function HomeSecton() {
 
   function RecProj() {
     const [loading, setLoading] = useState(true);
-
     const [projects, setProjects] = useState<Project[]>([]);
+
     useEffect(() => {
       // prevent running before localStorage is available (server-side)
       if (typeof window === "undefined") return;
@@ -102,7 +101,7 @@ export default function HomeSecton() {
               ease-in-out
               duration-200
               text-left
-              text-blue-500
+              text-accent
             ">
             Featured Projects
           </p>
@@ -119,7 +118,7 @@ export default function HomeSecton() {
                   {projects
                     .filter((p) => p.feature)
                     .map((p, i) => (
-                      <ProjSection key={i} project={p} index={i} />
+                      <ProjSection key={i} project={p} index={i} setShow={setShow} view={popUpView} />
                     ))}
                 </>
               )}
@@ -140,22 +139,19 @@ export default function HomeSecton() {
             </p>
             <motion.p
               className="
-                md:text-5xl 
+                md:text-5xl
                 sm:text-4xl
-                text-3xl 
-                font-bold 
+                text-3xl
+                font-bold
                 bg-clip-text
-                text-transparent 
-                bg-[length:400%_200%] 
+                text-transparent
+                bg-[linear-gradient(to_top,theme('colors.accent'),theme('colors.accent'),theme('colors.accent'))]
+                bg-[length:400%_200%]
                 transition-all
                 ease-in-out
                 duration-100
-                text-center"
-              animate={{ backgroundPositionX: ["0%", "100%", "0"] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              style={{
-                backgroundImage: "linear-gradient(to top, #0073ffff, #00bfffff, #0073ffff)", // blue-400 → teal-300
-              }}
+                text-center
+            "
             >
               Garrett Butchko
             </motion.p>
@@ -183,7 +179,11 @@ export default function HomeSecton() {
               alt="My profile picture"
               width={150}            // required
               height={150}           // required
-              className="rounded-full border-7 border-oppbackground/10"
+              className="rounded-full border-7 border-oppbackground/10 cursor-pointer"
+              onClick={() => {
+                  setShow(true);
+                  popUpView.current = picView("/profile.jpeg")
+              }}
             />
           </div>
         </div>
@@ -205,8 +205,7 @@ export default function HomeSecton() {
                   transition-all
                   ease-in-out
                   duration-300
-                  bg-blue-500
-                  hover:bg-blue-600
+                  bg-accent hover:brightness-75
                   h-8
                   w-40
                   cursor-pointer
@@ -406,7 +405,7 @@ export default function HomeSecton() {
               ease-in-out
               duration-200
               text-left
-              text-blue-500
+              text-accent
             ">
             Education
           </p>
@@ -427,7 +426,7 @@ export default function HomeSecton() {
                 ease-in-out
                 duration-200
                 text-left
-                text-blue-500
+                text-accent
                 ">
             Experience
           </p>

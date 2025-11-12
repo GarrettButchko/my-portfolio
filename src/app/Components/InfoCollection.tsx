@@ -46,9 +46,7 @@ export default function InfoCollection({
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: (index + 1) * 0.2 }}
+        whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
 
         className="flex flex-col items-center w-full">
         <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
@@ -105,8 +103,7 @@ export default function InfoCollection({
                   transition-all
                   ease-in-out
                   duration-300
-                  bg-blue-500
-                  hover:bg-blue-600
+                  bg-accent hover:brightness-75
                   cursor-pointer
                   `}
           style={{
@@ -207,7 +204,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
           flex-col
           gap-4
             overflow-x-auto
-            overflow-y-auto
+            overflow-y-visible
             [&::-webkit-scrollbar]:h-[0px]
             hover:[&::-webkit-scrollbar]:h-[6px]
             [&::-webkit-scrollbar]:w-[0px]
@@ -219,15 +216,16 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
             hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
             justify-start
             snap-x snap-mandatory
+            p-1
           ">
           {infoItem.actProjs.map((actProj: actProj, index) => (
             <ActProjSection key={index} actProj={actProj} />
           ))}
         </div>
       </VStack>
-      <HStack spacing={18}>
+      <HStack  spacing={18}>
         {infoItem.gpa != null ?
-          <VStack className="items-center">
+          <VStack whileHover={{ scale: 1.03 }} transition={{ duration: 0.15 }} className="items-center">
             <p className="
               text-sub2  
               md:text-[20px] 
@@ -256,7 +254,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
           :
           <></>
         }
-        <VStack className="items-center w-full">
+        <VStack whileHover={{ scale: 1.01 }} transition={{ duration: 0.15 }} className="items-center w-full">
           {infoItem.gpa != null
             ? (
               <p className="
@@ -303,7 +301,9 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
 
 function ActProjSection({ actProj }: { actProj: actProj }) {
   return (
-    <VStack className="
+    <VStack 
+    whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
+    className="
     bg-sub1 
     rounded-[19px] 
     p-4 

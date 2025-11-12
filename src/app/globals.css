@@ -9,6 +9,7 @@
   --sub1: #eeeeee;
   --sub2:	#9d9d9d;
   --sub3:	#7e7e7e;
+  --accent: #136aff;
 }
 
 
@@ -21,6 +22,7 @@
   --color-sub1: var(--sub1);
   --color-sub2: var(--sub2);
   --color-sub3: var(--sub3);
+  --color-accent: var(--accent);
 }
 
 @media (prefers-color-scheme: dark) {

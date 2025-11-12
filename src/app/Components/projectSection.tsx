@@ -1,8 +1,20 @@
-import { VStack, HStack, Text, Section, Divider, Spacer, ZStack } from "../Components/components";
+import { VStack, HStack, Spacer} from "../Components/components";
+import { picView } from "./picView";
 import { Project } from "@/app/Types/Project"
+import { motion } from "framer-motion";
 
 
-export function ProjSection({ project, index }: { project: Project; index: number }) {
+export function ProjSection(
+  { project,
+    view,
+    setShow
+  }:
+    {
+      project: Project; index: number,
+      view: React.RefObject<React.ReactNode>,
+      setShow: React.Dispatch<React.SetStateAction<boolean>>
+    }
+) {
   const total = Object.values(project.languages).reduce((a, b) => a + b, 0);
 
   const languageColors: Record<string, string> = {
@@ -33,9 +45,7 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
 
   return (
     <VStack
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: (index + 1) * 0.2 }}
+
       className="bg-sub1 rounded-[24px] py-6 w-full overflow-hidden"
       spacing={10}
     >
@@ -53,7 +63,7 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
         <button
           type="button"
           onClick={() => window.open(project.link, "_blank")}
-          className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-blue-500 hover:bg-blue-600 cursor-pointer h-8 w-25 flex justify-center items-center"
+          className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
         >
           <span className="text-white font-semibold">Github</span>
         </button>
@@ -65,7 +75,7 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
           spacing={20}
           className="
           overflow-x-auto
-          py-[1px] px-[1px]
+          p-1
           [&::-webkit-scrollbar]:h-[0px]
           hover:[&::-webkit-scrollbar]:h-[6px]
           [&::-webkit-scrollbar-track]:rounded-full
@@ -73,14 +83,20 @@ export function ProjSection({ project, index }: { project: Project; index: numbe
           [&::-webkit-scrollbar-thumb]:rounded-full
           [&::-webkit-scrollbar-thumb]:bg-gray-400/30
           hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
+          
         "
         >
           {project.photos.map((photo) => (
-            <img
+            <motion.img
+              whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
               key={photo}
               src={photo}
               alt={`Screenshot from ${project.title}`}
-              className="rounded-[12px] h-[150px]"
+              className="rounded-[12px] h-[150px] cursor-pointer"
+              onClick={() => {
+                setShow(true);
+                view.current = picView(photo)
+              }}
             />
           ))}
         </HStack>
@@ -168,3 +184,5 @@ export function ProjSectionPlaceHolder({ className, animate = true }: { classNam
     </VStack>
   );
 }
+
+
