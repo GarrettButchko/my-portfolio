@@ -4,7 +4,7 @@ import { VStack, HStack, Text, Section, Spacer } from "../Components/components"
 import InfoCollection from "../Components/InfoCollection";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Project } from "@/app/Types/Project"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
 import BlurOverlay from "@/app/Components/blurOverlay";
@@ -12,11 +12,12 @@ import BlurOverlay from "@/app/Components/blurOverlay";
 export default function HomeSecton() {
 
   const [show, setShow] = useState(false);
-  const [popUpView, setPopUpView] = useState<React.ReactNode>(
-    <div className="text-textColor text-center text-bold">
-      {"Nothing Here Yet :)..."}
+  const popUpView = useRef<React.ReactNode>(
+    <div className="text-textColor text-center font-bold">
+      Nothing Here Yet :)...
     </div>
   );
+
 
 
   useEffect(() => {
@@ -44,8 +45,8 @@ export default function HomeSecton() {
   }, [show]);
 
   return (
-    <div>
-      <VStack className="mt-40 mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
+    <div className="w-full flex justify-center mt-40 mx-3 md:mx-6">
+      <VStack className="w-full max-w-4xl bg-foreground rounded-[30px]">
         <Intro />
         <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />
         <EduExp />
@@ -53,7 +54,7 @@ export default function HomeSecton() {
         <RecProj />
       </VStack>
       <BlurOverlay show={show} onClose={() => setShow(false)} >
-        {popUpView}
+        {popUpView.current}
       </BlurOverlay>
     </div>
   );
@@ -89,7 +90,7 @@ export default function HomeSecton() {
 
 
     return (
-      <Section className="max-w-4xl items-center py-5">
+      <Section className="w-full items-center py-5">
         <VStack spacing={25}>
           <p
             className="
@@ -106,7 +107,7 @@ export default function HomeSecton() {
             Featured Projects
           </p>
 
-          <VStack className="w-full max-w-4xl bg-foreground rounded-[30px]" spacing={45}>
+          <VStack className="bg-foreground rounded-[30px]" spacing={45}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
               {loading ? (
                 <>
@@ -131,7 +132,7 @@ export default function HomeSecton() {
 
   function Intro() {
     return (
-      <Section className="max-w-4xl items-center pt-20 py-5">
+      <Section className="items-center pt-20 py-5">
         <div className="flex sm:flex-row flex-col items-center justify-center gap-5">
           <VStack className="sm:items-start items-center">
             <p className="font-bold text-textColor">
@@ -393,7 +394,7 @@ export default function HomeSecton() {
     ]);
 
     return (
-      <Section className="max-w-4xl items-center py-6">
+      <Section className="w-full items-center py-6">
         <VStack spacing={25}>
           <p
             className="
@@ -412,7 +413,7 @@ export default function HomeSecton() {
 
           <VStack spacing={25}>
             {education.map((student: InfoItem, index) => (
-              <InfoCollection key={index} infoItem={student} index={index} setPopUpView={setPopUpView} setShow={setShow} />
+              <InfoCollection key={student.title} infoItem={student} index={index} popUpView={popUpView} setShow={setShow} />
             ))}
           </VStack>
 
@@ -433,7 +434,7 @@ export default function HomeSecton() {
           <VStack>
             <VStack spacing={25}>
               {experience.map((job: InfoItem, index) => (
-                <InfoCollection key={index} infoItem={job} index={index} setPopUpView={setPopUpView} setShow={setShow} />
+                <InfoCollection key={index} infoItem={job} index={index} popUpView={popUpView} setShow={setShow} />
               ))}
             </VStack>
           </VStack>

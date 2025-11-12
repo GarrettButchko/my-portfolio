@@ -11,13 +11,16 @@ export default function InfoCollection({
   infoItem,
   index,
   setShow,
-  setPopUpView,
+  popUpView,
 }: {
   infoItem: InfoItem;
   index: number;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  setPopUpView: React.Dispatch<React.SetStateAction<React.ReactNode>>;
+  popUpView: React.RefObject<React.ReactNode>;
 }) {
+
+
+
   return (
     <HStack spacing={20} className="items-center ">
       <div className="md:flex hidden">
@@ -46,6 +49,7 @@ export default function InfoCollection({
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: (index + 1) * 0.2 }}
+
         className="flex flex-col items-center w-full">
         <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
           <VStack className="md:items-start items-center justify-center">
@@ -92,7 +96,7 @@ export default function InfoCollection({
           type="button"
           onClick={() => {
             setShow(true);
-            setPopUpView(<InfoCollectionBig infoItem={infoItem} />);
+            popUpView.current = <InfoCollectionBig infoItem={infoItem} />;
           }}
           className={`
                   z-20 
@@ -144,7 +148,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
         ">
           {infoItem.start}'-{typeof infoItem.end === "string" ? infoItem.end : infoItem.end + "'"}
         </p>
-        
+
         <VStack>
           <p
             style={{ color: infoItem.hexColor }}
@@ -173,7 +177,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
             {infoItem.loc}
           </p>
         </VStack>
-        
+
         <Image
           src={infoItem.pic}     // path from /public
           alt={infoItem.picAlt}

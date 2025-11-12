@@ -12,7 +12,7 @@ interface BlurOverlayProps {
 
 export default function BlurOverlay({ show, onClose, children }: BlurOverlayProps) {
   return (
-    <AnimatePresence>
+    <AnimatePresence className="w-full">
       {show && (
         <motion.div
           initial={{ opacity: 0 }}

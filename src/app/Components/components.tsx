@@ -79,7 +79,7 @@ export function Text({ children, variant = "body", className = "" }: { children?
 
 export function Section({ children, className = "" }: { children?: React.ReactNode; className?: string }) {
   return (
-    <section className={`w-full max-w-3xl px-6 ${className}`}>
+    <section className={`w-full px-6 ${className}`}>
       {children}
     </section>
   );
