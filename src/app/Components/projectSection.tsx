@@ -46,7 +46,7 @@ export function ProjSection(
   return (
     <VStack
 
-      className="bg-sub1 rounded-[24px] py-6 w-full overflow-hidden"
+      className="bg-sub1 rounded-[15px] py-6 w-full overflow-hidden"
       spacing={10}
     >
       {/* Title + Github button */}

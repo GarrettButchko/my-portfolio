@@ -106,7 +106,7 @@ export default function HomeSecton() {
             Featured Projects
           </p>
 
-          <VStack className="bg-foreground rounded-[30px]" spacing={45}>
+          <VStack className="bg-foreground rounded-[30px] mb-1" spacing={45}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
               {loading ? (
                 <>

@@ -12,9 +12,11 @@ import Share from "../../../../public/svg/share.svg";
 import News from "../../../../public/svg/news.svg";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { useRouter } from "next/navigation";
+import { motion, type HTMLMotionProps } from "framer-motion";
+import { PicView } from "../../Components/PicView";
 
 
-export default function BlogPost() {
+export default function NewsPost() {
     const router = useRouter();
     const params = useParams();
     const slug = params.slug;
@@ -130,28 +132,30 @@ export default function BlogPost() {
 
             {/* Top buttons */}
             <HStack
-                className="fixed top-5 z-50 left-1/2 -translate-x-1/2 w-fit outline outline-2 outline-sub1 rounded-[35px] p-[8px] bg-foreground/80 backdrop-blur-sm"
+                className="fixed top-5 z-50 left-1/2 -translate-x-1/2 w-fit outline outline-2 outline-sub1 rounded-[35px] p-[6px] bg-foreground/80 backdrop-blur-sm"
             >
                 <div className="flex flex-row justify-center gap-2">
 
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.06 }} transition={{ duration: 0.02 }}
                         title="Back to News"
                         onClick={() => router.push("/?start-section=News")}
-                        className="bg-accent rounded-[27px] flex justify-center items-center hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer"
+                        className="bg-accent rounded-[27px] flex justify-center items-center hover:brightness-85 active:scale-75 transition-all ease-in-out duration-300 cursor-pointer"
                     >
                         <HStack className="text-white md:text-[18px] sm:text-[16px] text-[14px] justify-center items-center py-2 px-5" spacing={2}>
-                            <News className="md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6 transition-transform ease-in-out duration-300" />
+                            <News className=" sm:h-6 h-5 w-5  sm:w-6 transition-transform ease-in-out duration-300" />
                             <p>News</p>
                         </HStack>
-                    </button>
+                    </motion.button>
 
-                    <button
+                    <motion.button
+                    whileHover={{ scale: 1.06 }} transition={{ duration: 0.15 }}
                         title="Share post"
                         onClick={handleShare}
-                        className="bg-accent rounded-[27px] flex justify-center items-center md:p-4 sm:p-3 p-3 hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer"
+                        className="bg-accent rounded-[27px] flex justify-center items-center  sm:p-3 p-3 hover:brightness-75 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer"
                     >
-                        <Share className="text-white md:h-5 sm:h-4 h-3 md:w-5 sm:w-4 w-3 transition-transform ease-in-out duration-300" />
-                    </button>
+                        <Share className="text-white  sm:h-4 h-3  sm:w-5 w-3 transition-transform ease-in-out duration-300" />
+                    </motion.button>
 
                 </div>
             </HStack>
@@ -188,9 +192,16 @@ export default function BlogPost() {
 
                     {/* Post photo */}
                     {post.photo && (
-                        <div className='rounded-[12px] shadow-lg max-w-full max-h-[80vh] h-auto w-auto'>
-                            <img src={post.photo} alt="Photo" />
-                        </div>
+                        <motion.div 
+                        
+                        onClick={() => {
+                            setShow(true);
+                            popUpView.current = <PicView profile={post.photo} />
+                        }}
+                            whileHover={{ scale: 1.005 }} transition={{ duration: 0.15 }}
+                            className='max-w-full max-h-[80vh] h-auto w-auto'>
+                            <img src={post.photo} alt="Photo" className="rounded-[25px] cursor-pointer"/>
+                        </motion.div>
                     )}
 
                     {/* Mentioned projects */}

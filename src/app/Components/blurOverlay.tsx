@@ -6,16 +6,19 @@ import Plus from "../../../public/svg/plus.svg";
 
 interface BlurOverlayProps {
   show: boolean;
-  onClose?: () => void;
+  onClose: () => void;
   children?: React.ReactNode;
+  showXAndTap?: boolean;
 }
 
-export default function BlurOverlay({ show, onClose, children }: BlurOverlayProps) {
+export default function BlurOverlay({ show, onClose, children, showXAndTap = true }: BlurOverlayProps) {
   return (
     <AnimatePresence className="w-full">
       {show && (
         <motion.div
-          onClick={onClose}
+          onClick={() => {
+            if (showXAndTap) {onClose()};
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -27,9 +30,11 @@ export default function BlurOverlay({ show, onClose, children }: BlurOverlayProp
           "
         >
           {/* Close Button */}
-          <button
+          {showXAndTap ? <button
             type="button"
-            
+            onClick={() => {
+              if (showXAndTap) {onClose()};
+            }}
             className="
               absolute top-10 right-10
               rounded-full
@@ -43,7 +48,7 @@ export default function BlurOverlay({ show, onClose, children }: BlurOverlayProp
             <Plus className="text-accent hover:brightness-75 md:h-8 sm:h-7 h-6 w-6 md:w-8 sm:w-7 rotate-45 transition-all
               ease-in-out
               duration-300" />
-          </button>
+          </button> : <></>}
 
           {/* Overlay Content */}
           <motion.div

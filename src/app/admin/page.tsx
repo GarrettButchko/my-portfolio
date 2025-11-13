@@ -1,7 +1,7 @@
 "use client";
 
 import { VStack, HStack, Spacer, Text } from "../Components/Components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
 import Plus from "../../../public/svg/plus.svg";
@@ -11,6 +11,9 @@ import { Project } from "@/app/Types/Project";
 import { PostView, PostViewPlaceHolder } from "@/app/MainViews/NewsSection";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { SP } from "next/dist/shared/lib/utils";
+import { formatDate } from "../lib/formatDate"
 
 
 export default function AdminPage() {
@@ -22,6 +25,13 @@ export default function AdminPage() {
     const [authorized, setAuthorized] = useState(false);
     const [inputKey, setInputKey] = useState("");
     const [show, setShow] = useState(false);
+      const popUpView = useRef<React.ReactNode>(
+        <div className="text-textColor text-center font-bold">
+          Nothing Here Yet :)...
+        </div>
+      );
+
+    
 
     const SECRET_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY; // in .env.local
 
@@ -121,11 +131,8 @@ export default function AdminPage() {
     }
 
     return (
-
         <div>
-
-
-            <VStack className="mt-20 mb-20 justify-center items-center w-full" spacing={15}>
+            <VStack className="mt-20 mb-20 justify-center items-center mx-3" spacing={15}>
                 {/* 🔍 Search + Sort Controls */}
                 <div className="flex flex-row" style={{ gap: "8px" }}>
                     <HStack className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5">
@@ -149,7 +156,7 @@ export default function AdminPage() {
                         }}
                         className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
-                        hover:bg-oppbackground/5
+                        hover:brightness-75
                         active:scale-95 
                         transition-all
                         ease-in-out
@@ -172,7 +179,7 @@ export default function AdminPage() {
                         }}
                         className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
-                        hover:bg-oppbackground/5
+                        hover:brightness-75
                         active:scale-95 
                         transition-all
                         ease-in-out
@@ -184,7 +191,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* 📰 Post List */}
-                <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6 justify-center items-center" spacing={45}>
+                <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6 justify-center items-center" spacing={25}>
 
                     {loading ? (
                         <>
@@ -195,7 +202,39 @@ export default function AdminPage() {
                     ) : filteredPosts && filteredPosts.length > 0 ? (
                         <>
                             {filteredPosts.map((post, i) => (
-                                <PostView key={post.title} post={post} index={i} />
+                                <div key={i} className="flex sm:flex-row flex-col items-center p-6 bg-sub1 rounded-[15px] w-full gap-2">
+                                    <VStack className="sm:text-start text-center w-full">
+                                        <p className="text-accent font-bold">
+                                            {post.title}
+                                        </p>
+                                        <p className="text-sub3 -mt-1">
+                                            {post.subtitle}
+                                        </p>
+                                        <p
+                                            className="
+                                                text-sub2 
+                                                md:text-[14px] 
+                                                sm:text-[11px] 
+                                                text-[9px] 
+                                                truncate
+                                                -mt-1
+                                            "
+                                        >
+                                            {formatDate(post.publish)}
+                                        </p>
+                                    </VStack>
+                                    <Spacer />
+                                    <motion.button
+                                        whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
+                                        type="button"
+                                        onClick={() => {
+                                            
+                                        }}
+                                        className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
+                                    >
+                                        <span className="text-white font-semibold">Edit</span>
+                                    </motion.button>
+                                </div>
                             ))}
                         </>
                     ) : (
@@ -206,27 +245,16 @@ export default function AdminPage() {
                 </VStack>
             </VStack>
 
-            <VStack className="my-20 md:text-[15px] sm:text-[15px] text-[10px]">
+            <VStack className="my-20 md:text-[15px] sm:text-[15px] text-[10px] text-center">
                 <p className="text-sub2">
                     © {new Date().getFullYear()} Garrett Butchko. All rights reserved.
                 </p>
             </VStack>
 
-
-            <BlurOverlay show={show} onClose={() => setShow(false)}>
-                <div className="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-lg">
-                    <h2 className="text-xl font-semibold mb-3">Overlay Content</h2>
-                    <p className="text-gray-600 dark:text-gray-300">This is over the blurred screen.</p>
-                    <button
-                        onClick={() => setShow(false)}
-                        className="mt-4 px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
-                    >
-                        Close
-                    </button>
-                </div>
+            <BlurOverlay show={show} onClose={() => setShow(false)} showXAndTap={false}>
+                {popUpView.current}
             </BlurOverlay>
         </div >
-        
     );
 }
 

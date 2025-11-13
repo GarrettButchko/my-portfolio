@@ -160,7 +160,7 @@ export default function PortfolioSection() {
                             }
                             className="
                             bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
-                            hover:bg-oppbackground/5
+                            hover:brightness-75
                             active:scale-95 
                             transition-all
                             ease-in-out
@@ -230,7 +230,7 @@ export default function PortfolioSection() {
                                 setShownProjs(updated);
                             }
                         }}
-                        className={`${canSubtractPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                        className={`${canSubtractPage ? "hover:brightness-75 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
                         bg-foreground 
                         rounded-full 
                         flex 
@@ -258,7 +258,7 @@ export default function PortfolioSection() {
                                 setShownProjs(updated);
                             }
                         }}
-                        className={`${canAddPage ? "hover:bg-oppbackground/5 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
+                        className={`${canAddPage ? "hover:brightness-75 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer" : ""}
                         bg-foreground 
                         rounded-full 
                         flex 

@@ -47,7 +47,7 @@ export default function InfoCollection({
 
       <div
         className="flex flex-col items-center w-full">
-        <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
+        <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[15px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
           <VStack className="md:items-start items-center justify-center">
             <div className="flex sm:flex-row flex-col justify-center items-center 
             text-[12px] sm:text-[15px] md:text-[18px]">
@@ -224,7 +224,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
       </VStack>
       <HStack spacing={18}>
         {infoItem.gpa != null ?
-          <VStack whileHover={{ scale: 1.03 }} transition={{ duration: 0.15 }} className="items-center">
+          <VStack className="items-center">
             <p className="
               text-sub2  
               md:text-[20px] 
@@ -253,7 +253,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
           :
           <></>
         }
-        <VStack whileHover={{ scale: 1.01 }} transition={{ duration: 0.15 }} className="items-center w-full">
+        <VStack className="items-center w-full">
           {infoItem.gpa != null
             ? (
               <p className="
@@ -301,12 +301,11 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
 function ActProjSection({ actProj }: { actProj: actProj }) {
   return (
     <VStack
-      whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
       className="
-    bg-sub1 
-    rounded-[19px] 
-    p-4 
-    justify-between 
+        bg-sub1 
+        rounded-[19px] 
+        p-4 
+        justify-between 
           " spacing={4}>
       <VStack spacing={6}>
         <p className="

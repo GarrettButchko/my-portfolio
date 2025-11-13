@@ -9,7 +9,10 @@ import Image from "next/image";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { useRouter } from "next/navigation";
 import { slugify } from '@/app/lib/slugify';
-import { motion, type HTMLMotionProps  } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
+import { PicView } from "../Components/PicView";
+import { formatDate } from "../lib/formatDate"
+
 
 
 export default function NewsSection() {
@@ -26,7 +29,7 @@ export default function NewsSection() {
         </div>
     );
 
-    
+
 
     useEffect(() => {
         if (show) {
@@ -141,7 +144,7 @@ export default function NewsSection() {
                 : new Date(a.publish).getTime() - new Date(b.publish).getTime();
         });
 
-    
+
 
     return (
         <div className="w-full">
@@ -171,7 +174,7 @@ export default function NewsSection() {
                         }}
                         className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
-                        hover:bg-oppbackground/5
+                        hover:brightness-75
                         active:scale-95 
                         transition-all
                         ease-in-out
@@ -259,7 +262,7 @@ type PostViewProps = {
     popUpView: React.RefObject<React.ReactNode>;
 };
 
-export function PostView({ post, index }: PostViewProps) {
+export function PostView({ post, index, setShow, popUpView }: PostViewProps) {
     const router = useRouter();
 
     const goToPost = (postTitle: string) => {
@@ -268,8 +271,8 @@ export function PostView({ post, index }: PostViewProps) {
 
     return (
         <VStack
-            
-            className="relative bg-sub1 rounded-[20px] w-full justify-center items-center overflow-visible mb-[16px]"
+
+            className="relative bg-sub1 rounded-[15px] w-full justify-center items-center overflow-visible mb-[16px]"
             spacing={10}
         >
             {/* --- Content --- */}
@@ -311,6 +314,21 @@ export function PostView({ post, index }: PostViewProps) {
                     </p>
 
 
+                    <p
+                        className="
+                            text-sub2 
+                            md:text-[14px] 
+                            sm:text-[11px] 
+                            text-[9px] 
+                            truncate
+                            -mt-2
+                        "
+                    >
+                        {formatDate(post.publish)}
+                    </p>
+
+
+
                     <HStack
                         spacing={6}
                         className="
@@ -343,9 +361,15 @@ export function PostView({ post, index }: PostViewProps) {
 
                 <VStack spacing={6}>
                     {post.photo && (
-                        <div className='rounded-[50px] max-w-40 max-h-[80vh] h-auto w-auto'>
-                            <img src={post.photo} alt="Photo" />
-                        </div>
+                        <motion.div
+                            onClick={() => {
+                                setShow(true);
+                                popUpView.current = <PicView profile={post.photo} />
+                            }}
+                            whileHover={{ scale: 1.06 }} transition={{ duration: 0.15 }}
+                            className='max-w-40 max-h-[80vh] h-auto w-auto cursor-pointer' >
+                            <img src={post.photo} alt="Photo" className="rounded-[12px]" />
+                        </motion.div>
                     )}
 
                     <HStack
@@ -379,7 +403,7 @@ export function PostView({ post, index }: PostViewProps) {
 
             {/* --- Floating Button --- */}
             <motion.button
-            whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
+                whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
                 type="button"
                 onClick={() => {
                     goToPost(post.title);

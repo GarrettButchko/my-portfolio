@@ -145,11 +145,12 @@ export function FloatingBar({
               key={target.id}
               ref={el => { if (el) buttonRefs.current[i] = el; }}
               onClick={() => {
-
-                onSectionChange(target.name, i);
+                if (!target.isSelected) {
+                  onSectionChange(target.name, i);
+                }
               }}
               style={{ width: moverSize.width, height: moverSize.height }}
-              className={`z-20 rounded-[18px] ${target.isSelected ? "" : "active:scale-95 hover:bg-oppbackground/5"} transition-all ease-in-out duration-300 cursor-pointer`}
+              className={`z-20 rounded-[18px] ${target.isSelected ? "" : "active:scale-95 hover:bg-oppbackground/5 cursor-pointer"} transition-all ease-in-out duration-300 `}
             >
               <HStack
                 spacing={8}
