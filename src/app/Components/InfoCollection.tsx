@@ -1,6 +1,6 @@
 
 
-import { VStack, HStack, Text, Spacer, Divider } from "../Components/components";
+import { VStack, HStack, Text, Spacer, Divider } from "./Components";
 import Circle from "../../../public/svg/circle.svg";
 import Image from "next/image";
 import { hexToRgba } from "@/app/lib/hextoRgba";
@@ -45,9 +45,7 @@ export default function InfoCollection({
         )}
       </div>
 
-      <motion.div
-        whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
-
+      <div
         className="flex flex-col items-center w-full">
         <div style={{ outlineColor: hexToRgba(infoItem.hexColor, 0.2) }} className="flex md:flex-row flex-col rounded-[24px] bg-sub1 p-6 justify-center items-center gap-2 w-full outline outline-2">
           <VStack className="md:items-start items-center justify-center">
@@ -90,13 +88,16 @@ export default function InfoCollection({
           </button>
 
         </div>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
           type="button"
           onClick={() => {
             setShow(true);
             popUpView.current = <InfoCollectionBig infoItem={infoItem} />;
           }}
           className={`
+            relative
+                    bottom-[16px] 
                   z-20 
                   rounded-[25px]
                   active:scale-95 
@@ -105,12 +106,10 @@ export default function InfoCollection({
                   duration-300
                   bg-accent hover:brightness-75
                   cursor-pointer
+                  px-6
+                  py-1
                   `}
-          style={{
-            width: 160,
-            height: 32,
-            transform: "translateY(-16px)",
-          }}>
+          >
           <Text
             variant="body"
             className="
@@ -123,8 +122,8 @@ export default function InfoCollection({
                   ">
             Learn More
           </Text>
-        </button>
-      </motion.div>
+        </motion.button>
+      </div>
     </HStack>
   );
 }
@@ -223,7 +222,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
           ))}
         </div>
       </VStack>
-      <HStack  spacing={18}>
+      <HStack spacing={18}>
         {infoItem.gpa != null ?
           <VStack whileHover={{ scale: 1.03 }} transition={{ duration: 0.15 }} className="items-center">
             <p className="
@@ -301,9 +300,9 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
 
 function ActProjSection({ actProj }: { actProj: actProj }) {
   return (
-    <VStack 
-    whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
-    className="
+    <VStack
+      whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
+      className="
     bg-sub1 
     rounded-[19px] 
     p-4 

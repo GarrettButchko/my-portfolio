@@ -1,6 +1,6 @@
 "use client";
 
-import { VStack, HStack, Spacer, Text } from "../Components/components";
+import { VStack, HStack, Spacer, Text } from "../Components/Components";
 import React, { useState, useEffect } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
@@ -8,8 +8,8 @@ import Plus from "../../../public/svg/plus.svg";
 import Lock from "../../../public/svg/lock.svg";
 import { Post } from "@/app/Types/Post";
 import { Project } from "@/app/Types/Project";
-import { PostView, PostViewPlaceHolder } from "@/app/MainViews/newsSection";
-import BlurOverlay from "@/app/Components/blurOverlay";
+import { PostView, PostViewPlaceHolder } from "@/app/MainViews/NewsSection";
+import BlurOverlay from "@/app/Components/BlurOverlay";
 import Image from "next/image";
 
 
@@ -206,6 +206,13 @@ export default function AdminPage() {
                 </VStack>
             </VStack>
 
+            <VStack className="my-20 md:text-[15px] sm:text-[15px] text-[10px]">
+                <p className="text-sub2">
+                    © {new Date().getFullYear()} Garrett Butchko. All rights reserved.
+                </p>
+            </VStack>
+
+
             <BlurOverlay show={show} onClose={() => setShow(false)}>
                 <div className="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-lg">
                     <h2 className="text-xl font-semibold mb-3">Overlay Content</h2>
@@ -218,7 +225,8 @@ export default function AdminPage() {
                     </button>
                 </div>
             </BlurOverlay>
-        </div>
+        </div >
+        
     );
 }
 

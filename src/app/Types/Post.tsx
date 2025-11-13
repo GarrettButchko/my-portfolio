@@ -7,6 +7,6 @@ export type Post = {
   body: string;
   tags: string[];
   relatedProjects: string[];
-  photos: string[];
+  photo: string;
   publish: Date;
 };

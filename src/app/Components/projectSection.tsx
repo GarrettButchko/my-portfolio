@@ -1,5 +1,5 @@
-import { VStack, HStack, Spacer} from "../Components/components";
-import { picView } from "./picView";
+import { VStack, HStack, Spacer} from "./Components";
+import { PicView } from "../Components/PicView";
 import { Project } from "@/app/Types/Project"
 import { motion } from "framer-motion";
 
@@ -52,7 +52,7 @@ export function ProjSection(
       {/* Title + Github button */}
       <HStack className="items-center px-6 w-full">
         <VStack className="min-w-0">
-          <p className="font-bold text-sub3 md:text-45 sm:text-45 text-35 truncate">
+          <p className="font-bold text-accent md:text-60 sm:text-60 text-50 truncate">
             {project.title}
           </p>
           <p className="text-sub3 md:text-[15px] sm:text-[12px] text-[10px] truncate">
@@ -60,22 +60,24 @@ export function ProjSection(
           </p>
         </VStack>
         <Spacer />
-        <button
+        <motion.button
+        whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
           type="button"
           onClick={() => window.open(project.link, "_blank")}
           className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
         >
           <span className="text-white font-semibold">Github</span>
-        </button>
+        </motion.button>
       </HStack>
 
-      <VStack className="mx-6 rounded-[19px] bg-sub2/20 p-3" spacing={5}>
+      <VStack className="mx-6 rounded-[19px] bg-sub2/20 py-3" spacing={5}>
         {/* Photos */}
         <HStack
-          spacing={20}
+          spacing={16}
           className="
           overflow-x-auto
-          p-1
+          py-1
+          px-4
           [&::-webkit-scrollbar]:h-[0px]
           hover:[&::-webkit-scrollbar]:h-[6px]
           [&::-webkit-scrollbar-track]:rounded-full
@@ -95,7 +97,7 @@ export function ProjSection(
               className="rounded-[12px] h-[150px] cursor-pointer"
               onClick={() => {
                 setShow(true);
-                view.current = picView(photo)
+                view.current = <PicView profile={photo}/>
               }}
             />
           ))}
@@ -107,7 +109,7 @@ export function ProjSection(
           <HStack
             spacing={15}
             className="
-            overflow-x-auto py-[1px] px-[1px]  min-w-0
+            overflow-x-auto py-1 px-4  min-w-0
             transition-opacity duration-300
             [&::-webkit-scrollbar]:h-[0px]
             hover:[&::-webkit-scrollbar]:h-[6px]

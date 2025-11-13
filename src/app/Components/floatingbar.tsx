@@ -1,5 +1,5 @@
 import React, { useRef, useState, useLayoutEffect, useEffect } from "react";
-import { HStack, Text } from "../Components/components";
+import { HStack, Text } from "./Components";
 import { motion } from "framer-motion";
 
 type Target = {
@@ -11,8 +11,8 @@ type Target = {
 
 type FloatingBarProps = {
   targets: Target[];
-  setTargets: React.Dispatch<React.SetStateAction<Target[]>>;
   buttonRefs: React.RefObject<HTMLButtonElement[]>;
+  onSectionChange: (sectionName: string, index: number) => void; // 👈 new prop
 };
 
 export interface MoveDivToIndexOptions<T> {
@@ -51,8 +51,8 @@ export function moveDivToIndex<T extends { isSelected: boolean }>(
 
 export function FloatingBar({
   targets,
-  setTargets,
   buttonRefs,
+  onSectionChange,
 }: FloatingBarProps) {
   const [moverSize, setMoverSize] = useState({ width: 160, height: 36 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -86,16 +86,31 @@ export function FloatingBar({
   // Handle resize dynamically
   useEffect(() => {
     const handleResize = () => {
+      // Update mover size responsively
       if (window.innerWidth < 768) setMoverSize({ width: 60, height: 36 });
       else setMoverSize({ width: 160, height: 36 });
 
-      const selectedIndex = targets.findIndex(t => t.isSelected) ?? 0;
-      moveDivToIndex({ index: selectedIndex, setPosition, setTargets });
+      // Recalculate mover position based on the selected index
+      const selectedIndex = targets.findIndex(t => t.isSelected);
+      if (selectedIndex !== -1) {
+        let x = 0;
+        if (window.innerWidth < 768) {
+          if (selectedIndex === 0) x = -68;
+          else if (selectedIndex === 1) x = 0;
+          else if (selectedIndex === 2) x = 68;
+        } else {
+          if (selectedIndex === 0) x = -168;
+          else if (selectedIndex === 1) x = 0;
+          else if (selectedIndex === 2) x = 168;
+        }
+        setPosition({ x, y: 0 });
+      }
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [targets, setTargets]);
+  }, [targets]);
+
 
   if (!mounted) return null;
 
@@ -130,8 +145,8 @@ export function FloatingBar({
               key={target.id}
               ref={el => { if (el) buttonRefs.current[i] = el; }}
               onClick={() => {
-                moveDivToIndex({ index: i, setPosition, setTargets })
-                window.scrollTo(0, 0); // instant scroll to top
+
+                onSectionChange(target.name, i);
               }}
               style={{ width: moverSize.width, height: moverSize.height }}
               className={`z-20 rounded-[18px] ${target.isSelected ? "" : "active:scale-95 hover:bg-oppbackground/5"} transition-all ease-in-out duration-300 cursor-pointer`}

@@ -4,12 +4,11 @@ import React, { useState, useRef, useEffect } from "react";
 import HomeIcon from '../../public/svg/home.svg';
 import NewsIcon from '../../public/svg/news.svg';
 import PortfolioIcon from '../../public/svg/portfolio.svg';
-import { FloatingBar } from "./Components/floatingbar";
-import HomeSection from "./MainViews/homeSection";
-import PortfolioSection from "./MainViews/portfolioSection";
-import NewsSection from "./MainViews/newsSection";
-import { VStack, HStack } from "@/app/Components/components";
-import { moveDivToIndex } from "./Components/floatingbar";
+import { FloatingBar, moveDivToIndex } from "./Components/Floatingbar";
+import HomeSection from "./MainViews/HomeSection";
+import PortfolioSection from "./MainViews/PortfolioSection";
+import NewsSection from "./MainViews/NewsSection";
+import { VStack, HStack } from "@/app/Components/Components";
 import { useSearchParams, useRouter } from "next/navigation";
 
 type TargetSerializable = {
@@ -34,7 +33,7 @@ export default function Home() {
 
   const cachedTarget = typeof window !== "undefined" ? localStorage.getItem("target") : null;
   const sectionFromCache = cachedTarget ? (JSON.parse(cachedTarget) as "Home" | "Portfolio" | "News") : null;
-  const sectionFromUrl = searchParams?.get("start-section") as "Home" | "Portfolio" | "News" | null;
+  const sectionFromUrl = searchParams?.get("section") as "Home" | "Portfolio" | "News" | null;
 
   // Initial section priority: URL > localStorage > default
   const initialSection: "Home" | "Portfolio" | "News" = sectionFromUrl ?? sectionFromCache ?? "Home";
@@ -75,7 +74,7 @@ export default function Home() {
     moveDivToIndex({ index, setPosition, setTargets });
 
     // Update URL without reload
-    router.replace(`/?start-section=${sectionName}`, { scroll: false });
+    router.replace(`/?section=${sectionName}`, { scroll: false });
 
     // Scroll to top
     window.scrollTo(0, 0);
@@ -83,7 +82,7 @@ export default function Home() {
 
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
-      <FloatingBar targets={targets} setTargets={setTargets} buttonRefs={buttonRefs} />
+      <FloatingBar targets={targets} onSectionChange={handleSectionChange} buttonRefs={buttonRefs} />
 
       <VStack className="w-full items-center mx-3">
         {active === "Home" && <HomeSection />}

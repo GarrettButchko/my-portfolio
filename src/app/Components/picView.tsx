@@ -1,10 +1,10 @@
-export function picView(photo: string) {
+export function PicView({ profile }: { profile: string }) {
   return (
     <div className="flex justify-center items-center w-full p-4">
       <img
-        key={photo}
-        src={photo}
-        alt="Screenshot"
+        key={profile}
+        src={profile}
+        alt="Profile"
         className="
           rounded-[12px]
           shadow-lg

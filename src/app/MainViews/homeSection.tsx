@@ -1,14 +1,14 @@
 "use client";
 
-import { VStack, HStack, Text, Section, Spacer } from "../Components/components";
+import { VStack, HStack, Text, Section, Spacer } from "../Components/Components";
 import InfoCollection from "../Components/InfoCollection";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
 import { Project } from "@/app/Types/Project"
-import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
-import BlurOverlay from "@/app/Components/blurOverlay";
-import { picView } from "../Components/picView";
+import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/ProjectSection";
+import BlurOverlay from "@/app/Components/BlurOverlay";
+import { PicView } from "../Components/PicView";
 
 export default function HomeSecton() {
 
@@ -182,7 +182,7 @@ export default function HomeSecton() {
               className="rounded-full border-7 border-oppbackground/10 cursor-pointer"
               onClick={() => {
                   setShow(true);
-                  popUpView.current = picView("/profile.jpeg")
+                  popUpView.current = <PicView profile={"/profile.jpeg"}/>
               }}
             />
           </div>
@@ -191,7 +191,8 @@ export default function HomeSecton() {
         <VStack className="items-center mt-5" spacing={8}>
 
           <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
-            <button
+            <motion.button
+            whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
               title="Email Me!"
               type="button"
               onClick={() =>
@@ -223,9 +224,10 @@ export default function HomeSecton() {
                   ">
                 Contact
               </Text>
-            </button>
+            </motion.button>
             <HStack spacing={8}>
-              <button
+              <motion.button
+              whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
                 title="Go to my Linkedin"
                 onClick={() => window.open("https://www.linkedin.com/in/gar-butch/", "_blank")}
                 className="
@@ -244,8 +246,10 @@ export default function HomeSecton() {
                   width={32}
                   height={32}
                 />
-              </button>
-              <button className="
+              </motion.button>
+              <motion.button 
+              whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
+              className="
                   overflow-hidden 
                   rounded-[5px]
                   hover:brightness-75
@@ -264,7 +268,7 @@ export default function HomeSecton() {
                   width={32}
                   height={32}
                 />
-              </button>
+              </motion.button>
             </HStack>
           </div>
         </VStack>

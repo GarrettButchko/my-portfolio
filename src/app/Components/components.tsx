@@ -23,7 +23,7 @@ export function HStack({ children, spacing = 0, className = "", ...motionProps }
 
 
 
-export function VStack({ children, spacing = 0, className = "", ...motionProps }: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
+export function VStack({ children, spacing, className = "", ...motionProps }: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
   return (
     <motion.div
       className={`flex flex-col ${className}`}

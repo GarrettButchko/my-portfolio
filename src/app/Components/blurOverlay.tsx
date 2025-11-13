@@ -15,6 +15,7 @@ export default function BlurOverlay({ show, onClose, children }: BlurOverlayProp
     <AnimatePresence className="w-full">
       {show && (
         <motion.div
+          onClick={onClose}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -28,7 +29,7 @@ export default function BlurOverlay({ show, onClose, children }: BlurOverlayProp
           {/* Close Button */}
           <button
             type="button"
-            onClick={onClose}
+            
             className="
               absolute top-10 right-10
               rounded-full

@@ -1,14 +1,15 @@
 
-import { VStack, HStack, Spacer, Text } from "../Components/components";
+import { VStack, HStack, Spacer, Text } from "../Components/Components";
 import React, { useState, useEffect, useRef } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
 import { Post } from "@/app/Types/Post";
 import { Project } from "@/app/Types/Project";
 import Image from "next/image";
-import BlurOverlay from "@/app/Components/blurOverlay";
+import BlurOverlay from "@/app/Components/BlurOverlay";
 import { useRouter } from "next/navigation";
 import { slugify } from '@/app/lib/slugify';
+import { motion, type HTMLMotionProps  } from "framer-motion";
 
 
 export default function NewsSection() {
@@ -267,7 +268,7 @@ export function PostView({ post, index }: PostViewProps) {
 
     return (
         <VStack
-            whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
+            
             className="relative bg-sub1 rounded-[20px] w-full justify-center items-center overflow-visible mb-[16px]"
             spacing={10}
         >
@@ -279,9 +280,9 @@ export function PostView({ post, index }: PostViewProps) {
                         sm:text-left text-center
                         sm:justify-start justify-center
                     "
-                    spacing={4}
+                    spacing={6}
                 >
-                    <h2
+                    <p
                         className="
                             md:text-[30px]
                             sm:text-[26px]
@@ -290,11 +291,11 @@ export function PostView({ post, index }: PostViewProps) {
                             transition-all
                             ease-in-out
                             duration-200
-                            text-sub3
+                            text-accent
                         "
                     >
                         {post.title}
-                    </h2>
+                    </p>
 
                     <p
                         className="
@@ -303,6 +304,7 @@ export function PostView({ post, index }: PostViewProps) {
                             sm:text-[12px] 
                             text-[10px] 
                             truncate
+                            -mt-3
                         "
                     >
                         {post.subtitle}
@@ -340,13 +342,11 @@ export function PostView({ post, index }: PostViewProps) {
                 <Spacer />
 
                 <VStack spacing={6}>
-                    <Image
-                        src="/ss1.png"
-                        alt={post.title}
-                        width={150}
-                        height={150}
-                        className="rounded-[12px] sm:mt-0 mt-4"
-                    />
+                    {post.photo && (
+                        <div className='rounded-[50px] max-w-40 max-h-[80vh] h-auto w-auto'>
+                            <img src={post.photo} alt="Photo" />
+                        </div>
+                    )}
 
                     <HStack
                         spacing={6}
@@ -378,7 +378,8 @@ export function PostView({ post, index }: PostViewProps) {
             </div>
 
             {/* --- Floating Button --- */}
-            <button
+            <motion.button
+            whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
                 type="button"
                 onClick={() => {
                     goToPost(post.title);
@@ -410,7 +411,7 @@ export function PostView({ post, index }: PostViewProps) {
                 >
                     Info
                 </Text>
-            </button>
+            </motion.button>
         </VStack>
     );
 }

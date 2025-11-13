@@ -1,10 +1,10 @@
-import { HStack, VStack } from "../Components/components";
+import { HStack, VStack } from "../Components/Components";
 import Search from "../../../public/svg/search.svg";
 import React, { useState, useEffect, useRef } from "react";
 import { Project } from "@/app/Types/Project"
-import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/projectSection";
+import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/ProjectSection";
 import Arrow from "../../../public/svg/arrow.svg";
-import BlurOverlay from "@/app/Components/blurOverlay";
+import BlurOverlay from "@/app/Components/BlurOverlay";
 
 
 
