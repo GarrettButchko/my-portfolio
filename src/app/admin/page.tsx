@@ -1,6 +1,6 @@
 "use client";
 
-import { VStack, HStack, Spacer, Text } from "../Components/Components";
+import { VStack, HStack, Spacer } from "../Components/Components";
 import React, { useState, useEffect, useRef } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
@@ -10,9 +10,7 @@ import { Post } from "@/app/Types/Post";
 import { Project } from "@/app/Types/Project";
 import { PostView, PostViewPlaceHolder } from "@/app/MainViews/NewsSection";
 import BlurOverlay from "@/app/Components/BlurOverlay";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { SP } from "next/dist/shared/lib/utils";
 import { formatDate } from "../lib/formatDate"
 
 
@@ -25,13 +23,27 @@ export default function AdminPage() {
     const [authorized, setAuthorized] = useState(false);
     const [inputKey, setInputKey] = useState("");
     const [show, setShow] = useState(false);
-      const popUpView = useRef<React.ReactNode>(
+    const popUpView = useRef<React.ReactNode>(
         <div className="text-textColor text-center font-bold">
-          Nothing Here Yet :)...
+            Nothing Here Yet :)...
         </div>
-      );
+    );
 
-    
+    const defaultPost = {
+        id: 0,
+        title: "",
+        subtitle: "",
+        tags: [],
+        relatedProjects: [],
+        body: "",
+        photo: "",
+        publish: new Date(), // must be a Date
+    }
+
+    const [workingPost, setWorkingPost] = useState<Post>(defaultPost);
+
+    const ids = posts.map(p => p.id);
+    const maxId = Math.max(...ids);
 
     const SECRET_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY; // in .env.local
 
@@ -176,6 +188,7 @@ export default function AdminPage() {
                         type="button"
                         onClick={() => {
                             setQuery("");
+                            setShow(true)
                         }}
                         className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
@@ -228,7 +241,11 @@ export default function AdminPage() {
                                         whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
                                         type="button"
                                         onClick={() => {
-                                            
+                                            setWorkingPost(post);
+                                            if (workingPost) {
+                                                popUpView.current = <EditAddPostView id={post.id} workingPost={workingPost} setWorkingPost={setWorkingPost} />
+                                            }
+                                            setShow(true)
                                         }}
                                         className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
                                     >
@@ -257,4 +274,117 @@ export default function AdminPage() {
         </div >
     );
 }
+
+function EditAddPostView({
+    workingPost,
+    setWorkingPost,
+    id
+}: {
+    workingPost: Post;
+    setWorkingPost: React.Dispatch<React.SetStateAction<Post>>;
+    id?: number;
+}) {
+
+    // Local form state
+    const [title, setTitle] = useState(workingPost.title);
+    const [subTitle, setSubTitle] = useState(workingPost.subtitle);
+    const [body, setBody] = useState(workingPost.body);
+    const [photo, setPhoto] = useState(workingPost.photo);
+    const [date, setDate] = useState(workingPost.publish);
+    const [tags, setTags] = useState(workingPost.tags);
+    const [projects, setProjects] = useState(workingPost.relatedProjects);
+
+    // If id is passed, assign it once
+    useEffect(() => {
+        if (id) {
+            setWorkingPost(prev => ({ ...prev, id }));
+        } else {
+            setWorkingPost(prev => ({ ...prev,  }));
+        }
+    }, [id, setWorkingPost]);
+
+    // Helper to sync local -> parent
+    const updateParent = (field: string, value: any) => {
+        setWorkingPost(prev => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    return (
+        <VStack className="bg-foreground rounded-[25px] p-6 w-full shadow-lg" spacing={8}>
+            <HStack>
+                {/* ID FIELD */}
+                <VStack className="items-center">
+                    <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">ID</p>
+                    <p className="text-sub3 font-bold md:text-[20px] sm:text-[20px] text-[13px] px-10 py-3 rounded-[19px] bg-sub1">
+                        {workingPost.id}
+                    </p>
+                </VStack>
+
+                {/* TITLE FIELD */}
+                <VStack className="items-center">
+                    <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Title</p>
+                    <input
+                        type="text"
+                        placeholder="Type Here..."
+                        value={title}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setTitle(value);
+                            updateParent("title", value);
+                        }}
+                        className="
+                            text-sub3 font-bold
+                            md:text-[20px] sm:text-[20px] text-[13px]
+                            px-10 py-3 rounded-[19px] bg-sub1
+                        "
+                    />
+                </VStack>
+
+                {/* SUBTITLE FIELD */}
+                <VStack className="items-center">
+                    <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Subtitle</p>
+                    <input
+                        type="text"
+                        placeholder="Type Here..."
+                        value={subTitle}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSubTitle(value);
+                            updateParent("subtitle", value);
+                        }}
+                        className="
+                            text-sub3 font-bold
+                            md:text-[20px] sm:text-[20px] text-[13px]
+                            px-10 py-3 rounded-[19px] bg-sub1
+                        "
+                    />
+                </VStack>
+            </HStack>
+
+            {/* Body FIELD */}
+                <VStack className="items-center">
+                    <p className="text-start ml-4 text-sub2 md:text-[20px] sm:text-[20px] text-[13px] min-h-3">Body</p>
+                    <input
+                        type="text"
+                        placeholder="Type Here..."
+                        value={body}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSubTitle(value);
+                            updateParent("body", value);
+                        }}
+                        className="
+                        text-start
+                            text-sub3
+                            md:text-[20px] sm:text-[20px] text-[13px]
+                            px-10 py-3 rounded-[19px] bg-sub1
+                        "
+                    />
+                </VStack>
+        </VStack>
+    );
+}
+
 
