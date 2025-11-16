@@ -363,8 +363,12 @@ export function PostView({ post, index, setShow, popUpView }: PostViewProps) {
                     {post.photo && (
                         <motion.div
                             onClick={() => {
-                                setShow(true);
-                                popUpView.current = <PicView profile={post.photo} />
+                                if (post.photo) {
+                                    setShow(true);
+                                    popUpView.current = (
+                                        <PicView profile={post.photo} />
+                                    );
+                                }
                             }}
                             whileHover={{ scale: 1.06 }} transition={{ duration: 0.15 }}
                             className='max-w-40 max-h-[80vh] h-auto w-auto cursor-pointer' >

@@ -12,6 +12,11 @@ import { PostView, PostViewPlaceHolder } from "@/app/MainViews/NewsSection";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { motion } from "framer-motion";
 import { formatDate } from "../lib/formatDate"
+import DragDropUpload from "../Components/DragAndDrop"
+import { downloadImageAsFile } from "../lib/downloadImageAsFile";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 export default function AdminPage() {
@@ -36,7 +41,7 @@ export default function AdminPage() {
         tags: [],
         relatedProjects: [],
         body: "",
-        photo: "",
+        photo: null,
         publish: new Date(), // must be a Date
     }
 
@@ -241,12 +246,19 @@ export default function AdminPage() {
                                         whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
                                         type="button"
                                         onClick={() => {
-                                            setWorkingPost(post);
-                                            if (workingPost) {
-                                                popUpView.current = <EditAddPostView id={post.id} workingPost={workingPost} setWorkingPost={setWorkingPost} />
-                                            }
-                                            setShow(true)
+                                            setWorkingPost(post);  // update state
+
+                                            popUpView.current = (
+                                                <EditAddPostView
+                                                    id={post.id}
+                                                    workingPost={post}   // ← FIXED
+                                                />
+                                            );
+
+                                            setShow(true);
                                         }}
+
+
                                         className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
                                     >
                                         <span className="text-white font-semibold">Edit</span>
@@ -260,6 +272,8 @@ export default function AdminPage() {
                         </>
                     )}
                 </VStack>
+
+
             </VStack>
 
             <VStack className="my-20 md:text-[15px] sm:text-[15px] text-[10px] text-center">
@@ -277,112 +291,335 @@ export default function AdminPage() {
 
 function EditAddPostView({
     workingPost,
-    setWorkingPost,
     id
 }: {
     workingPost: Post;
-    setWorkingPost: React.Dispatch<React.SetStateAction<Post>>;
-    id?: number;
+    id: number;
 }) {
 
-    // Local form state
-    const [title, setTitle] = useState(workingPost.title);
-    const [subTitle, setSubTitle] = useState(workingPost.subtitle);
-    const [body, setBody] = useState(workingPost.body);
-    const [photo, setPhoto] = useState(workingPost.photo);
-    const [date, setDate] = useState(workingPost.publish);
-    const [tags, setTags] = useState(workingPost.tags);
-    const [projects, setProjects] = useState(workingPost.relatedProjects);
+    const [photoFile, setPhotoFile] = useState<File | null>(null);
 
-    // If id is passed, assign it once
     useEffect(() => {
-        if (id) {
-            setWorkingPost(prev => ({ ...prev, id }));
-        } else {
-            setWorkingPost(prev => ({ ...prev,  }));
+        async function loadImage() {
+            const file = await downloadImageAsFile(workingPost.photo, "photo.png");
+            setPhotoFile(file);   // file will be File or null
         }
-    }, [id, setWorkingPost]);
 
-    // Helper to sync local -> parent
-    const updateParent = (field: string, value: any) => {
-        setWorkingPost(prev => ({
+        loadImage();
+    }, [workingPost.photo]);
+
+    const [localPost, setLocalPost] = useState(workingPost);
+
+    console.log("photo URL:", localPost.photo);
+
+    const addTag = () => {
+        setLocalPost(prev => ({
             ...prev,
-            [field]: value,
+            tags: [...prev.tags, ""], // add an empty string at the end
+        }));
+    };
+
+    const addRelatedProject = () => {
+        setLocalPost(prev => ({
+            ...prev,
+            relatedProjects: [...prev.relatedProjects, ""],
+        }));
+    };
+
+    const removeTag = (index: number) => {
+        setLocalPost(prev => ({
+            ...prev,
+            tags: prev.tags.filter((_, i) => i !== index), // remove the tag at `index`
+        }));
+    };
+
+    const removeRelatedProject = (index: number) => {
+        setLocalPost(prev => ({
+            ...prev,
+            relatedProjects: prev.relatedProjects.filter((_, i) => i !== index), // remove project
         }));
     };
 
     return (
-        <VStack className="bg-foreground rounded-[25px] p-6 w-full shadow-lg" spacing={8}>
-            <HStack>
+        <VStack className="bg-foreground rounded-[25px] p-6 w-full shadow-lg h-162
+            overflow-x-auto
+            [&::-webkit-scrollbar]:w-[0px]
+            hover:[&::-webkit-scrollbar]:w-[6px]
+            [&::-webkit-scrollbar-track]:rounded-full
+            [&::-webkit-scrollbar-track]:bg-transparent
+            [&::-webkit-scrollbar-thumb]:rounded-full
+            [&::-webkit-scrollbar-thumb]:bg-gray-400/30
+            hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
+        " spacing={8}>
+            <HStack spacing={10} className="w-full">
                 {/* ID FIELD */}
                 <VStack className="items-center">
                     <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">ID</p>
-                    <p className="text-sub3 font-bold md:text-[20px] sm:text-[20px] text-[13px] px-10 py-3 rounded-[19px] bg-sub1">
+                    <p className="text-sub3 font-bold md:text-[20px] sm:text-[20px] text-[13px] px-10 py-3 rounded-[12px] bg-sub1">
                         {workingPost.id}
                     </p>
                 </VStack>
 
                 {/* TITLE FIELD */}
-                <VStack className="items-center">
+                <VStack className="items-center w-full">
                     <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Title</p>
                     <input
                         type="text"
                         placeholder="Type Here..."
-                        value={title}
+                        value={localPost.title}
                         onChange={(e) => {
                             const value = e.target.value;
-                            setTitle(value);
-                            updateParent("title", value);
+                            setLocalPost(prev => ({ ...prev, title: value }));
                         }}
                         className="
+                       outline-none
+                            w-full
                             text-sub3 font-bold
                             md:text-[20px] sm:text-[20px] text-[13px]
-                            px-10 py-3 rounded-[19px] bg-sub1
+                            px-5 py-3 rounded-[12px] bg-sub1
                         "
                     />
                 </VStack>
 
                 {/* SUBTITLE FIELD */}
-                <VStack className="items-center">
+                <VStack className="items-center w-full">
                     <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Subtitle</p>
                     <input
                         type="text"
                         placeholder="Type Here..."
-                        value={subTitle}
+                        value={localPost.subtitle}
                         onChange={(e) => {
                             const value = e.target.value;
-                            setSubTitle(value);
-                            updateParent("subtitle", value);
+                            setLocalPost(prev => ({ ...prev, subtitle: value }));
                         }}
                         className="
+                        outline-none
+                            w-full
                             text-sub3 font-bold
                             md:text-[20px] sm:text-[20px] text-[13px]
-                            px-10 py-3 rounded-[19px] bg-sub1
+                            px-5 py-3 rounded-[12px] bg-sub1
                         "
                     />
                 </VStack>
             </HStack>
 
             {/* Body FIELD */}
-                <VStack className="items-center">
-                    <p className="text-start ml-4 text-sub2 md:text-[20px] sm:text-[20px] text-[13px] min-h-3">Body</p>
-                    <input
-                        type="text"
-                        placeholder="Type Here..."
-                        value={body}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setSubTitle(value);
-                            updateParent("body", value);
+            <VStack className="items-center w-full">
+                <p className="text-left w-full ml-6 text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">
+                    Body
+                </p>
+
+                <textarea
+                    placeholder="Type Here..."
+                    value={localPost.body}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setLocalPost(prev => ({ ...prev, body: value }));
+                    }}
+                    className="
+                        outline-none
+                        text-left
+                        text-sub3
+                        md:text-[20px] sm:text-[20px] text-[13px]
+                        px-6 py-4 rounded-[12px] bg-sub1
+                        w-full min-h-[300px] resize-none
+                        overflow-x-auto py-1 px-4  min-w-0
+                        transition-opacity duration-300
+                        [&::-webkit-scrollbar]:w-[0px]
+                        hover:[&::-webkit-scrollbar]:w-[6px]
+                        [&::-webkit-scrollbar-track]:rounded-full
+                        [&::-webkit-scrollbar-track]:bg-transparent
+                        [&::-webkit-scrollbar-thumb]:rounded-full
+                        [&::-webkit-scrollbar-thumb]:bg-gray-400/30
+                        hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
+                    "
+                />
+            </VStack>
+            <HStack spacing={5}>
+                {/*Drag and Drop*/}
+                <VStack className="items-center w-full">
+                    <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Photo</p>
+                    <DragDropUpload
+                        photoFile={photoFile}
+                        setPhotoFile={setPhotoFile}
+                        onFileSelect={(file) => {
+                            setPhotoFile(file)
                         }}
-                        className="
-                        text-start
-                            text-sub3
-                            md:text-[20px] sm:text-[20px] text-[13px]
-                            px-10 py-3 rounded-[19px] bg-sub1
-                        "
                     />
                 </VStack>
+                <div className="w-full max-w-xs items-center text-center">
+                    <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Date</p>
+                    <DatePicker
+                        selected={localPost.publish ?? new Date()}
+                        onChange={(date: Date | null) => {
+                            setLocalPost(prev => ({ ...prev, publish: date || new Date() }));
+                        }}
+                        dateFormat="MM-dd-yyyy"
+                        placeholderText="Select a date"
+                        className="outline-none px-3 py-2 rounded-[12px] w-full bg-sub1 text-sub2 w-full text-center cursor-pointer md:text-[20px] sm:text-[20px] text-[13px]"
+                    />
+                </div>
+            </HStack>
+            <HStack className="w-full text-center" spacing={10}>
+                {/* Related Projects */}
+                <VStack className="w-full items-center" spacing={8}>
+                    <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Related Projects</p>
+
+                    {localPost.relatedProjects.map((project: string, i: number) => (
+                        <HStack key={i} className="w-full gap-2">
+                            <input
+                                type="text"
+                                placeholder="Type Here..."
+                                value={project}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setLocalPost(prev => {
+                                        const updated = [...prev.relatedProjects];
+                                        updated[i] = value;
+                                        return { ...prev, relatedProjects: updated };
+                                    });
+                                }}
+                                className="
+                                    outline-none
+                                    w-full
+                                    text-sub3 font-bold
+                                    md:text-[20px] sm:text-[20px] text-[13px]
+                                    px-5 py-3 rounded-[12px] bg-sub1
+                                "
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeRelatedProject(i)}
+                                className="
+                                    flex justify-center items-center p-2
+                                    hover:brightness-75
+                                    active:scale-95
+                                    transition-all
+                                    ease-in-out
+                                    duration-300
+                                    cursor-pointer
+                                "
+                            >
+                                <Plus className="text-red-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6 rotate-45" />
+                            </button>
+                        </HStack>
+                    ))}
+
+                    <button
+                        type="button"
+                        onClick={addRelatedProject}
+                        className="
+                            w-20 bg-accent rounded-full flex justify-center items-center p-2
+                            hover:brightness-75
+                            active:scale-95
+                            transition-all
+                            ease-in-out
+                            duration-300
+                            cursor-pointer
+                        "
+                    >
+                        <Plus className="text-white md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6" />
+                    </button>
+                </VStack>
+
+                {/* Tags */}
+                <VStack className="w-full items-center" spacing={8}>
+                    <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">Tags</p>
+
+                    {localPost.tags.map((tag: string, i: number) => (
+                        <HStack key={i} className="w-full gap-2">
+                            <input
+                                type="text"
+                                placeholder="Type Here..."
+                                value={tag}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setLocalPost(prev => {
+                                        const updated = [...prev.tags];
+                                        updated[i] = value;
+                                        return { ...prev, tags: updated };
+                                    });
+                                }}
+                                className="
+                                    outline-none
+                                    w-full
+                                    text-sub3 font-bold
+                                    md:text-[20px] sm:text-[20px] text-[13px]
+                                    px-5 py-3 rounded-[12px] bg-sub1
+                                "
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeTag(i)}
+                                className="
+                                    flex justify-center items-center p-2
+                                    hover:brightness-75
+                                    active:scale-95
+                                    transition-all
+                                    ease-in-out
+                                    duration-300
+                                    cursor-pointer
+                                "
+                            >
+                                <Plus className="text-red-500 md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6 rotate-45" />
+                            </button>
+                        </HStack>
+                    ))}
+
+                    <button
+                        type="button"
+                        onClick={addTag}
+                        className="
+                            w-20 bg-accent rounded-full flex justify-center items-center p-2
+                            hover:brightness-75
+                            active:scale-95
+                            transition-all
+                            ease-in-out
+                            duration-300
+                            cursor-pointer
+                        "
+                    >
+                        <Plus className="text-white md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6" />
+                    </button>
+                </VStack>
+            </HStack>
+            <HStack spacing={10} className="w-full justify-center">
+                <button
+                    type="button"
+                    className="
+                        bg-red-500 text-white px-6 py-2 rounded-full
+                        hover:brightness-75
+                        active:scale-95
+                        transition-all
+                        ease-in-out
+                        duration-300
+                        cursor-pointer
+                    "
+                    onClick={() => {
+                        // Cancel logic
+                        console.log("Cancelled");
+                    }}
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    onClick={set}
+                    className="
+                        bg-blue-500 text-white px-6 py-2 rounded-full
+                        hover:brightness-75
+                        active:scale-95
+                        transition-all
+                        ease-in-out
+                        duration-300
+                        cursor-pointer
+                    "
+                >
+                    Submit
+                </button>
+            </HStack>
+
         </VStack>
     );
 }
