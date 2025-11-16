@@ -16,8 +16,18 @@ import DragDropUpload from "../Components/DragAndDrop"
 import { downloadImageAsFile } from "../lib/downloadImageAsFile";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import saveProjectWithFileRealtime from "../lib/saveProjectWithFileRealtime";
 
-
+const defaultPost = {
+        id: 1,
+        title: "",
+        subtitle: "",
+        tags: [],
+        relatedProjects: [],
+        body: "",
+        photo: null,
+        publish: new Date(), // must be a Date
+    }
 
 export default function AdminPage() {
     const [query, setQuery] = useState("");
@@ -33,19 +43,6 @@ export default function AdminPage() {
             Nothing Here Yet :)...
         </div>
     );
-
-    const defaultPost = {
-        id: 0,
-        title: "",
-        subtitle: "",
-        tags: [],
-        relatedProjects: [],
-        body: "",
-        photo: null,
-        publish: new Date(), // must be a Date
-    }
-
-    const [workingPost, setWorkingPost] = useState<Post>(defaultPost);
 
     const ids = posts.map(p => p.id);
     const maxId = Math.max(...ids);
@@ -192,7 +189,14 @@ export default function AdminPage() {
                     <button
                         type="button"
                         onClick={() => {
-                            setQuery("");
+                            popUpView.current = (
+                                <EditAddPostView
+                                    id={maxId + 1}
+                                    workingPost={defaultPost}
+                                    setPosts={setPosts}
+                                    setShow={setShow}
+                                />
+                            );
                             setShow(true)
                         }}
                         className="
@@ -246,12 +250,14 @@ export default function AdminPage() {
                                         whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
                                         type="button"
                                         onClick={() => {
-                                            setWorkingPost(post);  // update state
+
 
                                             popUpView.current = (
                                                 <EditAddPostView
                                                     id={post.id}
                                                     workingPost={post}   // ← FIXED
+                                                    setPosts={setPosts}
+                                                    setShow={setShow}
                                                 />
                                             );
 
@@ -291,11 +297,17 @@ export default function AdminPage() {
 
 function EditAddPostView({
     workingPost,
-    id
+    id,
+    setPosts,
+    setShow,
 }: {
     workingPost: Post;
     id: number;
+    setPosts: React.Dispatch<React.SetStateAction<Post[]>>
+    setShow: React.Dispatch<React.SetStateAction<boolean>>
 }) {
+
+    
 
     const [photoFile, setPhotoFile] = useState<File | null>(null);
 
@@ -339,6 +351,8 @@ function EditAddPostView({
             relatedProjects: prev.relatedProjects.filter((_, i) => i !== index), // remove project
         }));
     };
+
+
 
     return (
         <VStack className="bg-foreground rounded-[25px] p-6 w-full shadow-lg h-162
@@ -596,7 +610,8 @@ function EditAddPostView({
                         cursor-pointer
                     "
                     onClick={() => {
-                        // Cancel logic
+                        setLocalPost(defaultPost)
+                        setShow(false);
                         console.log("Cancelled");
                     }}
                 >
@@ -605,7 +620,38 @@ function EditAddPostView({
 
                 <button
                     type="submit"
-                    onClick={set}
+                    onClick={async () => {
+                        const result = await saveProjectWithFileRealtime({
+                            file: photoFile ?? null,
+                            post: localPost
+                        });
+
+                        if (result.success) {
+                            console.log("Upload + save complete:", result.payload);
+                            setShow(false); // close the popup
+
+                            // Update or add post in state
+                            setPosts(prev => {
+                                const exists = prev.some(p => p.id === localPost.id);
+
+                                let updated;
+
+                                if (exists) {
+                                    updated = prev.map(p =>
+                                        p.id === localPost.id ? { ...p, ...localPost } : p
+                                    );
+                                } else {
+                                    updated = [...prev, localPost];
+                                }
+
+                                return updated;
+                            });
+
+                        } else {
+                            console.error("Failed to save post:", result.error);
+                            alert("There was an error saving your post.");
+                        }
+                    }}
                     className="
                         bg-blue-500 text-white px-6 py-2 rounded-full
                         hover:brightness-75
@@ -618,6 +664,7 @@ function EditAddPostView({
                 >
                     Submit
                 </button>
+
             </HStack>
 
         </VStack>

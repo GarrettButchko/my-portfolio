@@ -1,22 +1,7 @@
 import "server-only";
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getDatabase, ref, get } from "firebase/database";
+import { realtimeDB } from "@/app/firebase";
+import { ref, get } from "firebase/database";
 import { Post } from "@/app/Types/Post";
-
-// ✅ Firebase config (from environment)
-const firebaseConfig = {
-    apiKey: process.env.APIKEY,
-    authDomain: "portfolio-website-cfe3d.firebaseapp.com",
-    databaseURL: "https://portfolio-website-cfe3d-default-rtdb.firebaseio.com",
-    projectId: "portfolio-website-cfe3d",
-    storageBucket: "portfolio-website-cfe3d.firebasestorage.app",
-    messagingSenderId: process.env.MESSENGINGSENDERID,
-    appId: process.env.APPID,
-};
-
-// ✅ Initialize app safely (no duplicate apps in dev)
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const db = getDatabase(app);
 
 // 🔁 In-memory cache
 let cache: Post[] | null = null;
@@ -26,13 +11,13 @@ let postsPromise: Promise<Post[]> | null = null;
 
 // ✅ Fetch all posts from Realtime Database
 export async function getPosts(): Promise<Post[]> {
-    // Return cached version if recent
+    // Use cached version if fresh
     if (cache && Date.now() - cacheTime < CACHE_TTL) {
         console.log("🪣 Using cached Realtime DB posts");
         return cache;
     }
 
-    // Return shared promise if fetch ongoing
+    // If another request already started → share it
     if (postsPromise) {
         console.log("⏳ Returning existing getPosts() promise");
         return postsPromise;
@@ -42,18 +27,21 @@ export async function getPosts(): Promise<Post[]> {
         console.log("🔥 Fetching posts from Realtime Database...");
 
         try {
-            const snapshot = await get(ref(db, "posts"));
+            const snapshot = await get(ref(realtimeDB, "posts"));
 
             if (!snapshot.exists()) {
                 console.warn("⚠️ No posts found in Realtime Database");
                 return [];
             }
 
-            // Convert object map -> array
             const data = snapshot.val();
+
+            // Convert object → array
             const posts: Post[] = Object.values(data).map((item: any) => ({
                 ...item,
-                publish: item.publish?.toDate ? item.publish.toDate().toISOString() : item.publish,
+                publish: item.publish?.toDate
+                    ? item.publish.toDate().toISOString()
+                    : item.publish,
             }));
 
             // Cache result

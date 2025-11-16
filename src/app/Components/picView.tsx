@@ -1,11 +1,12 @@
-export function PicView({ profile }: { profile: string }) {
-  return (
+export function PicView({ profile }: { profile: string | null }) {
+  if (profile) {
+    return (
     <div className="flex justify-center items-center w-full p-4">
-      <img
-        key={profile}
-        src={profile}
-        alt="Profile"
-        className="
+        <img
+          key={profile}
+          src={profile}
+          alt="Profile"
+          className="
           rounded-[12px]
           shadow-lg
           max-w-full
@@ -13,7 +14,8 @@ export function PicView({ profile }: { profile: string }) {
           h-auto
           w-auto
         "
-      />
-    </div>
-  );
+        />
+      </div>
+    );
+  }
 }
