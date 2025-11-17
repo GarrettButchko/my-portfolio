@@ -49,7 +49,7 @@ export default function AdminPage() {
     }, [posts]);
 
 
-    const SECRET_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY; // in .env.local
+    const SECRET_KEY = process.env.ADMIN_KEY; // in .env.local
 
     const handleUnlock = () => {
         if (inputKey === SECRET_KEY) {
