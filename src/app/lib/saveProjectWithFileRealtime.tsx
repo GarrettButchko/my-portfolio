@@ -11,7 +11,6 @@ export default async function saveProjectWithFileRealtime({
     file: File | null;
     post: Post;
 }) {
-
     var payload;
 
     const dateString = formatDate(post.publish)

@@ -5,7 +5,7 @@ import InfoCollection from "../Components/InfoCollection";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
-import { Project } from "@/app/Types/Project"
+import { Project, InfoItem } from "@/app/types"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/ProjectSection";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { PicView } from "../Components/PicView";
@@ -118,7 +118,7 @@ export default function HomeSecton() {
                   {projects
                     .filter((p) => p.feature)
                     .map((p, i) => (
-                      <ProjSection key={i} project={p} index={i} setShow={setShow} view={popUpView} />
+                      <ProjSection key={p.title} project={p} index={i} setShow={setShow} view={popUpView} />
                     ))}
                 </>
               )}
@@ -277,6 +277,7 @@ export default function HomeSecton() {
   }
 
   function EduExp() {
+    
     const education: InfoItem[] = [
       {
         id: 1,
@@ -416,7 +417,7 @@ export default function HomeSecton() {
 
           <VStack spacing={25}>
             {education.map((student: InfoItem, index) => (
-              <InfoCollection key={student.title} infoItem={student} index={index} popUpView={popUpView} setShow={setShow} />
+              <InfoCollection key={student.title + index} infoItem={student} popUpView={popUpView} setShow={setShow} />
             ))}
           </VStack>
 
@@ -437,7 +438,7 @@ export default function HomeSecton() {
           <VStack>
             <VStack spacing={25}>
               {experience.map((job: InfoItem, index) => (
-                <InfoCollection key={index} infoItem={job} index={index} popUpView={popUpView} setShow={setShow} />
+                <InfoCollection key={job.id + index} infoItem={job} popUpView={popUpView} setShow={setShow} />
               ))}
             </VStack>
           </VStack>

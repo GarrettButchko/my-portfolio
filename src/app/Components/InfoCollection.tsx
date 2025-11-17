@@ -5,16 +5,14 @@ import Circle from "../../../public/svg/circle.svg";
 import Image from "next/image";
 import { hexToRgba } from "@/app/lib/hextoRgba";
 import { motion } from "framer-motion";
-import { info } from "console";
+import { InfoItem, ActProj } from "../types";
 
 export default function InfoCollection({
   infoItem,
-  index,
   setShow,
   popUpView,
 }: {
   infoItem: InfoItem;
-  index: number;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   popUpView: React.RefObject<React.ReactNode>;
 }) {
@@ -38,7 +36,7 @@ export default function InfoCollection({
               />
               <div
                 className="bg-sub1 scale-150"
-                style={{ height: `${140}px`, width: `${5}px`, transform: "translateY(56px) translateX(9px)" }}
+                style={{ height: "140px", width: "5px", transform: "translateY(56px) translateX(9px)" }}
               />
             </div>
           </HStack>
@@ -89,6 +87,7 @@ export default function InfoCollection({
 
         </div>
         <motion.button
+          aria-label="Open details"
           whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
           type="button"
           onClick={() => {
@@ -217,8 +216,8 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
             snap-x snap-mandatory
             p-1
           ">
-          {infoItem.actProjs.map((actProj: actProj, index) => (
-            <ActProjSection key={index} actProj={actProj} />
+          {infoItem.actProjs.map((actProj: ActProj) => (
+            <ActProjSection key={actProj.title} actProj={actProj} />
           ))}
         </div>
       </VStack>
@@ -298,7 +297,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
   );
 }
 
-function ActProjSection({ actProj }: { actProj: actProj }) {
+function ActProjSection({ actProj }: { actProj: ActProj }) {
   return (
     <VStack
       className="

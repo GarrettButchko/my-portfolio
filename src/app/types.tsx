@@ -9,12 +9,12 @@ export type InfoItem = {
   in: boolean;
   pic: string;
   picAlt: string;
-  actProjs: actProj[];
+  actProjs: ActProj[];
   hexColor: string;
   link: string;
 };
 
-export type actProj = {
+export type ActProj = {
   title: string;
   body: string;
   skills: string[];

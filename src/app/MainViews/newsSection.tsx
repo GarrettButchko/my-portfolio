@@ -1,6 +1,6 @@
 
 import { VStack, HStack, Spacer, Text } from "../Components/Components";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
 import { Post, Project } from "@/app/types";
@@ -19,40 +19,12 @@ export default function NewsSection() {
     const [sortFirst, setSortFirst] = useState(true);
     const [shownPosts, setShownPosts] = useState(5);
     const [posts, setPosts] = useState<Post[]>([]);
-    const [projects, setProjects] = useState<Project[]>([]);
     const [show, setShow] = useState(false);
     const popUpView = useRef<React.ReactNode>(
         <div className="text-textColor text-center font-bold">
             Nothing Here Yet :)...
         </div>
     );
-
-
-
-    useEffect(() => {
-        if (show) {
-            // Lock scroll and save current scroll position
-            const scrollY = window.scrollY;
-            document.body.style.position = "fixed";
-            document.body.style.top = `-${scrollY}px`;
-            document.body.style.left = "0";
-            document.body.style.right = "0";
-            document.body.style.overflowY = "scroll";
-            document.body.style.width = "100%";
-
-            return () => {
-                // Restore scroll position
-                document.body.style.position = "";
-                document.body.style.top = "";
-                document.body.style.left = "";
-                document.body.style.right = "";
-                document.body.style.overflowY = "";
-                document.body.style.width = "";
-                window.scrollTo(0, scrollY);
-            };
-        }
-    }, [show]);
-
 
     useEffect(() => {
         if (show) {
@@ -102,46 +74,24 @@ export default function NewsSection() {
             .finally(() => setLoading(false));
     }, []);
 
-    // ✅ Fetch projects from API and cache in localStorage
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-
-        const cached = localStorage.getItem("projects");
-        if (cached) {
-            setProjects(JSON.parse(cached));
-            setLoading(false);
-        }
-
-        fetch("/api/projects")
-            .then((res) => res.json())
-            .then((data) => {
-                const cachedData = cached ? JSON.parse(cached) : null;
-                if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
-                    setProjects(data);
-                    localStorage.setItem("projects", JSON.stringify(data));
-                }
-            })
-            .catch((err) => console.error("Error loading projects:", err))
-            .finally(() => setLoading(false));
-    }, []);
-
     const addMore = posts.length - shownPosts > 0;
 
-    const filteredPosts = posts
-        .filter((p) => {
-            const matchesSearch =
-                query === "" ||
-                p.title.toLowerCase().includes(query.toLowerCase()) ||
-                p.subtitle.toLowerCase().includes(query.toLowerCase()) || Object.keys(p.tags).includes(query.toLowerCase());
+    const filteredPosts = useMemo(() => {
+        return posts
+            .filter((p) => {
+                const matchesSearch =
+                    query === "" ||
+                    p.title.toLowerCase().includes(query.toLowerCase()) ||
+                    p.subtitle.toLowerCase().includes(query.toLowerCase()) || Object.keys(p.tags).includes(query.toLowerCase());
 
-            return matchesSearch;
-        })
-        .sort((a, b) => {
-            return sortFirst
-                ? new Date(b.publish).getTime() - new Date(a.publish).getTime()
-                : new Date(a.publish).getTime() - new Date(b.publish).getTime();
-        });
-
+                return matchesSearch;
+            })
+            .sort((a, b) => {
+                return sortFirst
+                    ? new Date(b.publish).getTime() - new Date(a.publish).getTime()
+                    : new Date(a.publish).getTime() - new Date(b.publish).getTime();
+            });
+    }, [posts, query, sortFirst]);
 
 
     return (
@@ -203,7 +153,7 @@ export default function NewsSection() {
                     ) : filteredPosts && filteredPosts.length > 0 ? (
                         <>
                             {filteredPosts.slice(0, shownPosts).map((post, i) => (
-                                <PostView key={post.title} post={post} index={i} setShow={setShow} popUpView={popUpView} />
+                                <PostView key={post.id} post={post} index={i} setShow={setShow} popUpView={popUpView} />
                             ))}
 
                             {/* Add placeholders if less than 5 items */}

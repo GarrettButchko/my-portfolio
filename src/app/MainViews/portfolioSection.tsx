@@ -1,7 +1,7 @@
 import { HStack, VStack } from "../Components/Components";
 import Search from "../../../public/svg/search.svg";
 import React, { useState, useEffect, useRef } from "react";
-import { Project } from "@/app/Types/Project"
+import { Project } from "@/app/types"
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/ProjectSection";
 import Arrow from "../../../public/svg/arrow.svg";
 import BlurOverlay from "@/app/Components/BlurOverlay";
@@ -22,11 +22,15 @@ export default function PortfolioSection() {
           Nothing Here Yet :)...
         </div>
       );
+      const scrollRef = useRef(0);
+
+
+
 
       useEffect(() => {
           if (show) {
             // Lock scroll and save current scroll position
-            const scrollY = window.scrollY;
+            scrollRef.current = window.scrollY;
             document.body.style.position = "fixed";
             document.body.style.top = `-${scrollY}px`;
             document.body.style.left = "0";
@@ -42,7 +46,7 @@ export default function PortfolioSection() {
               document.body.style.right = "";
               document.body.style.overflowY = "";
               document.body.style.width = "";
-              window.scrollTo(0, scrollY);
+              window.scrollTo(0, scrollRef.current);
             };
           }
         }, [show]);

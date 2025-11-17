@@ -13,7 +13,7 @@ interface BlurOverlayProps {
 
 export default function BlurOverlay({ show, onClose, children, showXAndTap = true }: BlurOverlayProps) {
   return (
-    <AnimatePresence className="w-full">
+    <AnimatePresence mode="wait" className="w-full">
       {show && (
         <motion.div
           onClick={() => {
@@ -30,7 +30,7 @@ export default function BlurOverlay({ show, onClose, children, showXAndTap = tru
           "
         >
           {/* Close Button */}
-          {showXAndTap ? <button
+          {showXAndTap && <button
             type="button"
             onClick={() => {
               if (showXAndTap) {onClose()};
@@ -48,7 +48,7 @@ export default function BlurOverlay({ show, onClose, children, showXAndTap = tru
             <Plus className="text-accent hover:brightness-75 md:h-8 sm:h-7 h-6 w-6 md:w-8 sm:w-7 rotate-45 transition-all
               ease-in-out
               duration-300" />
-          </button> : <></>}
+          </button>}
 
           {/* Overlay Content */}
           <motion.div

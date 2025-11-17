@@ -1,23 +1,9 @@
 import { VStack, HStack, Spacer} from "./Components";
 import { PicView } from "../Components/PicView";
-import { Project } from "@/app/Types/Project"
+import { Project } from "@/app/types"
 import { motion } from "framer-motion";
 
-
-export function ProjSection(
-  { project,
-    view,
-    setShow
-  }:
-    {
-      project: Project; index: number,
-      view: React.RefObject<React.ReactNode>,
-      setShow: React.Dispatch<React.SetStateAction<boolean>>
-    }
-) {
-  const total = Object.values(project.languages).reduce((a, b) => a + b, 0);
-
-  const languageColors: Record<string, string> = {
+const languageColors: Record<string, string> = {
     Swift: "#ffac45",
     JavaScript: "#f1e05a",
     Shell: "#89e051",
@@ -43,6 +29,19 @@ export function ProjSection(
     MATLAB: "#e16737",
   };
 
+export function ProjSection(
+  { project,
+    view,
+    setShow
+  }:
+    {
+      project: Project; index: number,
+      view: React.RefObject<React.ReactNode>,
+      setShow: React.Dispatch<React.SetStateAction<boolean>>
+    }
+) {
+  const total = Object.values(project.languages).reduce((a, b) => a + b, 0) || 1;
+
   return (
     <VStack
 
@@ -61,9 +60,10 @@ export function ProjSection(
         </VStack>
         <Spacer />
         <motion.button
+        aria-label="Open project on GitHub"
         whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
           type="button"
-          onClick={() => window.open(project.link, "_blank")}
+          onClick={() => window.open(project.link, "_blank", "noopener,noreferrer")}
           className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
         >
           <span className="text-white font-semibold">Github</span>
@@ -91,7 +91,7 @@ export function ProjSection(
           {project.photos.map((photo) => (
             <motion.img
               whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}
-              key={photo}
+              key={project.title + photo}
               src={photo}
               alt={`Screenshot from ${project.title}`}
               className="rounded-[12px] h-[150px] cursor-pointer"

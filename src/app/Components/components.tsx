@@ -1,42 +1,74 @@
 import React from "react";
 import { motion, type HTMLMotionProps } from "framer-motion";
 
-export function Spacer({ minH = 0, className = "" }: { minH?: number; color?: string, className?: string }) {
-  const minHClass = `min-h-[${minH}px]`;
+/* ------------------------------------------------------
+ * Spacer (Fixed Tailwind Issue)
+ * ------------------------------------------------------ */
+export function Spacer({
+  minH = 0,
+  className = "",
+}: {
+  minH?: number;
+  className?: string;
+}) {
   return (
-    <div className={`flex-grow ${minHClass} ${className}`}></div>
+    <div
+      className={`flex-grow ${className}`}
+      style={{ minHeight: minH }} // <-- FIX: inline style so Tailwind doesn't fail
+    />
   );
 }
 
-export function HStack({ children, spacing = 0, className = "", ...motionProps }: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
+/* ------------------------------------------------------
+ * HStack
+ * ------------------------------------------------------ */
+export function HStack({
+  children,
+  spacing = 0,
+  className = "",
+  style,
+  ...motionProps
+}: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
   return (
     <motion.div
       className={`flex flex-row ${className}`}
-      style={{ gap: `${spacing}px` }}
-      {...motionProps} // allows initial, animate, exit, transition
+      style={{ gap: spacing, ...style }}
+      {...motionProps}
     >
       {children}
     </motion.div>
   );
 }
 
-
-
-
-export function VStack({ children, spacing, className = "", ...motionProps }: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
+/* ------------------------------------------------------
+ * VStack
+ * ------------------------------------------------------ */
+export function VStack({
+  children,
+  spacing = 0,
+  className = "",
+  style,
+  ...motionProps
+}: { children?: React.ReactNode; spacing?: number; className?: string } & HTMLMotionProps<"div">) {
   return (
     <motion.div
       className={`flex flex-col ${className}`}
-      style={{ gap: `${spacing}px` }}
-      {...motionProps} // pass initial, animate, exit, transition
+      style={{ gap: spacing, ...style }}
+      {...motionProps}
     >
       {children}
     </motion.div>
   );
 }
 
-
-export function ZStack({ children, className = "", ...motionProps }: { children?: React.ReactNode; className?: string } & HTMLMotionProps<"div">) {
+/* ------------------------------------------------------
+ * ZStack
+ * ------------------------------------------------------ */
+export function ZStack({
+  children,
+  className = "",
+  ...motionProps
+}: { children?: React.ReactNode; className?: string } & HTMLMotionProps<"div">) {
   return (
     <motion.div className={`relative ${className}`} {...motionProps}>
       {React.Children.map(children, (child, index) => (
@@ -48,9 +80,9 @@ export function ZStack({ children, className = "", ...motionProps }: { children?
   );
 }
 
-
-
-
+/* ------------------------------------------------------
+ * Divider
+ * ------------------------------------------------------ */
 export function Divider({
   className = "",
   backgroundColor = "bg-foreground",
@@ -60,27 +92,44 @@ export function Divider({
   backgroundColor?: string;
   height?: string;
 }) {
-  return <div className={`flex ${backgroundColor} w-full ${height} ${className}`} />;
+  return <div className={`flex w-full ${backgroundColor} ${height} ${className}`} />;
 }
 
-
-export function Text({ children, variant = "body", className = "" }: { children?: React.ReactNode; variant?: "title" | "subtitle" | "body" | "caption"; className?: string, }) {
-  const variants: Record<"title" | "subtitle" | "body" | "caption", string> = {
+/* ------------------------------------------------------
+ * Text
+ * ------------------------------------------------------ */
+export function Text({
+  children,
+  variant = "body",
+  className = "",
+}: {
+  children?: React.ReactNode;
+  variant?: "title" | "subtitle" | "body" | "caption";
+  className?: string;
+}) {
+  const variants = {
     title: "text-2xl font-bold",
     subtitle: "text-lg font-semibold",
     body: "text-base",
     caption: "text-sm",
-  };
+  } as const;
 
-
-  return <p className={`${variants[variant]} ${className} `}>{children}</p>;
+  return (
+    <p className={`${variants[variant]} ${className}`}>
+      {children}
+    </p>
+  );
 }
 
-
-export function Section({ children, className = "" }: { children?: React.ReactNode; className?: string }) {
-  return (
-    <section className={`w-full px-6 ${className}`}>
-      {children}
-    </section>
-  );
+/* ------------------------------------------------------
+ * Section
+ * ------------------------------------------------------ */
+export function Section({
+  children,
+  className = "",
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return <section className={`w-full px-6 ${className}`}>{children}</section>;
 }

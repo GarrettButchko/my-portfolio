@@ -1,16 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-
-const firebaseConfig = {
-  apiKey: process.env.APIKEY,
-  authDomain: "portfolio-website-cfe3d.firebaseapp.com",
-  databaseURL: "https://portfolio-website-cfe3d-default-rtdb.firebaseio.com",
-  projectId: "portfolio-website-cfe3d",
-  storageBucket: "portfolio-website-cfe3d.firebasestorage.app",
-  messagingSenderId: process.env.MESSENGINGSENDERID,
-  appId: process.env.APPID,
-};
-
+import { firebaseConfig } from "../firebase";
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
