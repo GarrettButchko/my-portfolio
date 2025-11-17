@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
 import Plus from "../../../public/svg/plus.svg";
-import Lock from "../../../public/svg/lock.svg";
 import { Post, Project } from "@/app/types";
 import { PostViewPlaceHolder } from "@/app/MainViews/NewsSection";
 import BlurOverlay from "@/app/Components/BlurOverlay";

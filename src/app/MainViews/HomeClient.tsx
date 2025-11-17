@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import HomeIcon from '../../../public/svg/home.svg';
 import NewsIcon from '../../../public/svg/news.svg';
 import PortfolioIcon from '../../../public/svg/portfolio.svg';
-import { FloatingBar, moveDivToIndex } from "../Components/Floatingbar";
+import { Floatingbar, moveDivToIndex } from "../Components/Floatingbar";
 import HomeSection from "./HomeSection";
 import PortfolioSection from "./PortfolioSection";
 import NewsSection from "./NewsSection";
@@ -75,7 +75,7 @@ export default function Home() {
 
   return (
     <main className="flex items-top justify-center min-h-screen bg-background">
-      <FloatingBar targets={targets} onSectionChange={handleSectionChange} buttonRefs={buttonRefs} />
+      <Floatingbar targets={targets} onSectionChange={handleSectionChange} buttonRefs={buttonRefs} />
 
       <VStack className="w-full items-center mx-3">
         {active === "Home" && <HomeSection />}
