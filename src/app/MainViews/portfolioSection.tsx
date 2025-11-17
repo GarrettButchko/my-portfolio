@@ -22,7 +22,6 @@ export default function PortfolioSection() {
           Nothing Here Yet :)...
         </div>
       );
-      const scrollRef = useRef(0);
 
 
 
@@ -30,7 +29,7 @@ export default function PortfolioSection() {
       useEffect(() => {
           if (show) {
             // Lock scroll and save current scroll position
-            scrollRef.current = window.scrollY;
+            const scrollY = window.scrollY;
             document.body.style.position = "fixed";
             document.body.style.top = `-${scrollY}px`;
             document.body.style.left = "0";
@@ -46,7 +45,7 @@ export default function PortfolioSection() {
               document.body.style.right = "";
               document.body.style.overflowY = "";
               document.body.style.width = "";
-              window.scrollTo(0, scrollRef.current);
+              window.scrollTo(0, scrollY);
             };
           }
         }, [show]);

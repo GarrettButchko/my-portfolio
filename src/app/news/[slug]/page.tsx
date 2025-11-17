@@ -13,6 +13,7 @@ import BlurOverlay from "@/app/Components/BlurOverlay";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { PicView } from "../../Components/PicView";
+import { formatDate } from '@/app/lib/formatDate';
 
 
 export default function NewsPost() {
@@ -169,6 +170,7 @@ export default function NewsPost() {
                         <VStack className='text-start'>
                             <p className="md:text-[35px] sm:text-[35px] text-[27px] text-accent font-bold">{post.title}</p>
                             <p className="md:text-[27px] sm:text-[27px] text-[22px] text-textColor/60 -mt-2">{post.subtitle}</p>
+                            <p className="md:text-[24px] sm:text-[24px] text-[18px] text-textColor/40 -mt-2">{formatDate(post.publish)}</p>
                         </VStack>
                     </HStack>
 

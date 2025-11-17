@@ -27,27 +27,27 @@ export default function NewsSection() {
 
     useEffect(() => {
         if (show) {
-            // Lock scroll and save current scroll position
-            const scrollY = window.scrollY;
-            document.body.style.position = "fixed";
-            document.body.style.top = `-${scrollY}px`;
-            document.body.style.left = "0";
-            document.body.style.right = "0";
-            document.body.style.overflowY = "scroll";
-            document.body.style.width = "100%";
-
-            return () => {
-                // Restore scroll position
-                document.body.style.position = "";
-                document.body.style.top = "";
-                document.body.style.left = "";
-                document.body.style.right = "";
-                document.body.style.overflowY = "";
-                document.body.style.width = "";
-                window.scrollTo(0, scrollY);
-            };
+          // Lock scroll and save current scroll position
+          const scrollY = window.scrollY;
+          document.body.style.position = "fixed";
+          document.body.style.top = `-${scrollY}px`;
+          document.body.style.left = "0";
+          document.body.style.right = "0";
+          document.body.style.overflowY = "scroll";
+          document.body.style.width = "100%";
+    
+          return () => {
+            // Restore scroll position
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.left = "";
+            document.body.style.right = "";
+            document.body.style.overflowY = "";
+            document.body.style.width = "";
+            window.scrollTo(0, scrollY);
+          };
         }
-    }, [show]);
+      }, [show]);
 
 
     // ✅ Fetch posts from API and cache in localStorage
@@ -308,7 +308,7 @@ export function PostView({ post, setShow, popUpView }: PostViewProps) {
 
                 <Spacer />
 
-                <VStack spacing={6}>
+                <VStack spacing={6} className="items-center">
                     {post.photo && (
                         <motion.div
                             onClick={() => {
@@ -319,7 +319,7 @@ export function PostView({ post, setShow, popUpView }: PostViewProps) {
                             }}
                             whileHover={{ scale: 1.06 }}
                             transition={{ duration: 0.15 }}
-                            className="max-w-40 max-h-[80vh] h-auto w-auto cursor-pointer"
+                            className="my-3 max-w-40 max-h-[80vh] h-auto w-auto cursor-pointer"
                         >
                             {post.photo && (
                                 <Image

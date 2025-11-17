@@ -16,6 +16,9 @@ import { downloadImageAsFile } from "../lib/downloadImageAsFile";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import saveProjectWithFileRealtime from "../lib/saveProjectWithFileRealtime";
+import { useAuth } from "@/app/hooks/useAuth";
+import AdminLogin from "../Components/GoogleSignIn";
+
 
 const defaultPost = {
     id: 1,
@@ -29,12 +32,10 @@ const defaultPost = {
 }
 
 export default function AdminPage() {
+    const { user, loading } = useAuth();
     const [query, setQuery] = useState("");
     const [sortFirst, setSortFirst] = useState(true);
     const [posts, setPosts] = useState<Post[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [authorized, setAuthorized] = useState(false);
-    const [inputKey, setInputKey] = useState("");
     const [show, setShow] = useState(false);
     const popUpView = useRef<React.ReactNode>(
         <div className="text-textColor text-center font-bold">
@@ -47,22 +48,6 @@ export default function AdminPage() {
         return Math.max(...posts.map(p => p.id));
     }, [posts]);
 
-    const handleUnlock = async () => {
-        const res = await fetch("/api/check-admin", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ key: inputKey }),
-        });
-
-        const data = await res.json();
-
-        if (data.authorized) {
-            setAuthorized(true);
-        } else {
-            alert("Invalid key!");
-        }
-    };
-
     // ✅ Fetch posts from API and cache in localStorage
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -70,7 +55,6 @@ export default function AdminPage() {
         const cached = localStorage.getItem("posts");
         if (cached) {
             setPosts(JSON.parse(cached));
-            setLoading(false);
         }
 
         fetch("/api/posts")
@@ -84,7 +68,6 @@ export default function AdminPage() {
                 localStorage.setItem("posts", JSON.stringify(normalized));
             })
             .catch((err) => console.error("Error loading posts:", err))
-            .finally(() => setLoading(false));
     }, []);
 
 
@@ -110,57 +93,52 @@ export default function AdminPage() {
         });
     }, [posts, query, sortFirst]);
 
-    if (!authorized) {
+    if (!user) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen">
                 <VStack className="justify-center items-center bg-foreground rounded-[25px] py-6 px-4 text-sub1">
                     <h1 className="text-2xl font-bold text-sub2 mb-4">Admin Login</h1>
-                    <input
-                        type="password"
-                        placeholder="Enter secret key"
-                        value={inputKey}
-                        onChange={(e) => setInputKey(e.target.value)}
-                        className="bg-sub2/20 px-4 py-2 rounded-[19px] mb-2 text-sub3"
-                    />
-                    <button
-                        onClick={handleUnlock}
-                        className="px-6 py-2 bg-accent hover:brightness-75 active:scale-95 text-white rounded-[19px] transition-all ease-in-out duration-300 cursor-pointer"
-                    >
-                        <HStack>
-                            <Lock className="h-6" />
-                            <p>Unlock</p>
-                        </HStack>
-                    </button>
+                    <AdminLogin />
                 </VStack>
             </div>
         );
     }
 
-    return (
-        <div>
-            <VStack className="mt-20 mb-20 justify-center items-center mx-3" spacing={15}>
-                {/* 🔍 Search + Sort Controls */}
-                <div className="flex flex-row" style={{ gap: "8px" }}>
-                    <HStack className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5">
-                        <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            value={query}
-                            onChange={(e) => {
-                                setQuery(e.target.value)
-                            }}
-                            className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-40"
-                        />
-                    </HStack>
+    if (user && user.email != "garrettwm2005@gmail.com") {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <VStack className="justify-center items-center bg-foreground rounded-[25px] py-6 px-4 text-sub1">
+                    <h1 className="text-2xl font-bold text-red-500 mb-4">Wrong Email! LEAVE</h1>
+                </VStack>
+            </div>
+        );
+    }
+    if (user && user.email == "garrettwm2005@gmail.com") {
+        return (
+            <div>
+                <VStack className="mt-20 mb-20 justify-center items-center mx-3" spacing={15}>
+                    {/* 🔍 Search + Sort Controls */}
+                    <div className="flex flex-row" style={{ gap: "8px" }}>
+                        <HStack className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5">
+                            <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={query}
+                                onChange={(e) => {
+                                    setQuery(e.target.value)
+                                }}
+                                className="ml-2 text-sub2 md:text-[20px] sm:text-[18px] text-[15px] bg-transparent outline-none w-full md:min-w-100 sm:min-w-75 min-w-40"
+                            />
+                        </HStack>
 
-                    <button
-                        title="Sort posts by newest or oldest"
-                        type="button"
-                        onClick={() => {
-                            setSortFirst(!sortFirst);
-                        }}
-                        className="
+                        <button
+                            title="Sort posts by newest or oldest"
+                            type="button"
+                            onClick={() => {
+                                setSortFirst(!sortFirst);
+                            }}
+                            className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
                         hover:brightness-75
                         active:scale-95 
@@ -169,29 +147,29 @@ export default function AdminPage() {
                         duration-300
                         cursor-pointer
                     ">
-                        <Arrow
-                            className={`text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
+                            <Arrow
+                                className={`text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6
                         transition-transform
                         ease-in-out
                         duration-300
                         ${sortFirst ? "rotate-0" : "rotate-180"}
                     `} />
-                    </button>
+                        </button>
 
-                    <button
-                        type="button"
-                        onClick={() => {
-                            popUpView.current = (
-                                <EditAddPostView
-                                    id={maxId + 1}
-                                    workingPost={{ ...defaultPost }}
-                                    setPosts={setPosts}
-                                    setShow={setShow}
-                                />
-                            );
-                            setShow(true)
-                        }}
-                        className="
+                        <button
+                            type="button"
+                            onClick={() => {
+                                popUpView.current = (
+                                    <EditAddPostView
+                                        id={maxId + 1}
+                                        workingPost={{ ...defaultPost }}
+                                        setPosts={setPosts}
+                                        setShow={setShow}
+                                    />
+                                );
+                                setShow(true)
+                            }}
+                            className="
                         bg-foreground rounded-full flex justify-center items-center md:p-4 sm:p-3 p-2
                         hover:brightness-75
                         active:scale-95 
@@ -200,32 +178,32 @@ export default function AdminPage() {
                         duration-300
                         cursor-pointer
                     ">
-                        <Plus className="text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6" />
-                    </button>
-                </div>
+                            <Plus className="text-accent md:h-7 sm:h-6 h-5 w-5 md:w-7 sm:w-6" />
+                        </button>
+                    </div>
 
-                {/* 📰 Post List */}
-                <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6 justify-center items-center" spacing={25}>
+                    {/* 📰 Post List */}
+                    <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6 justify-center items-center" spacing={25}>
 
-                    {loading ? (
-                        <>
-                            <PostViewPlaceHolder />
-                            <PostViewPlaceHolder />
-                            <PostViewPlaceHolder />
-                        </>
-                    ) : filteredPosts && filteredPosts.length > 0 ? (
-                        <>
-                            {filteredPosts.map((post) => (
-                                <div key={post.id} className="flex sm:flex-row flex-col items-center p-6 bg-sub1 rounded-[15px] w-full gap-2">
-                                    <VStack className="sm:text-start text-center w-full">
-                                        <p className="text-accent font-bold">
-                                            {post.title}
-                                        </p>
-                                        <p className="text-sub3 -mt-1">
-                                            {post.subtitle}
-                                        </p>
-                                        <p
-                                            className="
+                        {loading ? (
+                            <>
+                                <PostViewPlaceHolder />
+                                <PostViewPlaceHolder />
+                                <PostViewPlaceHolder />
+                            </>
+                        ) : filteredPosts && filteredPosts.length > 0 ? (
+                            <>
+                                {filteredPosts.map((post) => (
+                                    <div key={post.id} className="flex sm:flex-row flex-col items-center p-6 bg-sub1 rounded-[15px] w-full gap-2">
+                                        <VStack className="sm:text-start text-center w-full">
+                                            <p className="text-accent font-bold">
+                                                {post.title}
+                                            </p>
+                                            <p className="text-sub3 -mt-1">
+                                                {post.subtitle}
+                                            </p>
+                                            <p
+                                                className="
                                                 text-sub2 
                                                 md:text-[14px] 
                                                 sm:text-[11px] 
@@ -233,56 +211,57 @@ export default function AdminPage() {
                                                 truncate
                                                 -mt-1
                                             "
+                                            >
+                                                {formatDate(post.publish)}
+                                            </p>
+                                        </VStack>
+                                        <Spacer />
+                                        <motion.button
+                                            whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
+                                            type="button"
+                                            onClick={() => {
+
+
+                                                popUpView.current = (
+                                                    <EditAddPostView
+                                                        id={post.id}
+                                                        workingPost={post}   // ← FIXED
+                                                        setPosts={setPosts}
+                                                        setShow={setShow}
+                                                    />
+                                                );
+
+                                                setShow(true);
+                                            }}
+
+
+                                            className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
                                         >
-                                            {formatDate(post.publish)}
-                                        </p>
-                                    </VStack>
-                                    <Spacer />
-                                    <motion.button
-                                        whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
-                                        type="button"
-                                        onClick={() => {
-
-
-                                            popUpView.current = (
-                                                <EditAddPostView
-                                                    id={post.id}
-                                                    workingPost={post}   // ← FIXED
-                                                    setPosts={setPosts}
-                                                    setShow={setShow}
-                                                />
-                                            );
-
-                                            setShow(true);
-                                        }}
-
-
-                                        className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
-                                    >
-                                        <span className="text-white font-semibold">Edit</span>
-                                    </motion.button>
-                                </div>
-                            ))}
-                        </>
-                    ) : (
-                        <>
-                            <p className="text-sub2 py-6">No posts yet...</p>
-                        </>
-                    )}
+                                            <span className="text-white font-semibold">Edit</span>
+                                        </motion.button>
+                                    </div>
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                <p className="text-sub2 py-6">No posts yet...</p>
+                            </>
+                        )}
+                    </VStack>
                 </VStack>
-            </VStack>
 
-            <VStack className="my-20 md:text-[15px] sm:text-[15px] text-[10px] text-center">
-                <p className="text-sub2">
-                    © {new Date().getFullYear()} Garrett Butchko. All rights reserved.
-                </p>
-            </VStack>
+                <VStack className="my-20 md:text-[15px] sm:text-[15px] text-[10px] text-center">
+                    <p className="text-sub2">
+                        © {new Date().getFullYear()} Garrett Butchko. All rights reserved.
+                    </p>
+                </VStack>
 
-            <BlurOverlay show={show} onClose={() => setShow(false)} showXAndTap={false}>
-                {popUpView.current}
-            </BlurOverlay>
-        </div>
-    );
+                <BlurOverlay show={show} onClose={() => setShow(false)} showXAndTap={false}>
+                    {popUpView.current}
+                </BlurOverlay>
+            </div>
+        );
+    }
 }
 
 function EditAddPostView({

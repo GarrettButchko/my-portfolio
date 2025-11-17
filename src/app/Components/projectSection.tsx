@@ -70,7 +70,7 @@ export function ProjSection(
         </motion.button>
       </HStack>
 
-      <VStack className="mx-6 rounded-[19px] bg-sub2/20 py-3" spacing={5}>
+      <VStack className="mx-6 rounded-[19px] bg-sub2/20 py-3 h-full" spacing={5}>
         {/* Photos */}
         <HStack
           spacing={16}
@@ -85,7 +85,6 @@ export function ProjSection(
           [&::-webkit-scrollbar-thumb]:rounded-full
           [&::-webkit-scrollbar-thumb]:bg-gray-400/30
           hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
-          
         "
         >
           {project.photos.map((photo) => (
@@ -94,7 +93,7 @@ export function ProjSection(
               key={project.title + photo}
               src={photo}
               alt={`Screenshot from ${project.title}`}
-              className="rounded-[12px] h-[150px] cursor-pointer"
+              className="rounded-[12px] max-h-[150px] w-auto object-contain cursor-pointer"
               onClick={() => {
                 setShow(true);
                 view.current = <PicView profile={photo}/>
@@ -102,9 +101,9 @@ export function ProjSection(
             />
           ))}
         </HStack>
-
+          <Spacer/>
         {/* Languages */}
-        <VStack spacing={5}>
+        <VStack spacing={5} >
           {/* Badges */}
           <HStack
             spacing={15}
