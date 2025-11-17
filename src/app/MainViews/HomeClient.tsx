@@ -5,11 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import HomeIcon from '../../../public/svg/home.svg';
 import NewsIcon from '../../../public/svg/news.svg';
 import PortfolioIcon from '../../../public/svg/portfolio.svg';
-import Floatingbar, { moveDivToIndex } from "@/app/Components/Floatingbar";
-import HomeSection from "@/app/MainViews/HomeSection";
-import PortfolioSection from "@/app/MainViews/PortfolioSection";
-import NewsSection from "@/app/MainViews/NewsSection";
-import { VStack, HStack } from "@/app/Components/Components";
+import Floatingbar, { moveDivToIndex } from "../Components/Floatingbar";
+import HomeSection from "../MainViews/HomeSection";
+import PortfolioSection from "../MainViews/PortfolioSection";
+import NewsSection from "../MainViews/NewsSection";
+import { VStack, HStack } from "../Components/Components";
 
 type TargetSerializable = {
   id: number;
