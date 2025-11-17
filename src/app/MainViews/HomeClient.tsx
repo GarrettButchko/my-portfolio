@@ -5,11 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import HomeIcon from '../../../public/svg/home.svg';
 import NewsIcon from '../../../public/svg/news.svg';
 import PortfolioIcon from '../../../public/svg/portfolio.svg';
-import Floatingbar, { moveDivToIndex } from "./Components/Floatingbar";
-import HomeSection from "./MainViews/HomeSection";
-import PortfolioSection from "./MainViews/PortfolioSection";
-import NewsSection from "./MainViews/NewsSection";
-import { VStack, HStack } from "./Components/Components";
+import Floatingbar, { moveDivToIndex } from "../Components/Floatingbar";
+import HomeSection from "./HomeSection";
+import PortfolioSection from "./PortfolioSection";
+import NewsSection from "./NewsSection";
+import { VStack, HStack } from "../Components/Components";
 
 type TargetSerializable = {
   id: number;
@@ -21,7 +21,7 @@ type Target = TargetSerializable & {
   icon: React.ReactElement;
 };
 
-export default function Home() {
+export default function HomeClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
