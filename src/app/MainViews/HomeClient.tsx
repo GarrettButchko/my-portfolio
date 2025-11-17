@@ -5,10 +5,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import HomeIcon from '../../../public/svg/home.svg';
 import NewsIcon from '../../../public/svg/news.svg';
 import PortfolioIcon from '../../../public/svg/portfolio.svg';
-import { Floatingbar, moveDivToIndex } from "../Components/Floatingbar";
-import HomeSection from "./HomeSection";
-import PortfolioSection from "./PortfolioSection";
-import NewsSection from "./NewsSection";
+import { Floatingbar, moveDivToIndex } from "@/app/Components/Floatingbar";
+import HomeSection from "@/app/MainViews/HomeSection";
+import PortfolioSection from "@/app/MainViews/PortfolioSection";
+import NewsSection from "@/app/MainViews/NewsSection";
 import { VStack, HStack } from "@/app/Components/Components";
 
 type TargetSerializable = {
