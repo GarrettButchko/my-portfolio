@@ -8,6 +8,7 @@ interface Props {
 
 const DragDropUpload: React.FC<Props> = ({ onFileSelect, photoFile, setPhotoFile }) => {
     const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -59,7 +60,7 @@ const DragDropUpload: React.FC<Props> = ({ onFileSelect, photoFile, setPhotoFile
                     </button>
                 ) : (
 
-                    <button onClick={() => { handleFileInput }} className="
+                    <button onClick={() => fileInputRef.current?.click()} className="
                             cursor-pointer bg-blue-500 text-white px-6 py-2 rounded-full
                             hover:brightness-75 transition
                         ">
@@ -69,6 +70,7 @@ const DragDropUpload: React.FC<Props> = ({ onFileSelect, photoFile, setPhotoFile
 
             </div>
             <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 className="hidden"

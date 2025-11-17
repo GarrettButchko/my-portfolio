@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Plus from "../../../public/svg/plus.svg";
 
@@ -52,7 +52,7 @@ export default function BlurOverlay({ show, onClose, children, showXAndTap = tru
 
           {/* Overlay Content */}
           <motion.div
-            onClick={(e: any) => e.stopPropagation()} // Prevent click-through
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}

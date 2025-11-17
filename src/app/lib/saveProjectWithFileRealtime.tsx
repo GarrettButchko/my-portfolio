@@ -11,7 +11,7 @@ export default async function saveProjectWithFileRealtime({
     file: File | null;
     post: Post;
 }) {
-    var payload;
+    let payload;
 
     const dateString = formatDate(post.publish)
 
@@ -19,12 +19,9 @@ export default async function saveProjectWithFileRealtime({
 
         if (file) {
             // ---- 1. Handle STORAGE ----
-            var fileRef;
-            if (file.name.includes(`${post.id}_`)) {
-                fileRef = storageRef(storage, file.name);
-            } else {
-                fileRef = storageRef(storage, `${post.id}_${file.name}`);
-            }
+            const fileRef = file.name.includes(`${post.id}_`)
+                ? storageRef(storage, file.name)
+                : storageRef(storage, `${post.id}_${file.name}`);
 
             let downloadURL;
 
@@ -33,6 +30,7 @@ export default async function saveProjectWithFileRealtime({
                 downloadURL = await getDownloadURL(fileRef);
                 console.log("File already exists — using existing URL");
             } catch (err) {
+                console.log(err)
                 console.log("Uploading new file:", file.name);
                 await uploadBytes(fileRef, file);
                 downloadURL = await getDownloadURL(fileRef);

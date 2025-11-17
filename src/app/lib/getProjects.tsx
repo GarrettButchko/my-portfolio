@@ -1,5 +1,5 @@
 import "server-only";
-import { Project } from "@/app/types";
+import { Project, GitHubFile } from "@/app/types";
 
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME!;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
@@ -83,8 +83,8 @@ export async function getProjects(): Promise<Project[]> {
 
         const photos =
           ssFiles?.filter(
-            (f: any) => f.type === "file" && /\.(png|jpe?g|gif|webp)$/i.test(f.name)
-          ).map((f: any) => f.download_url) || [];
+            (f: GitHubFile) => f.type === "file" && /\.(png|jpe?g|gif|webp)$/i.test(f.name)
+          ).map((f: GitHubFile) => f.download_url) || [];
 
         const feature =
           project.feature ||

@@ -56,7 +56,7 @@ export default function InfoCollection({
                 |
               </p>
               <p className="font-bold text-sub2 justify-center">
-                {infoItem.loc} | '{infoItem.start} - {typeof infoItem.end === "string" ? infoItem.end : `'${infoItem.end}`}
+                {infoItem.loc} | {infoItem.start}&apos; - {typeof infoItem.end === "string" ? infoItem.end : `${infoItem.end}'`}
               </p>
             </div>
             <p
@@ -108,7 +108,7 @@ export default function InfoCollection({
                   px-6
                   py-1
                   `}
-          >
+        >
           <Text
             variant="body"
             className="
@@ -141,7 +141,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
           text-sub3 
           font-bold
         ">
-          {infoItem.start}'-{typeof infoItem.end === "string" ? infoItem.end : infoItem.end + "'"}
+          {infoItem.start}&apos; - {typeof infoItem.end === "string" ? infoItem.end : `${infoItem.end}'`}
         </p>
 
         <VStack>
@@ -243,7 +243,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
               justify-center
               px-10
               py-3
-              rounded-[19px] 
+              rounded-[12px] 
               bg-sub1
               ">
               {infoItem.gpa}
@@ -285,7 +285,7 @@ export function InfoCollectionBig({ infoItem }: { infoItem: InfoItem }) {
               text-center 
               justify-center
               py-3
-              rounded-[19px] 
+              rounded-[12px] 
               bg-sub1
               w-full
               ">
@@ -302,7 +302,7 @@ function ActProjSection({ actProj }: { actProj: ActProj }) {
     <VStack
       className="
         bg-sub1 
-        rounded-[19px] 
+        rounded-[12px] 
         p-4 
         justify-between 
           " spacing={4}>
@@ -354,7 +354,7 @@ function ActProjSection({ actProj }: { actProj: ActProj }) {
               items-start  
               justify-center
               relative bottom-0
-              rounded-[15px]
+              rounded-[10px]
               whitespace-nowrap
             ">
             {skill}

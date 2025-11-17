@@ -3,15 +3,14 @@ import { VStack, HStack, Spacer, Text } from "../Components/Components";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
-import { Post, Project } from "@/app/types";
+import { Post } from "@/app/types";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { useRouter } from "next/navigation";
 import { slugify } from '@/app/lib/slugify';
 import { motion } from "framer-motion";
 import { PicView } from "../Components/PicView";
 import { formatDate } from "../lib/formatDate"
-
-
+import Image from "next/image";
 
 export default function NewsSection() {
     const [query, setQuery] = useState("");
@@ -83,8 +82,8 @@ export default function NewsSection() {
                 const matchesSearch =
                     query === "" ||
                     p.title.toLowerCase().includes(q) ||
-                    p.subtitle.toLowerCase().includes(q) || 
-                   p.tags.some(tag => tag.toLowerCase().includes(q));
+                    p.subtitle.toLowerCase().includes(q) ||
+                    p.tags.some(tag => tag.toLowerCase().includes(q));
 
                 return matchesSearch;
             })
@@ -154,8 +153,8 @@ export default function NewsSection() {
                         </>
                     ) : filteredPosts && filteredPosts.length > 0 ? (
                         <>
-                            {filteredPosts.slice(0, shownPosts).map((post, i) => (
-                                <PostView key={post.id} post={post} index={i} setShow={setShow} popUpView={popUpView} />
+                            {filteredPosts.slice(0, shownPosts).map((post) => (
+                                <PostView key={post.id} post={post} setShow={setShow} popUpView={popUpView} />
                             ))}
 
                             {/* Add placeholders if less than 5 items */}
@@ -207,12 +206,11 @@ export default function NewsSection() {
 // ✅ PostView Component
 type PostViewProps = {
     post: Post;
-    index: number;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     popUpView: React.RefObject<React.ReactNode>;
 };
 
-export function PostView({ post, index, setShow, popUpView }: PostViewProps) {
+export function PostView({ post, setShow, popUpView }: PostViewProps) {
     const router = useRouter();
 
     const goToPost = (postTitle: string) => {
@@ -316,14 +314,26 @@ export function PostView({ post, index, setShow, popUpView }: PostViewProps) {
                             onClick={() => {
                                 if (post.photo) {
                                     setShow(true);
-                                    popUpView.current = (
-                                        <PicView profile={post.photo} />
-                                    );
+                                    popUpView.current = <PicView profile={post.photo} />;
                                 }
                             }}
-                            whileHover={{ scale: 1.06 }} transition={{ duration: 0.15 }}
-                            className='max-w-40 max-h-[80vh] h-auto w-auto cursor-pointer' >
-                            <img src={post.photo} alt="Photo" className="rounded-[12px]" />
+                            whileHover={{ scale: 1.06 }}
+                            transition={{ duration: 0.15 }}
+                            className="max-w-40 max-h-[80vh] h-auto w-auto cursor-pointer"
+                        >
+                            {post.photo && (
+                                <Image
+                                    src={post.photo}
+                                    alt="Photo"
+                                    width={500} // arbitrary fallback
+                                    height={500} // arbitrary fallback
+                                    style={{
+                                        maxWidth: "100%",
+                                        height: "auto",
+                                        borderRadius: "12px",
+                                    }}
+                                />
+                            )}
                         </motion.div>
                     )}
 

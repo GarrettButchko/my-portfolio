@@ -295,7 +295,6 @@ function EditAddPostView({
 
 
     const [projects, setProjects] = useState<Project[]>([]);
-    const [loading, setLoading] = useState(true);
     const [photoFile, setPhotoFile] = useState<File | null>(null);
 
     function getFileNameFromUrl(url: string | null): string {
@@ -325,7 +324,6 @@ function EditAddPostView({
         const cached = localStorage.getItem("projects");
         if (cached) {
             setProjects(JSON.parse(cached));
-            setLoading(false);
         }
 
         fetch("/api/projects")
@@ -338,7 +336,6 @@ function EditAddPostView({
                 }
             })
             .catch((err) => console.error("Error loading projects:", err))
-            .finally(() => setLoading(false));
     }, []);
 
     const [localPost, setLocalPost] = useState({

@@ -135,8 +135,9 @@ export default function HomeSecton() {
         <div className="flex sm:flex-row flex-col items-center justify-center gap-5">
           <VStack className="sm:items-start items-center">
             <p className="font-bold text-textColor">
-              👋 Hi, I'm
+              👋 Hi, I&apos;m
             </p>
+
             <motion.p
               className="
                 md:text-5xl
@@ -181,8 +182,8 @@ export default function HomeSecton() {
               height={150}           // required
               className="rounded-full border-7 border-oppbackground/10 cursor-pointer"
               onClick={() => {
-                  setShow(true);
-                  popUpView.current = <PicView profile={"/profile.jpeg"}/>
+                setShow(true);
+                popUpView.current = <PicView profile={"/profile.jpeg"} />
               }}
             />
           </div>
@@ -192,7 +193,7 @@ export default function HomeSecton() {
 
           <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
             <motion.button
-            whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
+              whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
               title="Email Me!"
               type="button"
               onClick={() =>
@@ -227,7 +228,7 @@ export default function HomeSecton() {
             </motion.button>
             <HStack spacing={8}>
               <motion.button
-              whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
+                whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
                 title="Go to my Linkedin"
                 onClick={() => window.open("https://www.linkedin.com/in/gar-butch/", "_blank")}
                 className="
@@ -247,9 +248,9 @@ export default function HomeSecton() {
                   height={32}
                 />
               </motion.button>
-              <motion.button 
-              whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
-              className="
+              <motion.button
+                whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
+                className="
                   overflow-hidden 
                   rounded-[5px]
                   hover:brightness-75
@@ -277,7 +278,7 @@ export default function HomeSecton() {
   }
 
   function EduExp() {
-    
+
     const education: InfoItem[] = [
       {
         id: 1,

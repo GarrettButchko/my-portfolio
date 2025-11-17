@@ -1,18 +1,17 @@
 "use client";
 
 import { useParams } from 'next/navigation';
-import { VStack, HStack, Text, Divider } from '@/app/Components/Components';
-import React, { useState, useEffect, useRef } from "react";
-import { Post } from "@/app/Types/Post";
-import { Project } from "@/app/Types/Project";
-import { slugify } from '@/app/lib/slugify';
 import Image from "next/image";
+import { VStack, HStack, Divider } from '@/app/Components/Components';
+import React, { useState, useEffect, useRef } from "react";
+import { Post, Project } from "@/app/types";
+import { slugify } from '@/app/lib/slugify';
 import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/ProjectSection";
 import Share from "../../../../public/svg/share.svg";
 import News from "../../../../public/svg/news.svg";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { useRouter } from "next/navigation";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion } from "framer-motion";
 import { PicView } from "../../Components/PicView";
 
 
@@ -22,10 +21,9 @@ export default function NewsPost() {
     const slug = params.slug;
 
     const [loading, setLoading] = useState(true);
-    const [posts, setPosts] = useState<Post[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
     const [post, setPost] = useState<Post | undefined>();
-    const [year, setYear] = useState<number>(new Date().getFullYear());
+    const year = (new Date().getFullYear());
     const [show, setShow] = useState(false);
 
     const popUpView = useRef<React.ReactNode>(
@@ -41,7 +39,6 @@ export default function NewsPost() {
         const cached = localStorage.getItem("posts");
         if (cached) {
             const cachedPosts = JSON.parse(cached);
-            setPosts(cachedPosts);
             setPost(cachedPosts.find((p: Post) => slugify(p.title) === slug));
             setLoading(false);
         }
@@ -51,7 +48,6 @@ export default function NewsPost() {
             .then(data => {
                 const cachedData = cached ? JSON.parse(cached) : null;
                 if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
-                    setPosts(data);
                     const foundPost = data.find((p: Post) => slugify(p.title) === slug);
                     setPost(foundPost);
                     localStorage.setItem("posts", JSON.stringify(data));
@@ -113,8 +109,12 @@ export default function NewsPost() {
                     url: window.location.href,
                 });
                 console.log("Shared successfully!");
-            } catch (err: any) {
-                if (err.name !== "AbortError") console.error("Error sharing:", err);
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    if (err.name !== "AbortError") console.error("Error sharing:", err);
+                } else {
+                    console.error("Unknown error:", err);
+                }
             }
         } else {
             navigator.clipboard.writeText(window.location.href);
@@ -149,7 +149,7 @@ export default function NewsPost() {
                     </motion.button>
 
                     <motion.button
-                    whileHover={{ scale: 1.06 }} transition={{ duration: 0.15 }}
+                        whileHover={{ scale: 1.06 }} transition={{ duration: 0.15 }}
                         title="Share post"
                         onClick={handleShare}
                         className="bg-accent rounded-[27px] flex justify-center items-center  sm:p-3 p-3 hover:brightness-75 active:scale-95 transition-all ease-in-out duration-300 cursor-pointer"
@@ -192,15 +192,24 @@ export default function NewsPost() {
 
                     {/* Post photo */}
                     {post.photo && (
-                        <motion.div 
-                        
-                        onClick={() => {
-                            setShow(true);
-                            popUpView.current = <PicView profile={post.photo} />
-                        }}
-                            whileHover={{ scale: 1.005 }} transition={{ duration: 0.15 }}
-                            className='max-w-full max-h-[80vh] h-auto w-auto'>
-                            <img src={post.photo} alt="Photo" className="rounded-[25px] cursor-pointer"/>
+                        <motion.div
+                            onClick={() => {
+                                setShow(true);
+                                popUpView.current = <PicView profile={post.photo} />;
+                            }}
+                            whileHover={{ scale: 1.005 }}
+                            transition={{ duration: 0.15 }}
+                            className="relative h-[80vh] cursor-pointer rounded-[25px] overflow-hidden flex items-center justify-center"
+                        >
+                            {post.photo && (
+                                <Image
+                                    src={post.photo}
+                                    alt="Photo"
+                                    fill
+                                    className="object-contain h-full w-auto"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                />
+                            )}
                         </motion.div>
                     )}
 

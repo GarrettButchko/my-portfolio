@@ -1,20 +1,33 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // ✅ Allow external images (GitHub raw content)
   images: {
     remotePatterns: [
+      // GitHub raw content
       {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
         pathname: "/**",
       },
+
+      // Firebase Storage (main domain)
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        pathname: "/**",
+      },
+
+      // Firebase Storage (app domain variant)
+      {
+        protocol: "https",
+        hostname: "firebasestorage.app",
+        pathname: "/**",
+      },
     ],
   },
 
-  // ✅ Webpack customization (SVGR setup)
   webpack(config) {
-    // Exclude SVGs from Next’s default file loader
+    // Exclude SVGs from Next's default file loader
     const fileLoaderRule = config.module.rules.find(
       (rule: any) => rule.test instanceof RegExp && rule.test.test(".svg")
     );
@@ -23,7 +36,7 @@ const nextConfig: NextConfig = {
       fileLoaderRule.exclude = /\.svg$/i;
     }
 
-    // Add @svgr/webpack loader for importing SVGs as React components
+    // Add SVGR loader
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,

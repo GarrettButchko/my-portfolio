@@ -1,21 +1,21 @@
+import Image from "next/image";
+
 export function PicView({ profile }: { profile: string | null }) {
-  if (profile) {
-    return (
+  if (!profile) return null;
+
+  return (
     <div className="flex justify-center items-center w-full p-4">
-        <img
+      <div className="relative w-full h-[80vh] rounded-xl overflow-hidden">
+        <Image
           key={profile}
           src={profile}
           alt="Profile"
-          className="
-          rounded-[12px]
-          shadow-lg
-          max-w-full
-          max-h-[80vh]
-          h-auto
-          w-auto
-        "
+          fill
+          className="object-contain"
         />
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+

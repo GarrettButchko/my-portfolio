@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect, useEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { HStack, Text } from "./Components";
 import { motion } from "framer-motion";
 
@@ -17,30 +17,12 @@ type FloatingBarProps = {
 
 export interface MoveDivToIndexOptions<T> {
   index: number;
-  setPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
   setTargets: React.Dispatch<React.SetStateAction<T[]>>;
 }
 
 export function moveDivToIndex<T extends { isSelected: boolean }>(
-  { index, setPosition, setTargets }: MoveDivToIndexOptions<T>
+  { index, setTargets }: MoveDivToIndexOptions<T>
 ) {
-  let x = 0;
-
-  if (typeof window !== "undefined") {
-    if (window.innerWidth < 768) {
-      if (index === 0) x = -68;
-      else if (index === 1) x = 0;
-      else if (index === 2) x = 68;
-    } else {
-      if (index === 0) x = -168;
-      else if (index === 1) x = 0;
-      else if (index === 2) x = 168;
-    }
-  }
-
-  const y = 0;
-
-  setPosition(prev => (prev.x === x && prev.y === y ? prev : { x, y }));
 
   setTargets(prev => {
     const newTargets = prev.map((t, i) => ({ ...t, isSelected: i === index }));
