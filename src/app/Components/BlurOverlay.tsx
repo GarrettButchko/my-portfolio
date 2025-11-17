@@ -13,7 +13,7 @@ interface BlurOverlayProps {
 
 export default function BlurOverlay({ show, onClose, children, showXAndTap = true }: BlurOverlayProps) {
   return (
-    <AnimatePresence mode="wait" className="w-full">
+    <AnimatePresence mode="wait">
       {show && (
         <motion.div
           onClick={() => {
@@ -24,6 +24,7 @@ export default function BlurOverlay({ show, onClose, children, showXAndTap = tru
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className="
+          w-full
             fixed inset-0 z-50
             backdrop-blur-md bg-background/30
             flex items-center justify-center
