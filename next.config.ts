@@ -1,3 +1,4 @@
+import path from "path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -9,14 +10,12 @@ const nextConfig: NextConfig = {
         hostname: "raw.githubusercontent.com",
         pathname: "/**",
       },
-
       // Firebase Storage (main domain)
       {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com",
         pathname: "/**",
       },
-
       // Firebase Storage (app domain variant)
       {
         protocol: "https",
@@ -27,11 +26,16 @@ const nextConfig: NextConfig = {
   },
 
   webpack(config) {
+    // 🔹 Add alias for @ -> ./src
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      "@": path.resolve(__dirname, "src"),
+    };
+
     // Exclude SVGs from Next's default file loader
     const fileLoaderRule = config.module.rules.find(
       (rule: any) => rule.test instanceof RegExp && rule.test.test(".svg")
     );
-
     if (fileLoaderRule) {
       fileLoaderRule.exclude = /\.svg$/i;
     }
