@@ -328,33 +328,34 @@ export function PostView({ post, index, setShow, popUpView }: PostViewProps) {
                     </p>
 
 
+                    {Array.isArray(post.tags) && post.tags.length > 0 && (
+                        <HStack
+                            spacing={6}
+                            className="
+                                hidden sm:flex
+                                overflow-x-auto
+                                py-[1px] px-[1px]
+                                [&::-webkit-scrollbar]:h-[0px]
+                                hover:[&::-webkit-scrollbar]:h-[6px]
+                                [&::-webkit-scrollbar-track]:rounded-full
+                                [&::-webkit-scrollbar-track]:bg-transparent
+                                [&::-webkit-scrollbar-thumb]:rounded-full
+                                [&::-webkit-scrollbar-thumb]:bg-gray-400/30
+                                hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
+                                sm:justify-start justify-center
+                            "
+                        >
+                            {post.tags.map((text) => (
+                                <p
+                                    key={text}
+                                    className="text-sub3 text-[12px] md:text-[15px] font-bold px-3 py-1 bg-sub2/20 rounded-[12px]"
+                                >
+                                    {text}
+                                </p>
+                            ))}
+                        </HStack>
+                    )}
 
-                    <HStack
-                        spacing={6}
-                        className="
-                        hidden
-                        sm:flex
-                            overflow-x-auto
-                            py-[1px] px-[1px]
-                            [&::-webkit-scrollbar]:h-[0px]
-                            hover:[&::-webkit-scrollbar]:h-[6px]
-                            [&::-webkit-scrollbar-track]:rounded-full
-                            [&::-webkit-scrollbar-track]:bg-transparent
-                            [&::-webkit-scrollbar-thumb]:rounded-full
-                            [&::-webkit-scrollbar-thumb]:bg-gray-400/30
-                            hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60
-                            sm:justify-start justify-center
-                        "
-                    >
-                        {post.tags.map((text) => (
-                            <p
-                                key={text}
-                                className="text-sub3 text-[12px] md:text-[15px] font-bold px-3 py-1 bg-sub2/20 rounded-[12px]"
-                            >
-                                {text}
-                            </p>
-                        ))}
-                    </HStack>
                 </VStack>
 
                 <Spacer />

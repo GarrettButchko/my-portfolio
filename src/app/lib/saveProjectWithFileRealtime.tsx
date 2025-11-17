@@ -2,6 +2,7 @@ import { get, ref as dbRef, set, update } from "firebase/database";
 import { getDownloadURL, ref as storageRef, uploadBytes, getMetadata } from "firebase/storage";
 import { realtimeDB, storage } from "@/app/firebase";
 import { Post } from "@/app/Types/Post";
+import { formatDate } from "./formatDate";
 
 export default async function saveProjectWithFileRealtime({
     file,
@@ -11,36 +12,45 @@ export default async function saveProjectWithFileRealtime({
     post: Post;
 }) {
 
-    var payload: Post;
+    var payload;
+
+    const dateString = formatDate(post.publish)
 
     try {
 
-        if (file){
-        // ---- 1. Handle STORAGE ----
-        const fileRef = storageRef(storage, `${post.id}_${file.name}`);
+        if (file) {
+            // ---- 1. Handle STORAGE ----
+            var fileRef;
+            if (file.name.includes(`${post.id}_`)) {
+                fileRef = storageRef(storage, file.name);
+            } else {
+                fileRef = storageRef(storage, `${post.id}_${file.name}`);
+            }
 
-        let downloadURL;
+            let downloadURL;
 
-        try {
-            await getMetadata(fileRef);
-            downloadURL = await getDownloadURL(fileRef);
-            console.log("File already exists — using existing URL");
-        } catch (err) {
-            console.log("Uploading new file:", file.name);
-            await uploadBytes(fileRef, file);
-            downloadURL = await getDownloadURL(fileRef);
+            try {
+                await getMetadata(fileRef);
+                downloadURL = await getDownloadURL(fileRef);
+                console.log("File already exists — using existing URL");
+            } catch (err) {
+                console.log("Uploading new file:", file.name);
+                await uploadBytes(fileRef, file);
+                downloadURL = await getDownloadURL(fileRef);
+            }
+
+            payload = {
+                ...post,
+                publish: dateString,
+                photo: downloadURL,
+            };
+        } else {
+            payload = {
+                ...post,
+                publish: dateString,
+                photo: "",
+            };
         }
-
-        payload = {
-            ...post,
-            photo: downloadURL,
-        };
-    } else {
-        payload = {
-            ...post,
-            photo: "",
-        };
-    }
 
         // ---- 2. Prepare payload ----
 

@@ -19,22 +19,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import saveProjectWithFileRealtime from "../lib/saveProjectWithFileRealtime";
 
 const defaultPost = {
-        id: 1,
-        title: "",
-        subtitle: "",
-        tags: [],
-        relatedProjects: [],
-        body: "",
-        photo: null,
-        publish: new Date(), // must be a Date
-    }
+    id: 1,
+    title: "",
+    subtitle: "",
+    tags: [],
+    relatedProjects: [],
+    body: "",
+    photo: null,
+    publish: new Date(), // must be a Date
+}
 
 export default function AdminPage() {
     const [query, setQuery] = useState("");
-    const [loading, setLoading] = useState(true);
     const [sortFirst, setSortFirst] = useState(true);
     const [posts, setPosts] = useState<Post[]>([]);
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(true);
     const [authorized, setAuthorized] = useState(false);
     const [inputKey, setInputKey] = useState("");
     const [show, setShow] = useState(false);
@@ -44,8 +43,15 @@ export default function AdminPage() {
         </div>
     );
 
-    const ids = posts.map(p => p.id);
-    const maxId = Math.max(...ids);
+    
+    var maxId: number;
+    if (posts.length != 0) {
+        const ids = posts.map(p => p.id);
+        maxId = Math.max(...ids);
+    } else {
+        maxId = 0;
+    }
+
 
     const SECRET_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY; // in .env.local
 
@@ -80,28 +86,7 @@ export default function AdminPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    // ✅ Fetch projects from API and cache in localStorage
-    useEffect(() => {
-        if (typeof window === "undefined") return;
 
-        const cached = localStorage.getItem("projects");
-        if (cached) {
-            setProjects(JSON.parse(cached));
-            setLoading(false);
-        }
-
-        fetch("/api/projects")
-            .then((res) => res.json())
-            .then((data) => {
-                const cachedData = cached ? JSON.parse(cached) : null;
-                if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
-                    setProjects(data);
-                    localStorage.setItem("projects", JSON.stringify(data));
-                }
-            })
-            .catch((err) => console.error("Error loading projects:", err))
-            .finally(() => setLoading(false));
-    }, []);
 
     const filteredPosts = posts
         .filter((p) => {
@@ -307,20 +292,58 @@ function EditAddPostView({
     setShow: React.Dispatch<React.SetStateAction<boolean>>
 }) {
 
-    
 
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(true);
     const [photoFile, setPhotoFile] = useState<File | null>(null);
+
+    function getFileNameFromUrl(url: string | null): string {
+        if (url) {
+            const cleanUrl = url.split("?")[0]; // remove query params
+            return cleanUrl.substring(cleanUrl.lastIndexOf("/") + 1);
+        } else {
+            return "photo.png"
+        }
+    }
 
     useEffect(() => {
         async function loadImage() {
-            const file = await downloadImageAsFile(workingPost.photo, "photo.png");
+            const fileName = getFileNameFromUrl(workingPost.photo);
+            const file = await downloadImageAsFile(workingPost.photo, fileName);
             setPhotoFile(file);   // file will be File or null
         }
 
         loadImage();
     }, [workingPost.photo]);
 
-    const [localPost, setLocalPost] = useState(workingPost);
+    // ✅ Fetch projects from API and cache in localStorage
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const cached = localStorage.getItem("projects");
+        if (cached) {
+            setProjects(JSON.parse(cached));
+            setLoading(false);
+        }
+
+        fetch("/api/projects")
+            .then((res) => res.json())
+            .then((data) => {
+                const cachedData = cached ? JSON.parse(cached) : null;
+                if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
+                    setProjects(data);
+                    localStorage.setItem("projects", JSON.stringify(data));
+                }
+            })
+            .catch((err) => console.error("Error loading projects:", err))
+            .finally(() => setLoading(false));
+    }, []);
+
+    const [localPost, setLocalPost] = useState({
+        ...workingPost,
+        id: id,  // <- force correct ID
+    });
+
 
     console.log("photo URL:", localPost.photo);
 
@@ -370,7 +393,7 @@ function EditAddPostView({
                 <VStack className="items-center">
                     <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px]">ID</p>
                     <p className="text-sub3 font-bold md:text-[20px] sm:text-[20px] text-[13px] px-10 py-3 rounded-[12px] bg-sub1">
-                        {workingPost.id}
+                        {localPost.id}
                     </p>
                 </VStack>
 
@@ -481,9 +504,7 @@ function EditAddPostView({
 
                     {localPost.relatedProjects.map((project: string, i: number) => (
                         <HStack key={i} className="w-full gap-2">
-                            <input
-                                type="text"
-                                placeholder="Type Here..."
+                            <select
                                 value={project}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -500,7 +521,15 @@ function EditAddPostView({
                                     md:text-[20px] sm:text-[20px] text-[13px]
                                     px-5 py-3 rounded-[12px] bg-sub1
                                 "
-                            />
+                            >
+                                <option value="">Select a project</option>
+                                {projects.map((opt) => (
+                                    <option key={opt.title} value={opt.title}>
+                                        {opt.title}
+                                    </option>
+                                ))}
+                            </select>
+
                             <button
                                 type="button"
                                 onClick={() => removeRelatedProject(i)}
