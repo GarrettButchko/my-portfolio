@@ -77,12 +77,14 @@ export default function NewsSection() {
     const addMore = posts.length - shownPosts > 0;
 
     const filteredPosts = useMemo(() => {
+        const q = query.toLowerCase()
         return posts
             .filter((p) => {
                 const matchesSearch =
                     query === "" ||
-                    p.title.toLowerCase().includes(query.toLowerCase()) ||
-                    p.subtitle.toLowerCase().includes(query.toLowerCase()) || Object.keys(p.tags).includes(query.toLowerCase());
+                    p.title.toLowerCase().includes(q) ||
+                    p.subtitle.toLowerCase().includes(q) || 
+                   p.tags.some(tag => tag.toLowerCase().includes(q));
 
                 return matchesSearch;
             })
