@@ -1,8 +1,8 @@
 import "server-only";
 import { Project, GitHubFile } from "@/app/types";
 
-const GITHUB_USERNAME = process.env.GITHUB_USERNAME!;
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
+const GITHUB_USERNAME = "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";
+const GITHUB_TOKEN = "garrettbutchko";
 
 const headers = {
   Accept: "application/vnd.github.v3+json",
