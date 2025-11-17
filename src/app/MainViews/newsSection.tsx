@@ -3,13 +3,11 @@ import { VStack, HStack, Spacer, Text } from "../Components/Components";
 import React, { useState, useEffect, useRef } from "react";
 import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
-import { Post } from "@/app/Types/Post";
-import { Project } from "@/app/Types/Project";
-import Image from "next/image";
+import { Post, Project } from "@/app/types";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { useRouter } from "next/navigation";
 import { slugify } from '@/app/lib/slugify';
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion } from "framer-motion";
 import { PicView } from "../Components/PicView";
 import { formatDate } from "../lib/formatDate"
 

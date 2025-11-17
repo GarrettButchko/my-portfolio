@@ -1,7 +1,7 @@
 import { get, ref as dbRef, set, update } from "firebase/database";
 import { getDownloadURL, ref as storageRef, uploadBytes, getMetadata } from "firebase/storage";
 import { realtimeDB, storage } from "@/app/firebase";
-import { Post } from "@/app/Types/Post";
+import { Post } from "@/app/types";
 import { formatDate } from "./formatDate";
 
 export default async function saveProjectWithFileRealtime({

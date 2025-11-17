@@ -1,7 +1,8 @@
 import "server-only";
 import { realtimeDB } from "@/app/firebase";
 import { ref, get } from "firebase/database";
-import { Post } from "@/app/Types/Post";
+import { Post } from "@/app/types";
+import { normalizePost } from "@/app/lib/normalizePost";
 
 // 🔁 In-memory cache
 let cache: Post[] | null = null;
@@ -37,12 +38,7 @@ export async function getPosts(): Promise<Post[]> {
             const data = snapshot.val();
 
             // Convert object → array
-            const posts: Post[] = Object.values(data).map((item: any) => ({
-                ...item,
-                publish: item.publish?.toDate
-                    ? item.publish.toDate().toISOString()
-                    : item.publish,
-            }));
+            const posts: Post[] = Object.values(data).map(normalizePost);
 
             // Cache result
             cache = posts;

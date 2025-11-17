@@ -6,9 +6,8 @@ import Search from "../../../public/svg/search.svg";
 import Arrow from "../../../public/svg/arrow.svg";
 import Plus from "../../../public/svg/plus.svg";
 import Lock from "../../../public/svg/lock.svg";
-import { Post } from "@/app/Types/Post";
-import { Project } from "@/app/Types/Project";
-import { PostView, PostViewPlaceHolder } from "@/app/MainViews/NewsSection";
+import { Post, Project } from "@/app/types";
+import { PostViewPlaceHolder } from "@/app/MainViews/NewsSection";
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { motion } from "framer-motion";
 import { formatDate } from "../lib/formatDate"
