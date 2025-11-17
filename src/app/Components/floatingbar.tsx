@@ -31,7 +31,7 @@ export function moveDivToIndex<T extends { isSelected: boolean }>(
   });
 }
 
-export function Floatingbar({
+export default function Floatingbar({
   targets,
   buttonRefs,
   onSectionChange,

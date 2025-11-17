@@ -2,7 +2,7 @@ import React from "react";
 import { motion, type HTMLMotionProps } from "framer-motion";
 
 /* ------------------------------------------------------
- * Spacer (Fixed Tailwind Issue)
+ * Spacer
  * ------------------------------------------------------ */
 export function Spacer({
   minH = 0,
