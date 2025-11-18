@@ -206,7 +206,7 @@ export default function NewsPost() {
                             }}
                             whileHover={{ scale: 1.005 }}
                             transition={{ duration: 0.15 }}
-                            className="relative cursor-pointer overflow-hidden flex items-center justify-center"
+                            className="relative cursor-pointer overflow-hidden flex items-center justify-start"
                         >
                             {post.photo && (
                                 <Image
