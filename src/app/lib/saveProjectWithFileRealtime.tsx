@@ -1,3 +1,5 @@
+"use client";
+
 import { get, ref as dbRef, set, update } from "firebase/database";
 import { getDownloadURL, ref as storageRef, uploadBytes, getMetadata } from "firebase/storage";
 import { realtimeDB, storage } from "@/app/firebase";
