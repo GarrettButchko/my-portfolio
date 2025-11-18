@@ -15,7 +15,6 @@ import { motion } from "framer-motion";
 import { PicView } from "../../Components/PicView";
 import { formatDate } from '@/app/lib/formatDate';
 
-
 export default function NewsPost() {
     const router = useRouter();
     const params = useParams();
@@ -32,6 +31,10 @@ export default function NewsPost() {
             Nothing Here Yet :)...
         </div>
     );
+
+     useEffect(() => {
+        document.title = `News: ${slug} | GB Portfolio`;
+    }, [slug]);
 
     // Fetch posts
     useEffect(() => {
@@ -123,12 +126,16 @@ export default function NewsPost() {
         }
     };
 
+   
+
     const formattedParagraphs = post.body
         .replace(/\/n/g, '\n')
         .split(/\n\s*\n/)
         .filter(p => p.trim().length > 0);
 
     return (
+
+
         <main className="flex justify-center items-top min-h-screen w-full bg-background px-3">
 
             {/* Top buttons */}

@@ -10,6 +10,8 @@ import { ProjSection, ProjSectionPlaceHolder } from "@/app/Components/ProjectSec
 import BlurOverlay from "@/app/Components/BlurOverlay";
 import { PicView } from "../Components/PicView";
 
+
+
 export default function HomeSecton() {
 
   const [show, setShow] = useState(false);
@@ -18,6 +20,10 @@ export default function HomeSecton() {
       Nothing Here Yet :)...
     </div>
   );
+
+   useEffect(() => {
+          document.title = `Home | GB Portfolio`;
+      });
 
   useEffect(() => {
     if (show) {

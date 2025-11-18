@@ -26,6 +26,10 @@ export default function NewsSection() {
     );
 
     useEffect(() => {
+        document.title = `News | GB Portfolio`;
+    });
+
+    useEffect(() => {
         if (show) {
           // Lock scroll and save current scroll position
           const scrollY = window.scrollY;

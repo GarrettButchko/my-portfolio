@@ -4,6 +4,10 @@ import { Project, GitHubFile } from "@/app/types";
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME!;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
 
+
+console.log(process.env.GITHUB_USERNAME);
+console.log(process.env.GITHUB_TOKEN?.slice(0, 10)); // show first 10 chars
+
 const headers = {
   Accept: "application/vnd.github.v3+json",
   Authorization: `Bearer ${GITHUB_TOKEN}`,

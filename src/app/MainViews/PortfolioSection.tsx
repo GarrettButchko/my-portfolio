@@ -23,7 +23,9 @@ export default function PortfolioSection() {
         </div>
       );
 
-
+      useEffect(() => {
+        document.title = `Portfolio | GB Portfolio`;
+    });
 
 
       useEffect(() => {
