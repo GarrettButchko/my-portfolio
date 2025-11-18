@@ -77,7 +77,7 @@ export default function HomeClient() {
     <main className="flex items-top justify-center min-h-screen bg-background">
       <Floatingbar targets={targets} onSectionChange={handleSectionChange} buttonRefs={buttonRefs} />
 
-      <VStack className="w-full items-center mx-3">
+      <VStack className="w-full items-center md:mx-6 sm:mx-3 mx-0">
         {active === "Home" && <HomeSection />}
         {active === "Portfolio" && <PortfolioSection />}
         {active === "News" && <NewsSection />}

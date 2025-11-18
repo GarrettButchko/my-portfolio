@@ -5,7 +5,7 @@ export function PicView({ profile }: { profile: string | null }) {
 
   return (
     <div className="flex justify-center items-center w-full p-4">
-      <div className="relative w-full h-[80vh] rounded-xl overflow-hidden">
+      <div className="relative w-full h-[70vh] rounded-xl overflow-hidden">
         <Image
           key={profile}
           src={profile}

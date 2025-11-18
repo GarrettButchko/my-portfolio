@@ -53,7 +53,6 @@ export default function BlurOverlay({ show, onClose, children, showXAndTap = tru
 
           {/* Overlay Content */}
           <motion.div
-            onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}

@@ -182,7 +182,7 @@ export default function PortfolioSection() {
                 </div>
 
 
-                <VStack className="mx-3 md:mx-6 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
+                <VStack className="sm:mx-0 md:mx-6 mx-0 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
 
 
 

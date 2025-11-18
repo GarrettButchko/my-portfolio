@@ -50,7 +50,7 @@ export default function HomeSecton() {
   }, [show]);
 
   return (
-    <div className="w-full flex justify-center mt-40 mx-3 md:mx-6">
+    <div className="w-full flex justify-center mt-40 sm:mx-3 md:mx-6 mx-0">
       <VStack className="w-full max-w-4xl bg-foreground rounded-[30px]">
         <Intro />
         <div className="flex bg-sub1 h-[3px] mx-6 rounded-[2px]" />

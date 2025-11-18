@@ -101,7 +101,7 @@ export default function Floatingbar({
       initial={{ y: -40, opacity: 0 }} // slide/fade in
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.1, ease: "easeInOut" }}
-      className="fixed top-5 z-50 left-1/2 -translate-x-1/2 w-fit outline outline-2 outline-sub1 rounded-[25px]"
+      className="fixed md:top-5 sm:top-3 top-2 z-50 left-1/2 -translate-x-1/2 w-fit outline outline-2 outline-sub1 rounded-[25px]"
     >
       <div
         style={{ height: moverSize.height + 16 }}

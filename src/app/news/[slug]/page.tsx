@@ -134,9 +134,7 @@ export default function NewsPost() {
         .filter(p => p.trim().length > 0);
 
     return (
-
-
-        <main className="flex justify-center items-top min-h-screen w-full bg-background px-3">
+        <main className="flex justify-center items-top min-h-screen w-full bg-background md:px-6 sm:px-3 px-0">
 
             {/* Top buttons */}
             <HStack
@@ -171,7 +169,7 @@ export default function NewsPost() {
             <VStack className="w-full max-w-4xl mt-40" spacing={15}>
 
                 {/* Main content */}
-                <VStack className="w-full bg-foreground rounded-[30px] p-10" spacing={20}>
+                <VStack className="w-full bg-foreground rounded-[30px] md:p-10 sm:p-8 p-6" spacing={20}>
 
                     <HStack className='items-start'>
                         <VStack className='text-start'>
@@ -208,15 +206,17 @@ export default function NewsPost() {
                             }}
                             whileHover={{ scale: 1.005 }}
                             transition={{ duration: 0.15 }}
-                            className="relative h-[80vh] cursor-pointer rounded-[25px] overflow-hidden flex items-center justify-center"
+                            className="relative cursor-pointer overflow-hidden flex items-center justify-center"
                         >
                             {post.photo && (
                                 <Image
+                                    key={post.photo}
                                     src={post.photo}
                                     alt="Photo"
-                                    fill
-                                    className="object-contain h-full w-auto"
-                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                    width={0}
+                                    height={0}
+                                    className="w-auto h-auto max-w-full rounded-[12px]"
+                                    sizes="100vw"
                                 />
                             )}
                         </motion.div>
@@ -225,7 +225,7 @@ export default function NewsPost() {
                     {/* Mentioned projects */}
                     <VStack className='mt-30'>
                         <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px] items-start justify-center ml-4">Mentioned Projects</p>
-                        <div className="flex sm:flex-row sm:h-full h-100 flex-col gap-4 overflow-x-auto overflow-y-visible [&::-webkit-scrollbar]:h-[0px] hover:[&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar]:w-[0px] hover:[&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400/30 hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60 justify-start snap-x snap-mandatory p-1">
+                        <div className="flex sm:flex-row sm:h-full flex-col gap-4 overflow-x-auto overflow-y-visible [&::-webkit-scrollbar]:h-[0px] hover:[&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar]:w-[0px] hover:[&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400/30 hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60 justify-start snap-x snap-mandatory p-1">
 
                             {loading ? (
                                 <>
