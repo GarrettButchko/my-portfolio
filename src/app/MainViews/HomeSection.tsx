@@ -21,9 +21,9 @@ export default function HomeSecton() {
     </div>
   );
 
-   useEffect(() => {
-          document.title = `Home | GB Portfolio`;
-      });
+  useEffect(() => {
+    document.title = `Home | GB Portfolio`;
+  });
 
   useEffect(() => {
     if (show) {
@@ -93,7 +93,7 @@ export default function HomeSecton() {
         .finally(() => setLoading(false));
     }, []); // ✅ empty dependency array runs once only
 
-
+    if (projects) { }
     return (
       <Section className="w-full items-center py-5">
         <VStack spacing={25}>
@@ -112,24 +112,40 @@ export default function HomeSecton() {
             Featured Projects
           </p>
 
-          <VStack className="bg-foreground rounded-[30px] mb-1" spacing={45}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
-              {loading ? (
-                <>
-                  <ProjSectionPlaceHolder />
-                  <ProjSectionPlaceHolder />
-                </>
-              ) : (
-                <>
-                  {projects
-                    .filter((p) => p.feature)
-                    .map((p, i) => (
-                      <ProjSection key={p.title} project={p} index={i} setShow={setShow} view={popUpView} />
-                    ))}
-                </>
-              )}
+
+          {loading && (
+            <VStack className="bg-foreground rounded-[30px] mb-1" spacing={45}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
+                <ProjSectionPlaceHolder />
+                <ProjSectionPlaceHolder />
+              </div>
+            </VStack>
+          )}
+
+          {!loading && (!projects || projects.length === 0) && (
+            <div className="h-[282px] w-full flex justify-center items-center">
+              <p className="text-center text-sub2">No Projects Yet :(</p>
             </div>
-          </VStack>
+          )}
+
+          {!loading && projects && projects.length > 0 && (
+            <VStack className="bg-foreground rounded-[30px] mb-1" spacing={45}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
+                {projects
+                  .filter((p) => p.feature)
+                  .map((p, i) => (
+                    <ProjSection
+                      key={p.title}
+                      project={p}
+                      index={i}
+                      setShow={setShow}
+                      view={popUpView}
+                    />
+                  ))}
+              </div>
+            </VStack>
+          )}
+
         </VStack>
       </Section >
     );

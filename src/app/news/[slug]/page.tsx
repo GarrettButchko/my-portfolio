@@ -32,7 +32,7 @@ export default function NewsPost() {
         </div>
     );
 
-     useEffect(() => {
+    useEffect(() => {
         document.title = `News: ${slug} | GB Portfolio`;
     }, [slug]);
 
@@ -126,7 +126,7 @@ export default function NewsPost() {
         }
     };
 
-   
+
 
     const formattedParagraphs = post.body
         .replace(/\/n/g, '\n')
@@ -222,24 +222,36 @@ export default function NewsPost() {
                         </motion.div>
                     )}
 
+                    
                     {/* Mentioned projects */}
                     <VStack className='mt-30'>
                         <p className="text-sub2 md:text-[20px] sm:text-[20px] text-[13px] items-start justify-center ml-4">Mentioned Projects</p>
                         <div className="flex sm:flex-row sm:h-full flex-col gap-4 overflow-x-auto overflow-y-visible [&::-webkit-scrollbar]:h-[0px] hover:[&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar]:w-[0px] hover:[&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400/30 hover:[&::-webkit-scrollbar-thumb]:bg-gray-400/60 justify-start snap-x snap-mandatory p-1">
+                            {
+                                loading ? (
+                                    <>
+                                        <ProjSectionPlaceHolder />
+                                        <ProjSectionPlaceHolder />
+                                    </>
+                                ) : projects && projects.length > 0 ? (
+                                    <>
+                                        {filteredProjects.map((p: Project, i: number) => (
+                                            <ProjSection
+                                                key={i}
+                                                project={p}
+                                                index={i}
+                                                setShow={setShow}
+                                                view={popUpView}
+                                            />
+                                        ))}
+                                    </>
+                                ) : (
+                                    <div className="h-[282px] w-full flex justify-center items-center">
+                                        <p className="text-center text-sub2">No Projects Yet :(</p>
+                                    </div>
 
-                            {loading ? (
-                                <>
-                                    <ProjSectionPlaceHolder />
-                                    <ProjSectionPlaceHolder />
-                                </>
-                            ) : (
-                                <>
-                                    {filteredProjects.map((p: Project, i: number) => (
-                                        <ProjSection key={i} project={p} index={i} setShow={setShow} view={popUpView} />
-                                    ))}
-                                </>
-                            )}
-
+                                )
+                            }
                         </div>
                     </VStack>
 
