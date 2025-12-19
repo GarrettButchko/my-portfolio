@@ -378,7 +378,7 @@ export default function HomeSecton() {
         id: 3,
         title: "Cleveland State University",
         majorOrEmployer: "CS & Design",
-        gpa: "TBD",
+        gpa: 3.86,
         loc: "Cleveland, OH",
         start: 25,
         end: "Pres.",
