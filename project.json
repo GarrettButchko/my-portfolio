@@ -1,4 +1,8 @@
 {
   "title": "Portfolio",
-  "type": "Next.js Website"
+  "type": "Next.js Website",
+  "link": "",
+  "languages": {},
+  "photos": [],
+  "feature": false
 }
