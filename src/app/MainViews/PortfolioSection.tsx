@@ -136,7 +136,7 @@ export default function PortfolioSection() {
     return (
         <>
             <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
-                <div className="flex flex-col sm:flex-row" style={{ gap: "8px" }}>
+                <div className="flex w-full flex-col sm:flex-row max-w-4xl px-3" style={{ gap: "8px" }}>
                     <HStack
                         className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5"
                     >

@@ -229,13 +229,12 @@ export default function HomeSecton() {
                   transition-all
                   ease-in-out
                   duration-300
-                  bg-accent hover:brightness-75
+                  bg-accent
                   h-8
                   w-40
                   cursor-pointer
                   `}>
               <Text
-
                 variant="body"
                 className="
                   justify-center 
@@ -256,7 +255,6 @@ export default function HomeSecton() {
                 className="
                   overflow-hidden 
                   rounded-[5px]
-                  hover:brightness-75
                   active:scale-95 
                   transition-all
                   ease-in-out
@@ -275,7 +273,6 @@ export default function HomeSecton() {
                 className="
                   overflow-hidden 
                   rounded-[5px]
-                  hover:brightness-75
                   active:scale-95 
                   transition-all
                   ease-in-out

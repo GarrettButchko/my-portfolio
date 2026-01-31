@@ -64,7 +64,7 @@ export function ProjSection(
         whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
           type="button"
           onClick={() => window.open(project.link, "_blank", "noopener,noreferrer")}
-          className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent hover:brightness-75 cursor-pointer h-8 w-25 flex justify-center items-center"
+          className="z-20 rounded-[25px] active:scale-95 transition-all ease-in-out duration-300 bg-accent cursor-pointer h-8 w-25 flex justify-center items-center"
         >
           <span className="text-white font-semibold">Github</span>
         </motion.button>

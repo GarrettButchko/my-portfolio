@@ -103,7 +103,7 @@ export default function NewsSection() {
         <div className="w-full">
             <VStack className="mt-40 justify-center items-center w-full" spacing={15}>
                 {/* 🔍 Search + Sort Controls */}
-                <div className="flex flex-row" style={{ gap: "8px" }}>
+                <div className="flex flex-row w-full max-w-4xl px-3" style={{ gap: "8px" }}>
                     <HStack className="flex-1 min-h-9 bg-foreground rounded-[30px] justify-start items-center px-5">
                         <Search className="md:h-6 md:w-6 sm:h-5 sm:w-5 h-4 w-4 text-sub2" />
                         <input
@@ -387,7 +387,7 @@ export function PostView({ post, setShow, popUpView }: PostViewProps) {
                     transition-all
                     ease-in-out
                     duration-300
-                    bg-accent hover:brightness-75
+                    bg-accent
                     cursor-pointer
                     flex
                     justify-center

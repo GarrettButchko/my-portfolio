@@ -103,7 +103,7 @@ export default function InfoCollection({
                   transition-all
                   ease-in-out
                   duration-300
-                  bg-accent hover:brightness-75
+                  bg-accent
                   cursor-pointer
                   px-6
                   py-1
