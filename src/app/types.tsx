@@ -41,6 +41,11 @@ export type Project = {
     pushed_at: string;
 }
 
+export type ProjectTitleType = {
+    title: string;
+    type: string;
+}
+
 export type GitHubFile = {
   name: string;
   path: string;

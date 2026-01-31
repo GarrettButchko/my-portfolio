@@ -1,5 +1,5 @@
 import "server-only";
-import { Project, GitHubFile } from "@/app/types";
+import { Project, GitHubFile, ProjectTitleType } from "@/app/types";
 
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME!;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
@@ -77,7 +77,9 @@ export async function getProjects(): Promise<Project[]> {
         const projectJSON = await fetchSafeJSON(projectFileData.download_url);
         if (!projectJSON) continue;
 
-        const project: Project = projectJSON;
+        const projectTitleType: ProjectTitleType = projectJSON;
+        const projectTitle = projectTitleType.title;
+        const projectType = projectTitleType.type;
         const languages = (await fetchSafeJSON(repo.languages_url, { headers })) || {};
 
         const ssFiles = await fetchSafeJSON(
@@ -91,12 +93,12 @@ export async function getProjects(): Promise<Project[]> {
           ).map((f: GitHubFile) => f.download_url) || [];
 
         const feature =
-          project.feature ||
-          project.title === "Mini Mate" ||
-          project.title === "Portfolio";
+          projectTitleType.title === "Mini Mate" ||
+          projectTitleType.title === "Portfolio";
 
         projects.push({
-          ...project,
+          title: projectTitle,
+          type: projectType,
           link: repo.html_url,
           languages,
           photos,
