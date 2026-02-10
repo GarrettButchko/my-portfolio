@@ -80,7 +80,8 @@ export default function AdminPage() {
                 q === "" ||
                 p.title.toLowerCase().includes(q) ||
                 p.subtitle.toLowerCase().includes(q) ||
-                p.tags.some(tag => tag.toLowerCase().includes(q)) // <-- FIXED
+                p.tags.some(tag => tag.toLowerCase().includes(q)) ||
+                p.id.toString().includes(q)// <-- FIXED
             );
         });
 
@@ -194,15 +195,18 @@ export default function AdminPage() {
                             <>
                                 {filteredPosts.map((post) => (
                                     <div key={post.id} className="flex sm:flex-row flex-col items-center p-6 bg-sub1 rounded-[15px] w-full gap-2">
-                                        <VStack className="sm:text-start text-center w-full">
-                                            <p className="text-accent font-bold">
-                                                {post.title}
-                                            </p>
-                                            <p className="text-sub3 -mt-1">
-                                                {post.subtitle}
-                                            </p>
-                                            <p
-                                                className="
+                                        <HStack className="items-center" spacing={16}>
+                                            <span className="text-sub3 font-bold text-[30px]">{post.id}</span>
+
+                                            <VStack className="sm:text-start text-center w-full">
+                                                <p className="text-accent font-bold">
+                                                    {post.title}
+                                                </p>
+                                                <p className="text-sub3 -mt-1">
+                                                    {post.subtitle}
+                                                </p>
+                                                <p
+                                                    className="
                                                 text-sub2 
                                                 md:text-[14px] 
                                                 sm:text-[11px] 
@@ -210,10 +214,11 @@ export default function AdminPage() {
                                                 truncate
                                                 -mt-1
                                             "
-                                            >
-                                                {formatDate(post.publish)}
-                                            </p>
-                                        </VStack>
+                                                >
+                                                    {formatDate(post.publish)}
+                                                </p>
+                                            </VStack>
+                                        </HStack>
                                         <Spacer />
                                         <motion.button
                                             whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
@@ -689,7 +694,7 @@ function EditAddPostView({
 
                 </HStack>
 
-                
+
             </VStack>
         </VStack>
     );

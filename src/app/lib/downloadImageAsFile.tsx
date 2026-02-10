@@ -3,23 +3,28 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from "../firebase";
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-
-// ⚡ Use the correct bucket for CORS-safe URLs
 const storage = getStorage(app, "gs://portfolio-website-cfe3d.firebasestorage.app");
 
 export async function downloadImageAsFile(
-  storagePath: string | null,
+  storagePathOrUrl: string | null,
   filename: string
 ): Promise<File | null> {
-  if (!storagePath) return null;
+  if (!storagePathOrUrl) return null;
 
   try {
-    const fileRef = ref(storage, storagePath);
-    const url = await getDownloadURL(fileRef); // always get correct bucket URL
+    // If it's already a full URL, fetch it directly
+    if (/^https?:\/\//.test(storagePathOrUrl)) {
+      const res = await fetch(storagePathOrUrl);
+      if (!res.ok) return null;
+      const blob = await res.blob();
+      return new File([blob], filename, { type: blob.type });
+    }
 
+    // Otherwise treat it as a storage path and resolve the download URL
+    const fileRef = ref(storage, storagePathOrUrl);
+    const url = await getDownloadURL(fileRef);
     const res = await fetch(url);
     if (!res.ok) return null;
-
     const blob = await res.blob();
     return new File([blob], filename, { type: blob.type });
   } catch (err) {
