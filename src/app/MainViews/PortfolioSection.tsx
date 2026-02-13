@@ -183,9 +183,6 @@ export default function PortfolioSection() {
 
 
                 <VStack className="sm:mx-0 md:mx-6 mx-0 w-full max-w-4xl bg-foreground rounded-[30px] p-6" spacing={45}>
-
-
-
                     {loading ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[1fr]">
                             <ProjSectionPlaceHolder />

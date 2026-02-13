@@ -259,27 +259,11 @@ export function PostView({ post, setShow, popUpView }: PostViewProps) {
                             sm:text-[12px] 
                             text-[10px] 
                             truncate
-                            -mt-3
-                        "
-                    >
-                        {post.subtitle}
-                    </p>
-
-
-                    <p
-                        className="
-                            text-sub2 
-                            md:text-[14px] 
-                            sm:text-[11px] 
-                            text-[9px] 
-                            truncate
                             -mt-2
                         "
                     >
-                        {formatDate(post.publish)}
+                        {post.subtitle} - {formatDate(post.publish)}
                     </p>
-
-
                     {Array.isArray(post.tags) && post.tags.length > 0 && (
                         <HStack
                             spacing={6}

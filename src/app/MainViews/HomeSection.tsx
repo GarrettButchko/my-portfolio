@@ -214,16 +214,13 @@ export default function HomeSecton() {
         <VStack className="items-center mt-5" spacing={8}>
 
           <div className="flex flex-col sm:flex-row items-center" style={{ gap: `8px` }}>
-            <motion.button
+            <motion.a
               whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}
               title="Email Me!"
-              type="button"
-              onClick={() =>
-              (window.location.href =
-                "mailto:garrettwm2005@gmail.com?subject=I'm%20interested%20in%20your%20work&body=")
-              }
+              href="mailto:garrettwm2005@gmail.com"
               className={`
                   z-20 
+                  flex justify-center items-center
                   rounded-[25px]
                   active:scale-95 
                   transition-all
@@ -246,7 +243,7 @@ export default function HomeSecton() {
                   ">
                 Contact
               </Text>
-            </motion.button>
+            </motion.a>
             <HStack spacing={8}>
               <motion.button
                 whileHover={{ scale: 1.06 }} transition={{ duration: 0.03 }}

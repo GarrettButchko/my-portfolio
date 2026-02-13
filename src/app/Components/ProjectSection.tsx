@@ -51,10 +51,10 @@ export function ProjSection(
       {/* Title + Github button */}
       <HStack className="items-center px-6 w-full">
         <VStack className="min-w-0">
-          <p className="font-bold text-accent md:text-60 sm:text-60 text-50 truncate">
+          <p className="font-bold text-accent md:text-[30px] sm:text-[30px] text-[20px] truncate">
             {project.title}
           </p>
-          <p className="text-sub3 md:text-[15px] sm:text-[12px] text-[10px] truncate">
+          <p className="text-sub3 font-semibold md:text-[15px] sm:text-[12px] text-[10px] truncate mt-[-5px]">
             {project.type}
           </p>
         </VStack>
@@ -70,7 +70,7 @@ export function ProjSection(
         </motion.button>
       </HStack>
 
-      <VStack className="mx-6 rounded-[19px] bg-sub2/20 py-3 h-full" spacing={5}>
+      <VStack className="mx-6 rounded-[12px] bg-sub2/20 py-3 h-full" spacing={5}>
         {/* Photos */}
         <HStack
           spacing={16}
@@ -93,7 +93,7 @@ export function ProjSection(
               key={project.title + photo}
               src={photo}
               alt={`Screenshot from ${project.title}`}
-              className="rounded-[12px] max-h-[150px] w-auto object-contain cursor-pointer"
+              className="rounded-[8px] max-h-[150px] w-auto object-contain cursor-pointer"
               onClick={() => {
                 setShow(true);
                 view.current = <PicView profile={photo}/>
@@ -123,7 +123,7 @@ export function ProjSection(
               <HStack
                 key={name}
                 spacing={5}
-                className="px-3 py-[1px] rounded-[12px] bg-sub2/20 items-center"
+                className="px-3 py-[1px] rounded-[8px] bg-sub2/20 items-center"
               >
                 <div
                   className="w-2 h-2 md:w-3 md:h-3 rounded-full"
